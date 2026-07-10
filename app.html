@@ -775,12 +775,12 @@
 
     async function syncAll() {
       try {
-        const localEntries = Object.values(state.entries).filter(entry => entry.person === state.activePerson);
-        await Promise.allSettled(localEntries.map(syncEntry));
         const response = await fetch(`${apiBase()}/api/entries`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        (data.entries || []).forEach(entry => { if (entry && entry.date && entry.person) state.entries[entryKey(entry.person, entry.date)] = entry; });
+        const syncedEntries = {};
+        (data.entries || []).forEach(entry => { if (entry && entry.date && entry.person) syncedEntries[entryKey(entry.person, entry.date)] = entry; });
+        state.entries = syncedEntries;
         save(); render(); updateSyncStatus('Synced shared entries.'); toast('Shared entries synced.');
       } catch (err) {
         const dot = $('#syncDot'); if (dot) dot.className = 'sync-dot err';

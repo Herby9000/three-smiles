@@ -16,3 +16,5 @@ assert.doesNotMatch(appHtml, /id="loginGate"|id="appShell" hidden/, 'app shell i
 assert.match(appHtml, /fetch\('\/api\/me'/, 'app loads the current server-authenticated user');
 assert.match(appHtml, /fetch\('\/api\/logout'/, 'app can log out through the server');
 assert.match(appHtml, /\/api\/entries/, 'app syncs entries through the protected server API');
+assert.doesNotMatch(appHtml, /localEntries/, 'startup sync does not re-upload stale browser-cached entries');
+assert.match(appHtml, /state\.entries = syncedEntries/, 'startup sync replaces browser cache with server history');
