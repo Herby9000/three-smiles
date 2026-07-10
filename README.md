@@ -1,24 +1,12 @@
 # Three Smiles
 
-A small daily gratitude app for Daisy and Charlie.
+A private daily gratitude app for Daisy and Charlie.
 
-## Static site
+## Private Mac mini server
 
-The site can run as static files on GitHub Pages. Entries are saved in the browser with localStorage.
+The real app is now served by `server.js` behind server-side login. Unauthenticated visitors are redirected to `/login`, and `/api/entries` returns `401` unless the browser has a valid signed session cookie.
 
-Live site: https://herby9000.github.io/three-smiles/
-
-The public GitHub Pages version now shows a Daisy/Charlie passcode gate before the app. This is useful for casual privacy on a shared URL, but it is still client-side protection because GitHub Pages cannot enforce server-side login. Do not enable shared sync for sensitive entries until the backend is deployed with real server-side authentication.
-
-## Optional shared backend
-
-The lightweight backend is a dependency-free Node server that:
-
-- serves the same static site
-- accepts shared entries at `POST /api/entries`
-- lists shared entries at `GET /api/entries?circleId=daisy-charlie`
-- stores entries in `data/entries.json`
-- supports CORS so the GitHub Pages site can sync to it
+Entries are stored in `data/entries.json` on the Mac mini. Login secrets live in `data/auth.json`; `data/` is gitignored and must not be pushed.
 
 Run locally:
 
@@ -32,25 +20,52 @@ Then open:
 http://127.0.0.1:8787/
 ```
 
-Or use the GitHub Pages site and put this backend URL in Settings → Shared sync:
+## Public GitHub Pages shell
 
-```text
-http://127.0.0.1:8787
+Live public shell: https://herby9000.github.io/three-smiles/
+
+The GitHub Pages page is now only a placeholder telling visitors the app is private. It does not expose the app interface or shared-entry API.
+
+## Auth config
+
+Create `data/auth.json` with this shape:
+
+```json
+{
+  "sessionSecret": "long-random-secret",
+  "users": {
+    "Charlie": "sha256-hex-passcode-hash",
+    "Daisy": "sha256-hex-passcode-hash"
+  }
+}
 ```
 
-For a permanent shared version, deploy `server.js` to a small Node host such as Render, Fly, Railway, or a private VPS, then paste that public URL into Settings → Shared sync on both phones.
+You can generate a SHA-256 hash with:
+
+```bash
+node -e "const crypto=require('crypto'); console.log(crypto.createHash('sha256').update(process.argv[1]).digest('hex'))" 'your-passcode'
+```
 
 ## API
+
+All APIs except `/api/login` and `/api/health` require the signed login cookie.
+
+Login:
+
+```bash
+curl -c cookies.txt -X POST http://127.0.0.1:8787/api/login \
+  -H 'content-type: application/json' \
+  -d '{"person":"Charlie","passcode":"..."}'
+```
 
 Save an entry:
 
 ```bash
-curl -X POST http://127.0.0.1:8787/api/entries \
+curl -b cookies.txt -X POST http://127.0.0.1:8787/api/entries \
   -H 'content-type: application/json' \
   -d '{
-    "circleId": "daisy-charlie",
     "entry": {
-      "person": "Daisy",
+      "person": "Charlie",
       "date": "2026-07-10",
       "smiles": ["Coffee", "Kids laughing", "A good walk"],
       "mood": "Loved",
@@ -60,8 +75,8 @@ curl -X POST http://127.0.0.1:8787/api/entries \
   }'
 ```
 
-List entries:
+List shared entries:
 
 ```bash
-curl 'http://127.0.0.1:8787/api/entries?circleId=daisy-charlie'
+curl -b cookies.txt http://127.0.0.1:8787/api/entries
 ```
