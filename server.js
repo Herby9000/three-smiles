@@ -255,9 +255,10 @@ function createServer(options = {}) {
     }
     try {
       const data = await fs.readFile(filePath);
+      const noCache = pathname.endsWith('.html') || pathname.endsWith('.webmanifest') || pathname === '/sw.js' || pathname === '/sw-v2.js';
       res.writeHead(200, {
         'content-type': mimeTypes[path.extname(filePath)] || 'application/octet-stream',
-        'cache-control': pathname.endsWith('.html') ? 'no-store' : 'public, max-age=3600'
+        'cache-control': noCache ? 'no-store' : 'public, max-age=3600'
       });
       res.end(data);
     } catch (error) {

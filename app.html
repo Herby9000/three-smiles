@@ -849,7 +849,7 @@
     }
     $$('.tab, .bottom-nav button').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw-v2.js').catch(()=>{});
     loadCurrentUser().finally(() => { render(); scheduleReminder(); syncAll(); });
   </script>
 </body>
