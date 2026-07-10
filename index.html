@@ -169,6 +169,31 @@
       max-width: 640px;
       position: relative;
     }
+    .daily-reflection {
+      position: relative;
+      margin: 22px 0 0;
+      padding: 16px 18px;
+      border: 1px solid rgba(169,78,45,.16);
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,.74), rgba(255,236,219,.72));
+    }
+    .daily-reflection span {
+      display: block;
+      color: var(--accent-dark);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .daily-reflection p {
+      margin: 0;
+      color: #4a2b1e;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(18px, 3.8vw, 24px);
+      line-height: 1.25;
+      letter-spacing: -.025em;
+    }
     .entry-form { position: relative; display: grid; gap: 14px; }
     .prompt-line { color: var(--accent-dark); font-weight: 750; font-size: 14px; letter-spacing: .01em; margin: 4px 0 -3px; }
     .smile-input {
@@ -271,6 +296,8 @@
     .panel.active { display: block; }
 
     .entries-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .circle-intro { margin-bottom: 14px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.6); color: var(--muted); line-height: 1.45; }
+    .circle-intro strong { color: var(--ink); }
     .entry-card { padding: 20px; }
     .entry-card .when { color: var(--accent-dark); font-weight: 800; font-size: 13px; margin-bottom: 10px; }
     .entry-card ol { margin: 12px 0 0 20px; padding: 0; color: var(--ink); line-height: 1.5; }
@@ -386,6 +413,10 @@
             <span class="pill" id="todayDate">Today</span>
             <span class="pill" id="saveState">Shared sync optional</span>
           </div>
+          <div class="daily-reflection" aria-label="Daily reflection">
+            <span>Daily reflection</span>
+            <p id="dailyReflection">Loading today’s reflection…</p>
+          </div>
           <h2>What made today feel good?</h2>
           <p class="lead">Write down three little moments that made you smile, brought joy, or helped the day feel great. Small counts. Especially small.</p>
 
@@ -449,6 +480,7 @@
     </nav>
 
     <section class="panel" id="circle" aria-label="Our gratitude circle">
+      <div class="circle-intro"><strong>Yes — this is where older entries live.</strong> Our circle shows Daisy and Charlie’s saved smiles from previous days, newest first. Once the shared backend is live, this becomes the shared history across both phones.</div>
       <div class="entries-grid" id="entriesGrid"></div>
     </section>
 
@@ -508,6 +540,28 @@
     const STORAGE_KEY = 'three-smiles-v1';
     const todayKey = () => new Date().toISOString().slice(0, 10);
     const people = ['Daisy', 'Charlie'];
+    const reflections = [
+      'The ordinary moments are not interruptions to life; they are the life.',
+      'Look for one small proof today that you are on the same team.',
+      'Joy often arrives quietly. Leave enough space to notice it.',
+      'A good day does not need to be perfect to be worth remembering.',
+      'What you appreciate grows more visible when you name it.',
+      'Pause long enough to catch the good before the day moves on.',
+      'The smallest kindness can change the temperature of a whole home.',
+      'Today, notice effort — yours, theirs, and the invisible kind.',
+      'Gratitude is not pretending things are easy; it is refusing to miss what is good.',
+      'A shared laugh counts. A calm minute counts. A hand on the shoulder counts.',
+      'Let one good thing from today be bigger than the noise around it.',
+      'The best memories often look boring while they are happening.',
+      'Be generous with thanks. It costs almost nothing and lands like warmth.',
+      'Ask: what did love look like today, even in a small form?',
+      'Some days the win is simply noticing each other kindly.',
+      'Make room for the sentence: I am glad this happened today.',
+      'Attention is affection. Notice something worth keeping.',
+      'A family is built in repeats: meals, pickups, jokes, apologies, trying again.',
+      'There is no trophy for rushing past the good parts.',
+      'Let today leave behind one sentence you would want to find again.'
+    ];
     const questions = [
       'What did your partner do recently that you appreciated but maybe didn’t say out loud?',
       'What small moment with each other would you replay from today?',
@@ -552,6 +606,11 @@
     function getEntry(person=state.activePerson, date=todayKey()) { return state.entries[entryKey(person, date)] || null; }
     function partnerOf(person) { return people.find(p => p !== person); }
 
+    function reflectionForDate(date=todayKey()) {
+      const seed = [...date].reduce((a,c)=>a+c.charCodeAt(0),0);
+      return reflections[seed % reflections.length];
+    }
+
     function questionForDate(date=todayKey()) {
       if (state.settings.questionStyle === 'sometimes') {
         const day = Number(date.replaceAll('-', ''));
@@ -567,6 +626,7 @@
 
     function render() {
       $('#todayDate').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+      $('#dailyReflection').textContent = reflectionForDate();
       $$('.person-switch button').forEach(btn => btn.classList.toggle('active', btn.dataset.person === state.activePerson));
       $('#questionText').textContent = questionForDate();
       $('#reminderTime').value = state.settings.reminderTime || '20:30';
