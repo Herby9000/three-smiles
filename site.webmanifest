@@ -1,0 +1,13 @@
+{
+  "name": "Three Smiles",
+  "short_name": "3 Smiles",
+  "description": "A private daily joy habit for Daisy and Charlie.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff9f4",
+  "theme_color": "#f7d6bd",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

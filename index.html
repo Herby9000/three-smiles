@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Three Smiles</title>
+  <meta name="description" content="A private daily gratitude check-in for Daisy and Charlie: three smiles, a mood, and gentle questions for each other." />
+  <meta name="theme-color" content="#f7d6bd" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="3 Smiles" />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icon.svg" />
+  <link rel="manifest" href="site.webmanifest" />
+  <style>
+    :root {
+      --bg: #fff9f4;
+      --paper: #fffefd;
+      --paper-2: #fff3ea;
+      --ink: #2c211b;
+      --muted: #7d6a5f;
+      --soft: #ead8c9;
+      --line: rgba(84, 54, 36, .14);
+      --accent: #df7f50;
+      --accent-dark: #a94e2d;
+      --honey: #f6c453;
+      --rose: #e99ba6;
+      --sage: #95b79a;
+      --sky: #8bb8d8;
+      --shadow: 0 18px 60px rgba(88, 52, 30, .12);
+      --radius: 28px;
+      --focus: 0 0 0 4px rgba(223,127,80,.22);
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--bg); }
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(246,196,83,.22), transparent 34rem),
+        radial-gradient(circle at 85% 10%, rgba(233,155,166,.18), transparent 28rem),
+        linear-gradient(180deg, #fffaf6 0%, #fff5ee 52%, #fff9f4 100%);
+      -webkit-font-smoothing: antialiased;
+      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    }
+
+    button, input, textarea, select { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+
+    .app-shell {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 18px clamp(16px, 3vw, 34px) 104px;
+    }
+
+    header.topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 8px 0 18px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      background: conic-gradient(from 210deg, #e99ba6, #f6c453, #95b79a, #8bb8d8, #e99ba6);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 30px rgba(192, 103, 64, .22);
+      flex: 0 0 auto;
+    }
+    .logo svg { width: 29px; height: 29px; filter: drop-shadow(0 2px 3px rgba(80,40,20,.18)); }
+    .brand h1 { font-size: 18px; margin: 0; line-height: 1; letter-spacing: -.02em; }
+    .brand p { margin: 4px 0 0; color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .person-switch {
+      display: flex;
+      background: rgba(255,255,255,.68);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px;
+      gap: 4px;
+      box-shadow: 0 8px 24px rgba(88,52,30,.08);
+    }
+    .person-switch button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .person-switch button.active { background: var(--ink); color: #fffaf6; }
+    .person-switch button:focus-visible, .icon-btn:focus-visible, .primary:focus-visible, .secondary:focus-visible, textarea:focus-visible, input:focus-visible, select:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+      gap: clamp(18px, 4vw, 42px);
+      align-items: stretch;
+      margin-top: 8px;
+    }
+
+    .today-card, .side-card, .entry-card, .memory-card, .modal-card {
+      background: color-mix(in srgb, var(--paper) 90%, transparent);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .today-card {
+      padding: clamp(22px, 5vw, 42px);
+      min-height: 550px;
+      position: relative;
+      overflow: hidden;
+    }
+    .today-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 90% 0%, rgba(246,196,83,.22), transparent 19rem);
+      pointer-events: none;
+    }
+    .date-row, .section-label, .meta-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.72);
+      color: var(--muted);
+      border-radius: 999px;
+      min-height: 34px;
+      padding: 0 12px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .hero h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(36px, 8vw, 72px);
+      line-height: .92;
+      letter-spacing: -.06em;
+      margin: 28px 0 14px;
+      max-width: 720px;
+      position: relative;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: clamp(16px, 2.3vw, 20px);
+      line-height: 1.55;
+      margin: 0 0 28px;
+      max-width: 640px;
+      position: relative;
+    }
+    .entry-form { position: relative; display: grid; gap: 14px; }
+    .prompt-line { color: var(--accent-dark); font-weight: 750; font-size: 14px; letter-spacing: .01em; margin: 4px 0 -3px; }
+    .smile-input {
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      background: rgba(255, 247, 240, .76);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+    }
+    .number-dot {
+      width: 36px; height: 36px; border-radius: 14px;
+      display: grid; place-items: center;
+      font-weight: 850;
+      color: var(--accent-dark);
+      background: #ffe0ca;
+    }
+    textarea {
+      width: 100%;
+      min-height: 74px;
+      border: 0;
+      resize: vertical;
+      background: transparent;
+      color: var(--ink);
+      line-height: 1.45;
+      padding: 8px 0 2px;
+    }
+    textarea::placeholder { color: color-mix(in srgb, var(--muted), transparent 18%); }
+
+    .mood-row { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px; }
+    .mood-btn {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.68);
+      border-radius: 999px;
+      padding: 10px 12px;
+      min-height: 44px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .mood-btn.active { border-color: rgba(169,78,45,.36); color: var(--accent-dark); background: #ffe2cf; font-weight: 800; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+    .primary, .secondary, .icon-btn {
+      border: 0;
+      min-height: 48px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .primary { background: var(--ink); color: #fffaf6; padding: 0 19px; font-weight: 850; box-shadow: 0 14px 30px rgba(44,33,27,.18); }
+    .secondary { background: rgba(255,255,255,.74); color: var(--ink); border: 1px solid var(--line); padding: 0 16px; }
+    .icon-btn { width: 48px; background: rgba(255,255,255,.72); border: 1px solid var(--line); color: var(--ink); }
+
+    .side-stack { display: grid; gap: 16px; }
+    .side-card { padding: 20px; overflow: hidden; }
+    .side-card h3, .entry-card h3, .memory-card h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.02em; }
+    .side-card p, .memory-card p { color: var(--muted); line-height: 1.48; margin: 0; }
+    .question-card {
+      background: linear-gradient(135deg, rgba(255,244,223,.96), rgba(255,229,220,.92));
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .question-text { font-family: Georgia, serif; font-size: 25px; line-height: 1.15; letter-spacing: -.035em; color: #4a2b1e; margin-top: 16px; }
+    .streak-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; margin-top: 16px; }
+    .day-dot { aspect-ratio: 1; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,.66); display: grid; place-items: center; color: var(--muted); font-size: 11px; }
+    .day-dot.done { background: #ffe0ca; border-color: #f1b389; color: var(--accent-dark); font-weight: 900; }
+    .mini-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+    .stat { border: 1px solid var(--line); border-radius: 18px; padding: 12px; background: rgba(255,255,255,.62); }
+    .stat strong { display: block; font-size: 22px; letter-spacing: -.04em; }
+    .stat span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+
+    nav.tabs {
+      display: flex;
+      gap: 8px;
+      margin: 22px 0 14px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    nav.tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.7);
+      min-height: 44px;
+      border-radius: 999px;
+      padding: 0 14px;
+      color: var(--muted);
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .tab.active { background: var(--accent-dark); color: white; border-color: var(--accent-dark); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .entries-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .entry-card { padding: 20px; }
+    .entry-card .when { color: var(--accent-dark); font-weight: 800; font-size: 13px; margin-bottom: 10px; }
+    .entry-card ol { margin: 12px 0 0 20px; padding: 0; color: var(--ink); line-height: 1.5; }
+    .entry-card li + li { margin-top: 8px; }
+    .entry-card blockquote { border-left: 3px solid #f1b389; margin: 14px 0 0; padding: 0 0 0 12px; color: var(--muted); }
+
+    .memory-layout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 16px; }
+    .memory-card { padding: 22px; }
+    .word-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .word { background: rgba(255,255,255,.75); border: 1px solid var(--line); border-radius: 999px; padding: 8px 11px; color: var(--accent-dark); }
+
+    .settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .field { display: grid; gap: 7px; margin-top: 14px; }
+    .field label { font-weight: 800; font-size: 13px; color: var(--muted); }
+    input, select {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.74);
+      border-radius: 16px;
+      min-height: 48px;
+      padding: 0 13px;
+      color: var(--ink);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 92px;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: white;
+      border-radius: 999px;
+      padding: 12px 16px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s ease;
+      z-index: 60;
+      max-width: calc(100vw - 32px);
+      text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(12px + env(safe-area-inset-bottom));
+      width: min(520px, calc(100% - 24px));
+      background: rgba(255,255,255,.84);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 50px rgba(88,52,30,.18);
+      border-radius: 999px;
+      padding: 6px;
+      display: none;
+      gap: 4px;
+      backdrop-filter: blur(20px);
+      z-index: 50;
+    }
+    .bottom-nav button { flex: 1; border: 0; background: transparent; color: var(--muted); border-radius: 999px; min-height: 48px; cursor: pointer; font-size: 12px; }
+    .bottom-nav button.active { background: var(--ink); color: #fffaf6; font-weight: 850; }
+
+    .empty { color: var(--muted); border: 1px dashed var(--line); border-radius: 22px; padding: 24px; text-align: center; background: rgba(255,255,255,.52); }
+    .danger { color: #9d2d2d; }
+
+    @media (max-width: 820px) {
+      .app-shell { padding-bottom: 96px; }
+      header.topbar { align-items: flex-start; position: static; }
+      .brand p { max-width: 170px; }
+      .person-switch button { padding: 0 10px; }
+      .hero, .memory-layout, .settings-grid, .entries-grid { grid-template-columns: 1fr; }
+      .today-card { min-height: auto; padding: 22px 18px; border-radius: 30px; }
+      .hero h2 { margin-top: 20px; }
+      .side-stack { grid-template-columns: 1fr; }
+      nav.tabs { display: none; }
+      .bottom-nav { display: flex; }
+      .panel { display: none !important; }
+      .panel.mobile-active { display: block !important; }
+      .panel#today.mobile-active { display: block !important; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Three Smiles home">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" role="img"><path d="M32 55s-2.1-1.7-5.2-4.2C15.6 41.8 8 35.7 8 25.7 8 18.6 13.3 13 20.2 13c4 0 7.9 2 11.8 6 3.9-4 7.8-6 11.8-6C50.7 13 56 18.6 56 25.7c0 10-7.6 16.1-18.8 25.1C34.1 53.3 32 55 32 55Z" fill="#fffaf6"/><circle cx="23" cy="27" r="3" fill="#df7f50"/><circle cx="41" cy="27" r="3" fill="#df7f50"/><path d="M23 36c2.2 2.4 5.1 3.6 9 3.6s6.8-1.2 9-3.6" stroke="#df7f50" stroke-width="4" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h1>Three Smiles</h1>
+          <p>Daisy + Charlie’s tiny daily joy habit</p>
+        </div>
+      </div>
+      <div class="person-switch" aria-label="Choose who is writing">
+        <button data-person="Daisy" class="active">Daisy</button>
+        <button data-person="Charlie">Charlie</button>
+      </div>
+    </header>
+
+    <section class="panel active mobile-active" id="today" aria-label="Today check-in">
+      <div class="hero">
+        <section class="today-card">
+          <div class="date-row">
+            <span class="pill" id="todayDate">Today</span>
+            <span class="pill" id="saveState">Private on this device</span>
+          </div>
+          <h2>What made today feel good?</h2>
+          <p class="lead">Write down three little moments that made you smile, brought joy, or helped the day feel great. Tiny counts. Especially tiny.</p>
+
+          <form class="entry-form" id="entryForm">
+            <div class="prompt-line">Three smiles</div>
+            <label class="smile-input"><span class="number-dot">1</span><textarea id="smile1" placeholder="Something that made me smile…" maxlength="360"></textarea></label>
+            <label class="smile-input"><span class="number-dot">2</span><textarea id="smile2" placeholder="Something that brought joy…" maxlength="360"></textarea></label>
+            <label class="smile-input"><span class="number-dot">3</span><textarea id="smile3" placeholder="Something that made the day great…" maxlength="360"></textarea></label>
+
+            <div class="prompt-line">Mood today</div>
+            <div class="mood-row" role="radiogroup" aria-label="Mood">
+              <button type="button" class="mood-btn" data-mood="Light">☀️ Light</button>
+              <button type="button" class="mood-btn" data-mood="Grateful">🌿 Grateful</button>
+              <button type="button" class="mood-btn" data-mood="Tired">🌙 Tired</button>
+              <button type="button" class="mood-btn" data-mood="Loved">💛 Loved</button>
+              <button type="button" class="mood-btn" data-mood="Frazzled">🫠 Frazzled</button>
+            </div>
+
+            <div class="prompt-line">A question for connection</div>
+            <label class="smile-input"><span class="number-dot">?</span><textarea id="answer" placeholder="Answer today’s question, if you feel like it…" maxlength="520"></textarea></label>
+
+            <div class="actions">
+              <button class="primary" type="submit">Save today</button>
+              <button class="secondary" type="button" id="shareToday">Share with each other</button>
+              <button class="secondary" type="button" id="newQuestion">New question</button>
+            </div>
+          </form>
+        </section>
+
+        <aside class="side-stack">
+          <section class="side-card question-card">
+            <div class="section-label"><span class="pill">Today’s couple question</span><button class="icon-btn" id="sparkQuestion" aria-label="Refresh question">↻</button></div>
+            <div class="question-text" id="questionText"></div>
+          </section>
+          <section class="side-card">
+            <h3>This week</h3>
+            <p id="weekCopy">A soft nudge, not a productivity contest.</p>
+            <div class="streak-grid" id="streakGrid"></div>
+            <div class="mini-stats">
+              <div class="stat"><strong id="countMe">0</strong><span>your entries</span></div>
+              <div class="stat"><strong id="countPartner">0</strong><span>partner entries</span></div>
+              <div class="stat"><strong id="currentStreak">0</strong><span>day streak</span></div>
+            </div>
+          </section>
+          <section class="side-card">
+            <h3>Gentle reminder</h3>
+            <p>Set a time and this page will nudge you when it’s open. For iPhone, add it to your Home Screen for the app-ish version.</p>
+            <div class="field"><label for="reminderTime">Reminder time</label><input id="reminderTime" type="time" value="20:30" /></div>
+            <div class="actions"><button class="secondary" type="button" id="enableReminder">Enable reminder</button></div>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Sections">
+      <button class="tab active" data-tab="today">Today</button>
+      <button class="tab" data-tab="circle">Our circle</button>
+      <button class="tab" data-tab="memories">Memories</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </nav>
+
+    <section class="panel" id="circle" aria-label="Our gratitude circle">
+      <div class="entries-grid" id="entriesGrid"></div>
+    </section>
+
+    <section class="panel" id="memories" aria-label="Memories and insights">
+      <div class="memory-layout">
+        <article class="memory-card">
+          <h3>Memory lane</h3>
+          <p id="memoryPrompt">Save a few entries and this will pull up a past smile.</p>
+          <div class="actions"><button class="secondary" id="randomMemory" type="button">Show another memory</button></div>
+        </article>
+        <article class="memory-card">
+          <h3>Words that keep showing up</h3>
+          <p>A small, imperfect little map of what has been bringing joy.</p>
+          <div class="word-cloud" id="wordCloud"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="settings" aria-label="Settings">
+      <div class="settings-grid">
+        <article class="memory-card">
+          <h3>Private storage</h3>
+          <p>Entries are stored in this browser only. Export if you want a backup, or import on another device.</p>
+          <div class="actions">
+            <button class="secondary" id="exportData" type="button">Export JSON</button>
+            <button class="secondary" id="importData" type="button">Import JSON</button>
+            <input id="importFile" type="file" accept="application/json" hidden />
+          </div>
+        </article>
+        <article class="memory-card">
+          <h3>Home Screen</h3>
+          <p>On iPhone: Share → Add to Home Screen. Then it opens like a little private app.</p>
+          <div class="field"><label for="questionStyle">Question rhythm</label><select id="questionStyle"><option value="daily">Ask a question every day</option><option value="sometimes">A few questions here and there</option></select></div>
+          <div class="actions"><button class="secondary danger" id="clearData" type="button">Clear this device</button></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Mobile sections">
+    <button class="active" data-tab="today">Today</button>
+    <button data-tab="circle">Circle</button>
+    <button data-tab="memories">Memories</button>
+    <button data-tab="settings">Settings</button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = 'three-smiles-v1';
+    const todayKey = () => new Date().toISOString().slice(0, 10);
+    const people = ['Daisy', 'Charlie'];
+    const questions = [
+      'What did your partner do recently that you appreciated but maybe didn’t say out loud?',
+      'What tiny moment with each other would you replay from today?',
+      'What is one thing your partner handled well this week?',
+      'What made you feel like a team lately?',
+      'What is something your partner does that makes the house feel warmer?',
+      'What is one stress you’d like to take off your partner’s plate tomorrow?',
+      'What did you notice your partner caring about today?',
+      'What made you proud of your partner recently?',
+      'What small ritual would make tomorrow feel more connected?',
+      'What is something funny from today that you want to remember?',
+      'When did you feel most seen by your partner this week?',
+      'What would be a 10-minute kindness you could do for each other tomorrow?',
+      'What part of ordinary family life felt sweet today?',
+      'What are you grateful your partner brings to the kids?',
+      'What is one thing you want to thank your partner for before sleeping?'
+    ];
+    const defaultState = { activePerson: 'Daisy', mood: '', entries: {}, settings: { reminderTime: '20:30', questionStyle: 'sometimes' }, questionIndexByDate: {} };
+    let state = load();
+    let reminderTimer = null;
+
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    function load() {
+      try { return { ...structuredClone(defaultState), ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') }; }
+      catch { return structuredClone(defaultState); }
+    }
+    function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function toast(msg) { const el = $('#toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 2300); }
+    function formatDate(key) { return new Date(key + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); }
+    function entryKey(person, date=todayKey()) { return `${date}::${person}`; }
+    function getEntry(person=state.activePerson, date=todayKey()) { return state.entries[entryKey(person, date)] || null; }
+    function partnerOf(person) { return people.find(p => p !== person); }
+
+    function questionForDate(date=todayKey()) {
+      if (state.settings.questionStyle === 'sometimes') {
+        const day = Number(date.replaceAll('-', ''));
+        if (day % 3 === 1) return 'No extra question today. Just three smiles is plenty.';
+      }
+      if (state.questionIndexByDate[date] == null) {
+        const seed = [...date].reduce((a,c)=>a+c.charCodeAt(0),0);
+        state.questionIndexByDate[date] = seed % questions.length;
+        save();
+      }
+      return questions[state.questionIndexByDate[date] % questions.length];
+    }
+
+    function render() {
+      $('#todayDate').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+      $$('.person-switch button').forEach(btn => btn.classList.toggle('active', btn.dataset.person === state.activePerson));
+      $('#questionText').textContent = questionForDate();
+      $('#reminderTime').value = state.settings.reminderTime || '20:30';
+      $('#questionStyle').value = state.settings.questionStyle || 'sometimes';
+      renderForm(); renderStats(); renderEntries(); renderMemories();
+    }
+
+    function renderForm() {
+      const entry = getEntry() || {};
+      $('#smile1').value = entry.smiles?.[0] || '';
+      $('#smile2').value = entry.smiles?.[1] || '';
+      $('#smile3').value = entry.smiles?.[2] || '';
+      $('#answer').value = entry.answer || '';
+      state.mood = entry.mood || state.mood || '';
+      $$('.mood-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mood === state.mood));
+      $('#saveState').textContent = entry.savedAt ? `Saved for ${state.activePerson}` : `Writing as ${state.activePerson}`;
+    }
+
+    function renderStats() {
+      const me = state.activePerson, partner = partnerOf(me);
+      const entries = Object.values(state.entries);
+      $('#countMe').textContent = entries.filter(e => e.person === me).length;
+      $('#countPartner').textContent = entries.filter(e => e.person === partner).length;
+      $('#currentStreak').textContent = streakFor(me);
+      const days = lastNDates(7).reverse();
+      $('#streakGrid').innerHTML = days.map(d => `<div class="day-dot ${getEntry(me,d)?'done':''}" title="${formatDate(d)}">${new Date(d+'T12:00:00').toLocaleDateString(undefined,{weekday:'narrow'})}</div>`).join('');
+      const bothToday = people.every(p => getEntry(p));
+      $('#weekCopy').textContent = bothToday ? 'Both of you checked in today. Mildly adorable.' : `${me}, your little joy ledger is waiting.`;
+    }
+
+    function renderEntries() {
+      const entries = Object.values(state.entries).sort((a,b) => (b.date+a.person).localeCompare(a.date+b.person));
+      if (!entries.length) { $('#entriesGrid').innerHTML = '<div class="empty">No entries yet. Save today’s three smiles and they’ll appear here.</div>'; return; }
+      $('#entriesGrid').innerHTML = entries.map(e => `
+        <article class="entry-card">
+          <div class="when">${escapeHtml(formatDate(e.date))} · ${escapeHtml(e.person)} ${e.mood ? '· ' + escapeHtml(e.mood) : ''}</div>
+          <h3>${e.person === state.activePerson ? 'Your smiles' : e.person + '’s smiles'}</h3>
+          <ol>${e.smiles.filter(Boolean).map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ol>
+          ${e.answer ? `<blockquote>${escapeHtml(e.answer)}</blockquote>` : ''}
+        </article>`).join('');
+    }
+
+    function renderMemories() {
+      const entries = Object.values(state.entries);
+      if (!entries.length) { $('#memoryPrompt').textContent = 'Save a few entries and this will pull up a past smile.'; $('#wordCloud').innerHTML = '<span class="word">smiles loading…</span>'; return; }
+      const picked = entries[Math.floor(Math.random() * entries.length)];
+      const smile = picked.smiles.find(Boolean) || picked.answer || 'A good day, saved.';
+      $('#memoryPrompt').textContent = `${formatDate(picked.date)}, ${picked.person}: “${smile}”`;
+      const words = countWords(entries.flatMap(e => [...e.smiles, e.answer || '']).join(' '));
+      $('#wordCloud').innerHTML = words.slice(0, 18).map(([w,c]) => `<span class="word" style="font-size:${Math.min(20, 12+c*2)}px">${escapeHtml(w)}</span>`).join('') || '<span class="word">joy</span>';
+    }
+
+    function countWords(text) {
+      const stop = new Set('the and that with this today from have were was you your our for but not just into had she him her his are they them then when what made feel felt did one thing something about'.split(' '));
+      const map = new Map();
+      text.toLowerCase().match(/[a-z’']{3,}/g)?.forEach(w => { w = w.replace(/[’']/g,''); if(!stop.has(w)) map.set(w,(map.get(w)||0)+1); });
+      return [...map.entries()].sort((a,b)=>b[1]-a[1]);
+    }
+
+    function lastNDates(n) { const out=[]; const d=new Date(); for(let i=0;i<n;i++){ const x=new Date(d); x.setDate(d.getDate()-i); out.push(x.toISOString().slice(0,10)); } return out; }
+    function streakFor(person) { let count=0; for(const d of lastNDates(365)){ if(getEntry(person,d)) count++; else break; } return count; }
+    function escapeHtml(s='') { return s.replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch])); }
+
+    function saveToday(evt) {
+      evt.preventDefault();
+      const smiles = [$('#smile1').value.trim(), $('#smile2').value.trim(), $('#smile3').value.trim()];
+      if (smiles.filter(Boolean).length < 1) return toast('Give me at least one smile. We are not monsters.');
+      const date = todayKey();
+      state.entries[entryKey(state.activePerson, date)] = { person: state.activePerson, date, smiles, mood: state.mood, question: questionForDate(date), answer: $('#answer').value.trim(), savedAt: new Date().toISOString() };
+      save(); render(); toast('Saved. Tiny joy successfully captured.');
+    }
+
+    function shareToday() {
+      const entry = getEntry();
+      if (!entry) return toast('Save today first, then share it.');
+      const text = `${entry.person}'s Three Smiles — ${formatDate(entry.date)}\n\n1. ${entry.smiles[0] || '—'}\n2. ${entry.smiles[1] || '—'}\n3. ${entry.smiles[2] || '—'}${entry.mood ? `\n\nMood: ${entry.mood}` : ''}${entry.answer ? `\n\nQuestion: ${entry.question}\n${entry.answer}` : ''}`;
+      if (navigator.share) navigator.share({ title: 'Three Smiles', text }).catch(()=>{});
+      else navigator.clipboard.writeText(text).then(()=>toast('Copied share text.'));
+    }
+
+    function randomizeQuestion() { state.questionIndexByDate[todayKey()] = Math.floor(Math.random() * questions.length); save(); render(); }
+
+    function setupReminder() {
+      state.settings.reminderTime = $('#reminderTime').value || '20:30'; save();
+      if (!('Notification' in window)) return toast('This browser does not support notifications.');
+      Notification.requestPermission().then(p => { if (p === 'granted') { scheduleReminder(); toast('Reminder enabled for when this app is open.'); } else toast('Notifications were not allowed.'); });
+    }
+    function scheduleReminder() {
+      clearTimeout(reminderTimer);
+      const [h,m] = (state.settings.reminderTime || '20:30').split(':').map(Number);
+      const now = new Date(); const target = new Date(); target.setHours(h,m,0,0); if (target <= now) target.setDate(target.getDate()+1);
+      reminderTimer = setTimeout(() => { if (!getEntry(state.activePerson) && Notification.permission === 'granted') new Notification('Three Smiles', { body: 'What three things made today feel good?', icon: 'assets/icon.svg' }); scheduleReminder(); }, target - now);
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `three-smiles-${todayKey()}.json`; a.click(); URL.revokeObjectURL(a.href);
+    }
+    function importData(file) {
+      const reader = new FileReader();
+      reader.onload = () => { try { const incoming = JSON.parse(reader.result); state = { ...structuredClone(defaultState), ...incoming, entries: {...state.entries, ...(incoming.entries||{})} }; save(); render(); toast('Imported and merged.'); } catch { toast('That JSON did not import.'); } };
+      reader.readAsText(file);
+    }
+
+    $$('.person-switch button').forEach(btn => btn.addEventListener('click', () => { state.activePerson = btn.dataset.person; state.mood=''; save(); render(); }));
+    $$('.mood-btn').forEach(btn => btn.addEventListener('click', () => { state.mood = btn.dataset.mood; $$('.mood-btn').forEach(b=>b.classList.toggle('active', b===btn)); }));
+    $('#entryForm').addEventListener('submit', saveToday);
+    $('#shareToday').addEventListener('click', shareToday);
+    $('#newQuestion').addEventListener('click', randomizeQuestion);
+    $('#sparkQuestion').addEventListener('click', randomizeQuestion);
+    $('#enableReminder').addEventListener('click', setupReminder);
+    $('#reminderTime').addEventListener('change', e => { state.settings.reminderTime = e.target.value; save(); scheduleReminder(); });
+    $('#questionStyle').addEventListener('change', e => { state.settings.questionStyle = e.target.value; delete state.questionIndexByDate[todayKey()]; save(); render(); });
+    $('#randomMemory').addEventListener('click', renderMemories);
+    $('#exportData').addEventListener('click', exportData);
+    $('#importData').addEventListener('click', () => $('#importFile').click());
+    $('#importFile').addEventListener('change', e => e.target.files[0] && importData(e.target.files[0]));
+    $('#clearData').addEventListener('click', () => { if (confirm('Clear Three Smiles data from this device?')) { localStorage.removeItem(STORAGE_KEY); state = structuredClone(defaultState); render(); toast('Cleared this device.'); }});
+
+    function switchTab(id) {
+      $$('.tab, .bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+      $$('.panel').forEach(p => { p.classList.toggle('active', p.id === id); p.classList.toggle('mobile-active', p.id === id); });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    $$('.tab, .bottom-nav button').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+    render(); scheduleReminder();
+  </script>
+</body>
+</html>
