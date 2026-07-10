@@ -6,6 +6,7 @@ const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const http = require('node:http');
 const { createServer } = require('../server');
 
 function sha256(value) {
@@ -32,12 +33,36 @@ function cookieFrom(response) {
   return response.headers.get('set-cookie').split(';')[0];
 }
 
+function requestWithHost(base, pathName, host) {
+  const url = new URL(base);
+  return new Promise((resolve, reject) => {
+    const req = http.request({ hostname: url.hostname, port: url.port, path: pathName, method: 'GET', headers: { Host: host } }, res => {
+      let body = '';
+      res.setEncoding('utf8');
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => resolve({ status: res.statusCode, headers: res.headers, text: body }));
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
+
 test('server-side auth protects app shell and entries API while public assets remain available for iOS icons', async () => {
   const app = await startTestServer();
   try {
     const appPage = await fetch(`${app.base}/`, { redirect: 'manual' });
     assert.equal(appPage.status, 302);
     assert.equal(appPage.headers.get('location'), '/login');
+
+    const portfolio = await requestWithHost(app.base, '/', 'herbyprojects.com');
+    assert.equal(portfolio.status, 200);
+    assert.match(portfolio.text, /Herby Projects/);
+    const portfolioApp = await requestWithHost(app.base, '/app.html', 'herbyprojects.com');
+    assert.equal(portfolioApp.status, 404);
+
+    const portfolioRedirect = await requestWithHost(app.base, '/projects/three-smiles', 'herbyprojects.com');
+    assert.equal(portfolioRedirect.status, 302);
+    assert.equal(portfolioRedirect.headers.location, 'https://three-smiles.herbyprojects.com');
 
     const entries = await fetch(`${app.base}/api/entries`);
     assert.equal(entries.status, 401);

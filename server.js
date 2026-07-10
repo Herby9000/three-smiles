@@ -171,6 +171,11 @@ function corsHeaders(req, allowedOrigin) {
   return {};
 }
 
+function isPortfolioHost(hostHeader = '') {
+  const hostname = String(hostHeader).split(':')[0].toLowerCase();
+  return hostname === 'herbyprojects.com' || hostname === 'www.herbyprojects.com';
+}
+
 function createServer(options = {}) {
   const dataDir = options.dataDir || DEFAULT_DATA_DIR;
   const dataFile = options.dataFile || path.join(dataDir, 'entries.json');
@@ -234,8 +239,18 @@ function createServer(options = {}) {
 
   async function serveStatic(req, res, url) {
     let pathname = decodeURIComponent(url.pathname);
+    const portfolioHost = isPortfolioHost(req.headers.host);
+
+    if (portfolioHost) {
+      if (pathname === '/' || pathname === '/index.html') pathname = '/portfolio.html';
+      else if (pathname === '/three-smiles' || pathname === '/projects/three-smiles') return redirect(res, 'https://three-smiles.herbyprojects.com');
+      else if (pathname === '/login') return redirect(res, 'https://three-smiles.herbyprojects.com/login');
+      else if (pathname !== '/portfolio.html') return send(res, 404, 'Not found');
+    }
+
     if (pathname === '/login') pathname = '/login.html';
     const publicAssetPaths = new Set([
+      '/portfolio.html',
       '/login.html',
       '/site.webmanifest',
       '/sw.js',
@@ -246,7 +261,7 @@ function createServer(options = {}) {
       '/assets/icon-512.png'
     ]);
     const isLoginAsset = publicAssetPaths.has(pathname);
-    if (!isLoginAsset) {
+    if (!portfolioHost && !isLoginAsset) {
       const session = await requireSession(req, res);
       if (!session) return;
     }
