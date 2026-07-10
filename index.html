@@ -334,6 +334,9 @@
 
     .empty { color: var(--muted); border: 1px dashed var(--line); border-radius: 22px; padding: 24px; text-align: center; background: rgba(255,255,255,.52); }
     .danger { color: #9d2d2d; }
+    .sync-dot { width: 9px; height: 9px; border-radius: 999px; background: var(--muted); display: inline-block; }
+    .sync-dot.on { background: var(--sage); }
+    .sync-dot.err { background: #c84e4e; }
 
     @media (max-width: 820px) {
       .app-shell { padding-bottom: 96px; }
@@ -365,7 +368,7 @@
         </div>
         <div>
           <h1>Three Smiles</h1>
-          <p>Daisy + Charlie’s tiny daily joy habit</p>
+          <p>Daisy + Charlie’s small daily joy habit</p>
         </div>
       </div>
       <div class="person-switch" aria-label="Choose who is writing">
@@ -379,10 +382,10 @@
         <section class="today-card">
           <div class="date-row">
             <span class="pill" id="todayDate">Today</span>
-            <span class="pill" id="saveState">Private on this device</span>
+            <span class="pill" id="saveState">Shared sync optional</span>
           </div>
           <h2>What made today feel good?</h2>
-          <p class="lead">Write down three little moments that made you smile, brought joy, or helped the day feel great. Tiny counts. Especially tiny.</p>
+          <p class="lead">Write down three little moments that made you smile, brought joy, or helped the day feel great. Small counts. Especially small.</p>
 
           <form class="entry-form" id="entryForm">
             <div class="prompt-line">Three smiles</div>
@@ -399,9 +402,6 @@
               <button type="button" class="mood-btn" data-mood="Frazzled">🫠 Frazzled</button>
             </div>
 
-            <div class="prompt-line">A question for connection</div>
-            <label class="smile-input"><span class="number-dot">?</span><textarea id="answer" placeholder="Answer today’s question, if you feel like it…" maxlength="520"></textarea></label>
-
             <div class="actions">
               <button class="primary" type="submit">Save today</button>
               <button class="secondary" type="button" id="shareToday">Share with each other</button>
@@ -414,6 +414,7 @@
           <section class="side-card question-card">
             <div class="section-label"><span class="pill">Today’s couple question</span><button class="icon-btn" id="sparkQuestion" aria-label="Refresh question">↻</button></div>
             <div class="question-text" id="questionText"></div>
+            <label class="smile-input" style="margin-top:16px; background:rgba(255,255,255,.54)"><span class="number-dot">?</span><textarea id="answer" placeholder="Answer below the question, if you feel like it…" maxlength="520"></textarea></label>
           </section>
           <section class="side-card">
             <h3>This week</h3>
@@ -465,12 +466,19 @@
       <div class="settings-grid">
         <article class="memory-card">
           <h3>Private storage</h3>
-          <p>Entries are stored in this browser only. Export if you want a backup, or import on another device.</p>
+          <p>Entries save to this browser and can sync through the lightweight backend when a sync URL is set.</p>
           <div class="actions">
             <button class="secondary" id="exportData" type="button">Export JSON</button>
             <button class="secondary" id="importData" type="button">Import JSON</button>
             <input id="importFile" type="file" accept="application/json" hidden />
           </div>
+        </article>
+        <article class="memory-card">
+          <h3>Shared sync</h3>
+          <p><span class="sync-dot" id="syncDot"></span> <span id="syncStatus">Local-only until a backend URL is added.</span></p>
+          <div class="field"><label for="apiUrl">Backend URL</label><input id="apiUrl" type="url" placeholder="https://your-backend.example.com" /></div>
+          <div class="field"><label for="circleId">Private circle name</label><input id="circleId" type="text" value="daisy-charlie" /></div>
+          <div class="actions"><button class="secondary" id="saveSync" type="button">Save sync settings</button><button class="secondary" id="syncNow" type="button">Sync now</button></div>
         </article>
         <article class="memory-card">
           <h3>Home Screen</h3>
@@ -497,7 +505,7 @@
     const people = ['Daisy', 'Charlie'];
     const questions = [
       'What did your partner do recently that you appreciated but maybe didn’t say out loud?',
-      'What tiny moment with each other would you replay from today?',
+      'What small moment with each other would you replay from today?',
       'What is one thing your partner handled well this week?',
       'What made you feel like a team lately?',
       'What is something your partner does that makes the house feel warmer?',
@@ -512,7 +520,7 @@
       'What are you grateful your partner brings to the kids?',
       'What is one thing you want to thank your partner for before sleeping?'
     ];
-    const defaultState = { activePerson: 'Daisy', mood: '', entries: {}, settings: { reminderTime: '20:30', questionStyle: 'sometimes' }, questionIndexByDate: {} };
+    const defaultState = { activePerson: 'Daisy', mood: '', entries: {}, settings: { reminderTime: '20:30', questionStyle: 'sometimes', apiUrl: '', circleId: 'daisy-charlie' }, questionIndexByDate: {} };
     let state = load();
     let reminderTimer = null;
 
@@ -524,6 +532,15 @@
       catch { return structuredClone(defaultState); }
     }
     function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function apiBase() { return (state.settings.apiUrl || '').replace(/\/$/, ''); }
+    function circleId() { return (state.settings.circleId || 'daisy-charlie').trim() || 'daisy-charlie'; }
+    function updateSyncStatus(message) {
+      const dot = $('#syncDot'); const status = $('#syncStatus');
+      if (!dot || !status) return;
+      const on = Boolean(apiBase());
+      dot.className = 'sync-dot' + (on ? ' on' : '');
+      status.textContent = message || (on ? 'Shared sync is configured.' : 'Local-only until a backend URL is added.');
+    }
     function toast(msg) { const el = $('#toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 2300); }
     function formatDate(key) { return new Date(key + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); }
     function entryKey(person, date=todayKey()) { return `${date}::${person}`; }
@@ -549,6 +566,9 @@
       $('#questionText').textContent = questionForDate();
       $('#reminderTime').value = state.settings.reminderTime || '20:30';
       $('#questionStyle').value = state.settings.questionStyle || 'sometimes';
+      $('#apiUrl').value = state.settings.apiUrl || '';
+      $('#circleId').value = state.settings.circleId || 'daisy-charlie';
+      updateSyncStatus();
       renderForm(); renderStats(); renderEntries(); renderMemories();
     }
 
@@ -614,7 +634,40 @@
       if (smiles.filter(Boolean).length < 1) return toast('Give me at least one smile. We are not monsters.');
       const date = todayKey();
       state.entries[entryKey(state.activePerson, date)] = { person: state.activePerson, date, smiles, mood: state.mood, question: questionForDate(date), answer: $('#answer').value.trim(), savedAt: new Date().toISOString() };
-      save(); render(); toast('Saved. Tiny joy successfully captured.');
+      save(); render(); toast('Saved. Small joy successfully captured.');
+      syncEntry(state.entries[entryKey(state.activePerson, date)]);
+    }
+
+    async function syncEntry(entry) {
+      if (!apiBase()) return;
+      try {
+        const response = await fetch(`${apiBase()}/api/entries`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ circleId: circleId(), entry })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        updateSyncStatus('Synced just now.');
+      } catch (err) {
+        const dot = $('#syncDot'); if (dot) dot.className = 'sync-dot err';
+        updateSyncStatus('Could not sync. Saved locally.');
+      }
+    }
+
+    async function syncAll() {
+      if (!apiBase()) { updateSyncStatus('Add a backend URL first.'); return toast('Add a backend URL first.'); }
+      try {
+        const localEntries = Object.values(state.entries);
+        await Promise.all(localEntries.map(syncEntry));
+        const response = await fetch(`${apiBase()}/api/entries?circleId=${encodeURIComponent(circleId())}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        (data.entries || []).forEach(entry => { if (entry && entry.date && entry.person) state.entries[entryKey(entry.person, entry.date)] = entry; });
+        save(); render(); updateSyncStatus('Synced shared entries.'); toast('Shared entries synced.');
+      } catch (err) {
+        const dot = $('#syncDot'); if (dot) dot.className = 'sync-dot err';
+        updateSyncStatus('Sync failed. Check the backend URL.'); toast('Sync failed. Saved locally.');
+      }
     }
 
     function shareToday() {
@@ -658,6 +711,8 @@
     $('#enableReminder').addEventListener('click', setupReminder);
     $('#reminderTime').addEventListener('change', e => { state.settings.reminderTime = e.target.value; save(); scheduleReminder(); });
     $('#questionStyle').addEventListener('change', e => { state.settings.questionStyle = e.target.value; delete state.questionIndexByDate[todayKey()]; save(); render(); });
+    $('#saveSync').addEventListener('click', () => { state.settings.apiUrl = $('#apiUrl').value.trim(); state.settings.circleId = $('#circleId').value.trim() || 'daisy-charlie'; save(); updateSyncStatus(); toast('Sync settings saved.'); syncAll(); });
+    $('#syncNow').addEventListener('click', syncAll);
     $('#randomMemory').addEventListener('click', renderMemories);
     $('#exportData').addEventListener('click', exportData);
     $('#importData').addEventListener('click', () => $('#importFile').click());
@@ -672,7 +727,7 @@
     $$('.tab, .bottom-nav button').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-    render(); scheduleReminder();
+    render(); scheduleReminder(); if (apiBase()) syncAll();
   </script>
 </body>
 </html>

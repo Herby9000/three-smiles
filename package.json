@@ -1,0 +1,14 @@
+{
+  "name": "three-smiles",
+  "version": "1.1.0",
+  "private": true,
+  "description": "A private daily joy habit site for Daisy and Charlie, with an optional lightweight shared-entry backend.",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check sw.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
