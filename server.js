@@ -238,6 +238,8 @@ function createServer(options = {}) {
     const publicAssetPaths = new Set([
       '/login.html',
       '/site.webmanifest',
+      '/sw.js',
+      '/sw-v2.js',
       '/assets/icon.svg',
       '/assets/apple-touch-icon.png',
       '/assets/icon-192.png',
