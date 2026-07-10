@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js && node --check sw.js"
+    "check": "node --check server.js && node --check sw.js && node tests/test-login-gate.js",
+    "test": "node tests/test-login-gate.js"
   },
   "engines": {
     "node": ">=18"

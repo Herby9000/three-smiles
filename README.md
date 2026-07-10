@@ -8,6 +8,8 @@ The site can run as static files on GitHub Pages. Entries are saved in the brows
 
 Live site: https://herby9000.github.io/three-smiles/
 
+The public GitHub Pages version now shows a Daisy/Charlie passcode gate before the app. This is useful for casual privacy on a shared URL, but it is still client-side protection because GitHub Pages cannot enforce server-side login. Do not enable shared sync for sensitive entries until the backend is deployed with real server-side authentication.
+
 ## Optional shared backend
 
 The lightweight backend is a dependency-free Node server that:

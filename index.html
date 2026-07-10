@@ -361,6 +361,46 @@
     .bottom-nav button.active { background: var(--ink); color: #fffaf6; font-weight: 850; }
 
     .empty { color: var(--muted); border: 1px dashed var(--line); border-radius: 22px; padding: 24px; text-align: center; background: rgba(255,255,255,.52); }
+
+    .login-gate {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: max(24px, env(safe-area-inset-top)) 18px max(24px, env(safe-area-inset-bottom));
+    }
+    .login-card {
+      width: min(100%, 460px);
+      background: color-mix(in srgb, var(--paper) 92%, transparent);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 7vw, 42px);
+    }
+    .login-card .logo { margin-bottom: 18px; }
+    .login-card h1 {
+      margin: 0 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(34px, 10vw, 52px);
+      line-height: .96;
+      letter-spacing: -.045em;
+      font-weight: 500;
+    }
+    .login-card p { color: var(--muted); line-height: 1.5; margin: 0 0 22px; }
+    .login-form { display: grid; gap: 14px; }
+    .login-form label, .field label { color: var(--muted); font-size: 13px; font-weight: 800; }
+    .login-form select, .login-form input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      min-height: 52px;
+      padding: 0 14px;
+      background: rgba(255,255,255,.74);
+      color: var(--ink);
+      margin-top: 6px;
+    }
+    .login-error { min-height: 20px; color: #9d2d2d; font-size: 13px; margin: 0; }
+    .logout-button { min-height: 40px; padding: 0 12px; font-size: 13px; }
+    [hidden] { display: none !important; }
     .danger { color: #9d2d2d; }
     .sync-dot { width: 9px; height: 9px; border-radius: 999px; background: var(--muted); display: inline-block; }
     .sync-dot.on { background: var(--sage); }
@@ -390,7 +430,31 @@
   </style>
 </head>
 <body>
-  <main class="app-shell">
+
+  <section class="login-gate" id="loginGate" aria-label="Three Smiles login">
+    <article class="login-card">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" role="img"><path d="M32 55s-2.1-1.7-5.2-4.2C15.6 41.8 8 35.7 8 25.7 8 18.6 13.3 13 20.2 13c4 0 7.9 2 11.8 6 3.9-4 7.8-6 11.8-6C50.7 13 56 18.6 56 25.7c0 10-7.6 16.1-18.8 25.1C34.1 53.3 32 55 32 55Z" fill="#fffaf6"/><circle cx="23" cy="27" r="3" fill="#df7f50"/><circle cx="41" cy="27" r="3" fill="#df7f50"/><path d="M23 36c2.2 2.4 5.1 3.6 9 3.6s6.8-1.2 9-3.6" stroke="#df7f50" stroke-width="4" stroke-linecap="round"/></svg>
+      </div>
+      <h1>Three Smiles</h1>
+      <p>Private daily check-ins for Daisy and Charlie only. Choose your name and enter your passcode to unlock this browser session.</p>
+      <form class="login-form" id="loginForm">
+        <label for="loginPerson">Who is checking in?
+          <select id="loginPerson" autocomplete="username">
+            <option value="Daisy">Daisy</option>
+            <option value="Charlie">Charlie</option>
+          </select>
+        </label>
+        <label for="loginPasscode">Passcode
+          <input id="loginPasscode" type="password" autocomplete="current-password" inputmode="text" required />
+        </label>
+        <button class="primary" type="submit">Unlock Three Smiles</button>
+        <p class="login-error" id="loginError" role="alert"></p>
+      </form>
+    </article>
+  </section>
+
+  <main class="app-shell" id="appShell" hidden>
     <header class="topbar">
       <div class="brand" aria-label="Three Smiles home">
         <div class="logo" aria-hidden="true">
@@ -404,6 +468,7 @@
       <div class="person-switch" aria-label="Choose who is writing">
         <button data-person="Daisy" class="active">Daisy</button>
         <button data-person="Charlie">Charlie</button>
+        <button class="secondary logout-button" id="logoutButton" type="button">Lock</button>
       </div>
     </header>
 
@@ -539,6 +604,12 @@
 
   <script>
     const STORAGE_KEY = 'three-smiles-v1';
+
+    const AUTH_SESSION_KEY = 'three-smiles-auth-v1';
+    const AUTH_USERS = {
+      Charlie: '17bec99aa761d68f52416d9537a6c25f16249cca27d414a8657f2f4ea6c6ca26',
+      Daisy: 'ba682e70a032b353c187ff796367cd7e427e786c06d0101bf3c34e718e353abd'
+    };
     const todayKey = () => new Date().toISOString().slice(0, 10);
     const people = ['Daisy', 'Charlie'];
     const reflections = [
@@ -586,6 +657,54 @@
 
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+
+    async function sha256Hex(value) {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function setUnlocked(person) {
+      sessionStorage.setItem(AUTH_SESSION_KEY, person);
+      $('#loginGate').hidden = true;
+      $('#appShell').hidden = false;
+      state.activePerson = person;
+      save();
+      render();
+      scheduleReminder();
+      if (apiBase()) syncAll();
+    }
+
+    async function handleLogin(evt) {
+      evt.preventDefault();
+      const person = $('#loginPerson').value;
+      const passcode = $('#loginPasscode').value;
+      const expected = AUTH_USERS[person];
+      if (!expected || await sha256Hex(passcode) !== expected) {
+        $('#loginError').textContent = 'That passcode did not work. Try again.';
+        $('#loginPasscode').value = '';
+        $('#loginPasscode').focus();
+        return;
+      }
+      $('#loginError').textContent = '';
+      $('#loginPasscode').value = '';
+      setUnlocked(person);
+    }
+
+    function lockApp() {
+      sessionStorage.removeItem(AUTH_SESSION_KEY);
+      $('#appShell').hidden = true;
+      $('#loginGate').hidden = false;
+      clearTimeout(reminderTimer);
+      $('#loginPasscode').focus();
+    }
+
+    function restoreLogin() {
+      const person = sessionStorage.getItem(AUTH_SESSION_KEY);
+      if (AUTH_USERS[person]) setUnlocked(person);
+      else $('#loginPasscode').focus();
+    }
 
     function load() {
       try { return { ...structuredClone(defaultState), ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') }; }
@@ -777,6 +896,8 @@
 
     $$('.person-switch button').forEach(btn => btn.addEventListener('click', () => { state.activePerson = btn.dataset.person; state.mood=''; save(); render(); }));
     $$('.mood-btn').forEach(btn => btn.addEventListener('click', () => { state.mood = btn.dataset.mood; $$('.mood-btn').forEach(b=>b.classList.toggle('active', b===btn)); }));
+    $('#loginForm').addEventListener('submit', handleLogin);
+    $('#logoutButton').addEventListener('click', lockApp);
     $('#entryForm').addEventListener('submit', saveToday);
     $$('.share-today').forEach(btn => btn.addEventListener('click', shareToday));
     $('#sparkQuestion').addEventListener('click', randomizeQuestion);
@@ -799,7 +920,7 @@
     $$('.tab, .bottom-nav button').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-    render(); scheduleReminder(); if (apiBase()) syncAll();
+    restoreLogin();
   </script>
 </body>
 </html>
