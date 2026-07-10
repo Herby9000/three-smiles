@@ -465,9 +465,8 @@
           <p>Daisy + Charlie’s small daily joy habit</p>
         </div>
       </div>
-      <div class="person-switch" aria-label="Choose who is writing">
-        <button data-person="Daisy" class="active">Daisy</button>
-        <button data-person="Charlie">Charlie</button>
+      <div class="person-switch" aria-label="Current writer">
+        <span class="pill" id="currentWriter">Writing as Daisy</span>
         <button class="secondary logout-button" id="logoutButton" type="button">Lock</button>
       </div>
     </header>
@@ -747,7 +746,7 @@
     function render() {
       $('#todayDate').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
       $('#dailyReflection').textContent = reflectionForDate();
-      $$('.person-switch button').forEach(btn => btn.classList.toggle('active', btn.dataset.person === state.activePerson));
+      $('#currentWriter').textContent = `Writing as ${state.activePerson}`;
       $('#questionText').textContent = questionForDate();
       $('#reminderTime').value = state.settings.reminderTime || '20:30';
       $('#questionStyle').value = state.settings.questionStyle || 'sometimes';
@@ -894,7 +893,6 @@
       reader.readAsText(file);
     }
 
-    $$('.person-switch button').forEach(btn => btn.addEventListener('click', () => { state.activePerson = btn.dataset.person; state.mood=''; save(); render(); }));
     $$('.mood-btn').forEach(btn => btn.addEventListener('click', () => { state.mood = btn.dataset.mood; $$('.mood-btn').forEach(b=>b.classList.toggle('active', b===btn)); }));
     $('#loginForm').addEventListener('submit', handleLogin);
     $('#logoutButton').addEventListener('click', lockApp);
