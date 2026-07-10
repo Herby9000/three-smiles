@@ -235,7 +235,15 @@ function createServer(options = {}) {
   async function serveStatic(req, res, url) {
     let pathname = decodeURIComponent(url.pathname);
     if (pathname === '/login') pathname = '/login.html';
-    const isLoginAsset = pathname === '/login.html' || pathname === '/assets/icon.svg';
+    const publicAssetPaths = new Set([
+      '/login.html',
+      '/site.webmanifest',
+      '/assets/icon.svg',
+      '/assets/apple-touch-icon.png',
+      '/assets/icon-192.png',
+      '/assets/icon-512.png'
+    ]);
+    const isLoginAsset = publicAssetPaths.has(pathname);
     if (!isLoginAsset) {
       const session = await requireSession(req, res);
       if (!session) return;

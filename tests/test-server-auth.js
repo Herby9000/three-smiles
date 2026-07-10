@@ -32,7 +32,7 @@ function cookieFrom(response) {
   return response.headers.get('set-cookie').split(';')[0];
 }
 
-test('server-side auth protects app shell and entries API', async () => {
+test('server-side auth protects app shell and entries API while public assets remain available for iOS icons', async () => {
   const app = await startTestServer();
   try {
     const appPage = await fetch(`${app.base}/`, { redirect: 'manual' });
@@ -41,6 +41,11 @@ test('server-side auth protects app shell and entries API', async () => {
 
     const entries = await fetch(`${app.base}/api/entries`);
     assert.equal(entries.status, 401);
+
+    for (const assetPath of ['/site.webmanifest', '/assets/apple-touch-icon.png', '/assets/icon-192.png', '/assets/icon-512.png']) {
+      const asset = await fetch(`${app.base}${assetPath}`, { redirect: 'manual' });
+      assert.equal(asset.status, 200, `${assetPath} should be available before login so Add to Home Screen can fetch the icon`);
+    }
   } finally {
     await app.close();
   }
