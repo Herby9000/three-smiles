@@ -76,6 +76,36 @@ test('server-side auth protects app shell and entries API while public assets re
   }
 });
 
+test('concurrent entry saves keep the data store valid and preserve every entry', async () => {
+  const app = await startTestServer();
+  try {
+    const login = await fetch(`${app.base}/api/login`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ person: 'Charlie', passcode: 'charlie-test-pass' })
+    });
+    assert.equal(login.status, 200);
+    const cookie = cookieFrom(login);
+
+    const responses = await Promise.all(Array.from({ length: 12 }, (_, index) => fetch(`${app.base}/api/entries`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', cookie },
+      body: JSON.stringify({ entry: {
+        person: 'Charlie',
+        date: `2026-07-${String(index + 1).padStart(2, '0')}`,
+        smiles: [`Concurrent smile ${index + 1}`]
+      } })
+    })));
+    assert.deepEqual(responses.map(response => response.status), Array(12).fill(200));
+
+    const storedText = await fs.readFile(path.join(app.temp, 'entries.json'), 'utf8');
+    const stored = JSON.parse(storedText);
+    assert.equal(Object.keys(stored.entries).length, 12);
+  } finally {
+    await app.close();
+  }
+});
+
 test('Charlie and Daisy can log in on different sessions and share history', async () => {
   const app = await startTestServer();
   try {

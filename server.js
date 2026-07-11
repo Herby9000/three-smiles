@@ -182,7 +182,19 @@ function createServer(options = {}) {
   const authFile = options.authFile || DEFAULT_AUTH_FILE;
   const allowedOrigin = options.allowedOrigin ?? process.env.ALLOWED_ORIGIN;
   let authPromise;
+  let storeWriteQueue = Promise.resolve();
   const getAuth = () => authPromise ||= loadAuth(authFile);
+
+  function saveEntry(entry) {
+    const operation = storeWriteQueue.then(async () => {
+      const store = await readStore(dataFile);
+      store.entries ||= {};
+      store.entries[`${entry.date}::${entry.person}`] = entry;
+      await writeStore(dataDir, dataFile, store);
+    });
+    storeWriteQueue = operation.catch(() => {});
+    return operation;
+  }
 
   async function handleLogin(req, res) {
     const auth = await getAuth();
@@ -227,10 +239,7 @@ function createServer(options = {}) {
     if (url.pathname === '/api/entries' && req.method === 'POST') {
       const payload = await parseBody(req);
       const entry = cleanEntry(payload.entry, session);
-      const store = await readStore(dataFile);
-      store.entries ||= {};
-      store.entries[`${entry.date}::${entry.person}`] = entry;
-      await writeStore(dataDir, dataFile, store);
+      await saveEntry(entry);
       return send(res, 200, { ok: true, entry }, corsHeaders(req, allowedOrigin));
     }
 
