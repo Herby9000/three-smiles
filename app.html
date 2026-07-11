@@ -578,7 +578,13 @@
 
   <script>
     const STORAGE_KEY = 'three-smiles-v1';
-    const todayKey = () => new Date().toISOString().slice(0, 10);
+    const dateKey = (date = new Date()) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    const todayKey = () => dateKey();
     const people = ['Daisy', 'Charlie'];
     const reflections = [
       'The ordinary moments are not interruptions to life; they are the life.',
@@ -742,7 +748,7 @@
       return [...map.entries()].sort((a,b)=>b[1]-a[1]);
     }
 
-    function lastNDates(n) { const out=[]; const d=new Date(); for(let i=0;i<n;i++){ const x=new Date(d); x.setDate(d.getDate()-i); out.push(x.toISOString().slice(0,10)); } return out; }
+    function lastNDates(n) { const out=[]; const d=new Date(); for(let i=0;i<n;i++){ const x=new Date(d); x.setDate(d.getDate()-i); out.push(dateKey(x)); } return out; }
     function streakFor(person) { let count=0; for(const d of lastNDates(365)){ if(getEntry(person,d)) count++; else break; } return count; }
     function escapeHtml(s='') { return s.replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch])); }
 
