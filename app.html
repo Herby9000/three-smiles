@@ -479,7 +479,6 @@
             </div>
             <div class="actions">
               <button class="primary" type="submit">Save today</button>
-              <button class="secondary share-today" type="button">Share with each other</button>
             </div>
 
           </form>
@@ -492,7 +491,6 @@
             <label class="smile-input" style="margin-top:16px; background:rgba(255,255,255,.54)"><span class="number-dot">?</span><textarea id="answer" placeholder="Answer below the question, if you feel like it…" maxlength="520"></textarea></label>
             <div class="actions">
               <button class="primary" type="submit" form="entryForm">Save today</button>
-              <button class="secondary share-today" type="button">Share with each other</button>
             </div>
           </section>
           <section class="side-card">
@@ -788,20 +786,6 @@
       }
     }
 
-    function shareToday() {
-      let entry = getEntry();
-      if (!entry) {
-        const smiles = [$('#smile1').value.trim(), $('#smile2').value.trim(), $('#smile3').value.trim()];
-        if (smiles.filter(Boolean).length < 1) return toast('Write at least one smile first.');
-        const date = todayKey();
-        entry = { person: state.activePerson, date, smiles, mood: state.mood, question: questionForDate(date), answer: $('#answer').value.trim(), savedAt: new Date().toISOString() };
-        state.entries[entryKey(state.activePerson, date)] = entry;
-        save(); render(); syncEntry(entry);
-      }
-      const text = `${entry.person}'s Three Smiles — ${formatDate(entry.date)}\n\n1. ${entry.smiles[0] || '—'}\n2. ${entry.smiles[1] || '—'}\n3. ${entry.smiles[2] || '—'}${entry.mood ? `\n\nMood: ${entry.mood}` : ''}${entry.answer ? `\n\nQuestion: ${entry.question}\n${entry.answer}` : ''}`;
-      if (navigator.share) navigator.share({ title: 'Three Smiles', text }).catch(()=>{});
-      else navigator.clipboard.writeText(text).then(()=>toast('Copied share text.')).catch(()=>toast('Saved. Copy/share is not allowed in this browser.'));
-    }
 
     function randomizeQuestion() { state.questionIndexByDate[todayKey()] = Math.floor(Math.random() * questions.length); save(); render(); }
 
@@ -830,7 +814,6 @@
     $$('.mood-btn').forEach(btn => btn.addEventListener('click', () => { state.mood = btn.dataset.mood; $$('.mood-btn').forEach(b=>b.classList.toggle('active', b===btn)); }));
     $('#logoutButton').addEventListener('click', logout);
     $('#entryForm').addEventListener('submit', saveToday);
-    $$('.share-today').forEach(btn => btn.addEventListener('click', shareToday));
     $('#sparkQuestion').addEventListener('click', randomizeQuestion);
     $('#enableReminder').addEventListener('click', setupReminder);
     $('#reminderTime').addEventListener('change', e => { state.settings.reminderTime = e.target.value; save(); scheduleReminder(); });
