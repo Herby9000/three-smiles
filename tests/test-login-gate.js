@@ -20,6 +20,9 @@ assert.doesNotMatch(appHtml, /localEntries/, 'startup sync does not re-upload st
 assert.doesNotMatch(appHtml, /toISOString\(\)\.slice\(0, 10\)/, 'calendar dates are not derived from UTC');
 assert.match(appHtml, /date\.getFullYear\(\)/, 'calendar dates use the device-local year, month, and day');
 assert.match(appHtml, /out\.push\(dateKey\(x\)\)/, 'streak dates use the same local calendar date helper');
+assert.match(appHtml, /currentWeekDates\(\)/, 'weekly streak display uses a fixed calendar week');
+assert.match(appHtml, /today\.getDay\(\) \+ 6\) % 7/, 'weekly streak display starts on Monday');
+for (const mood of ['Positive', 'Motivated', 'Energized']) assert.match(appHtml, new RegExp(`data-mood="${mood}"`), `includes the ${mood} feeling`);
 assert.doesNotMatch(appHtml, /Share with each other|share-today|shareToday|navigator\.share|navigator\.clipboard/, 'app has no external sharing controls or native share behavior');
 assert.equal((appHtml.match(/>Save today<\/button>/g) || []).length, 2, 'both in-app Save today controls remain available');
 assert.match(appHtml, /navigator\.serviceWorker\.register\('sw-v2\.js'\)/, 'app registers the cache-busting v2 service worker');

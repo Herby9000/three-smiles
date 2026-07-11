@@ -476,6 +476,9 @@
               <button type="button" class="mood-btn" data-mood="Tired">🌙 Tired</button>
               <button type="button" class="mood-btn" data-mood="Loved">💛 Loved</button>
               <button type="button" class="mood-btn" data-mood="Frazzled">🫠 Frazzled</button>
+              <button type="button" class="mood-btn" data-mood="Positive">✨ Positive</button>
+              <button type="button" class="mood-btn" data-mood="Motivated">🚀 Motivated</button>
+              <button type="button" class="mood-btn" data-mood="Energized">⚡ Energized</button>
             </div>
             <div class="actions">
               <button class="primary" type="submit">Save today</button>
@@ -713,7 +716,7 @@
       $('#countMe').textContent = entries.filter(e => e.person === me).length;
       $('#countPartner').textContent = entries.filter(e => e.person === partner).length;
       $('#currentStreak').textContent = streakFor(me);
-      const days = lastNDates(7).reverse();
+      const days = currentWeekDates();
       $('#streakGrid').innerHTML = days.map(d => `<div class="day-dot ${getEntry(me,d)?'done':''}" title="${formatDate(d)}">${new Date(d+'T12:00:00').toLocaleDateString(undefined,{weekday:'narrow'})}</div>`).join('');
       const bothToday = people.every(p => getEntry(p));
       $('#weekCopy').textContent = bothToday ? 'Both of you checked in today. Mildly adorable.' : `${me}, your little joy ledger is waiting.`;
@@ -749,6 +752,16 @@
     }
 
     function lastNDates(n) { const out=[]; const d=new Date(); for(let i=0;i<n;i++){ const x=new Date(d); x.setDate(d.getDate()-i); out.push(dateKey(x)); } return out; }
+    function currentWeekDates() {
+      const today = new Date();
+      const monday = new Date(today);
+      monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+      return Array.from({length: 7}, (_, i) => {
+        const day = new Date(monday);
+        day.setDate(monday.getDate() + i);
+        return dateKey(day);
+      });
+    }
     function streakFor(person) { let count=0; for(const d of lastNDates(365)){ if(getEntry(person,d)) count++; else break; } return count; }
     function escapeHtml(s='') { return s.replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch])); }
 
