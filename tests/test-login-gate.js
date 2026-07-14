@@ -25,4 +25,12 @@ assert.match(appHtml, /today\.getDay\(\) \+ 6\) % 7/, 'weekly streak display sta
 for (const mood of ['Positive', 'Motivated', 'Energized']) assert.match(appHtml, new RegExp(`data-mood="${mood}"`), `includes the ${mood} feeling`);
 assert.doesNotMatch(appHtml, /Share with each other|share-today|shareToday|navigator\.share|navigator\.clipboard/, 'app has no external sharing controls or native share behavior');
 assert.equal((appHtml.match(/>Save today<\/button>/g) || []).length, 2, 'both in-app Save today controls remain available');
+assert.match(appHtml, /data-entry-day="today"/, 'entry form offers today as a date choice');
+assert.match(appHtml, /data-entry-day="yesterday"/, 'entry form offers yesterday as a date choice');
+assert.match(appHtml, /selectedEntryDate = todayKey\(\)/, 'today is the default entry date');
+assert.match(appHtml, /selected\.setDate\(selected\.getDate\(\) - 1\)/, 'yesterday uses local calendar date arithmetic');
+assert.match(appHtml, /const date = selectedEntryDate;/, 'saving uses the selected entry date');
+assert.match(appHtml, /getEntry\(state\.activePerson, selectedEntryDate\)/, 'switching dates loads the selected day’s existing entry');
+assert.match(appHtml, /questionForDate\(selectedEntryDate\)/, 'the couple question follows the selected entry date');
+assert.match(appHtml, /Save \$\{entryDayLabel\(\)\.toLowerCase\(\)\}/, 'save buttons identify the selected day');
 assert.match(appHtml, /navigator\.serviceWorker\.register\('sw-v2\.js'\)/, 'app registers the cache-busting v2 service worker');

@@ -153,6 +153,28 @@
       font-size: 13px;
       white-space: nowrap;
     }
+    .entry-day-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.62);
+    }
+    .entry-day-switch button {
+      min-height: 38px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 750;
+    }
+    .entry-day-switch button.active { background: var(--ink); color: #fffaf6; }
+    .entry-day-switch button:focus-visible { outline: none; box-shadow: var(--focus); }
+    .entry-date-label { margin: 16px 0 -10px; color: var(--muted); font-size: 14px; font-weight: 750; }
+    .today-card .date-row { flex-wrap: wrap; }
     .hero h2 {
       font-family: Georgia, "Times New Roman", serif;
       font-size: clamp(32px, 7vw, 58px);
@@ -453,14 +475,18 @@
       <div class="hero">
         <section class="today-card">
           <div class="date-row">
-            <span class="pill" id="todayDate">Today</span>
+            <div class="entry-day-switch" role="group" aria-label="Choose entry day">
+              <button type="button" class="active" data-entry-day="today" aria-pressed="true">Today</button>
+              <button type="button" data-entry-day="yesterday" aria-pressed="false">Yesterday</button>
+            </div>
             <span class="pill" id="saveState">Shared sync optional</span>
           </div>
+          <p class="entry-date-label" id="todayDate">Today</p>
           <div class="daily-reflection" aria-label="Daily reflection">
             <span>Daily reflection</span>
             <p id="dailyReflection">Loading today’s reflection…</p>
           </div>
-          <h2>What made today good?</h2>
+          <h2 id="entryHeading">What made today good?</h2>
           <p class="lead">Write down three little moments that made you smile, brought joy, or helped the day feel great. Small counts. Especially small.</p>
 
           <form class="entry-form" id="entryForm">
@@ -469,7 +495,7 @@
             <label class="smile-input"><span class="number-dot">2</span><textarea id="smile2" placeholder="Something that brought joy…" maxlength="360"></textarea></label>
             <label class="smile-input"><span class="number-dot">3</span><textarea id="smile3" placeholder="Something that made the day great…" maxlength="360"></textarea></label>
 
-            <div class="prompt-line">Mood today</div>
+            <div class="prompt-line" id="moodPrompt">Mood today</div>
             <div class="mood-row" role="radiogroup" aria-label="Mood">
               <button type="button" class="mood-btn" data-mood="Light">☀️ Light</button>
               <button type="button" class="mood-btn" data-mood="Grateful">🌿 Grateful</button>
@@ -481,7 +507,7 @@
               <button type="button" class="mood-btn" data-mood="Energized">⚡ Energized</button>
             </div>
             <div class="actions">
-              <button class="primary" type="submit">Save today</button>
+              <button class="primary save-entry-button" type="submit">Save today</button>
             </div>
 
           </form>
@@ -489,11 +515,11 @@
 
         <aside class="side-stack">
           <section class="side-card question-card">
-            <div class="section-label"><span class="pill">Today’s couple question</span><button class="icon-btn" id="sparkQuestion" aria-label="Refresh question">↻</button></div>
+            <div class="section-label"><span class="pill" id="questionDayLabel">Today’s couple question</span><button class="icon-btn" id="sparkQuestion" aria-label="Refresh question">↻</button></div>
             <div class="question-text" id="questionText"></div>
             <label class="smile-input" style="margin-top:16px; background:rgba(255,255,255,.54)"><span class="number-dot">?</span><textarea id="answer" placeholder="Answer below the question, if you feel like it…" maxlength="520"></textarea></label>
             <div class="actions">
-              <button class="primary" type="submit" form="entryForm">Save today</button>
+              <button class="primary save-entry-button" type="submit" form="entryForm">Save today</button>
             </div>
           </section>
           <section class="side-card">
@@ -630,6 +656,7 @@
     ];
     const defaultState = { activePerson: 'Daisy', mood: '', entries: {}, settings: { reminderTime: '20:30', questionStyle: 'sometimes' }, questionIndexByDate: {} };
     let state = load();
+    let selectedEntryDate = todayKey();
     let reminderTimer = null;
 
     const $ = (sel) => document.querySelector(sel);
@@ -688,11 +715,31 @@
       return questions[state.questionIndexByDate[date] % questions.length];
     }
 
+    function entryDayLabel() { return selectedEntryDate === todayKey() ? 'Today' : 'Yesterday'; }
+
+    function selectEntryDay(day) {
+      const selected = new Date();
+      if (day === 'yesterday') selected.setDate(selected.getDate() - 1);
+      selectedEntryDate = dateKey(selected);
+      state.mood = '';
+      render();
+    }
+
     function render() {
-      $('#todayDate').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-      $('#dailyReflection').textContent = reflectionForDate();
+      const dayLabel = entryDayLabel();
+      $('#todayDate').textContent = `${dayLabel} · ${formatDate(selectedEntryDate)}`;
+      $('#dailyReflection').textContent = reflectionForDate(selectedEntryDate);
+      $('#entryHeading').textContent = `What made ${dayLabel.toLowerCase()} good?`;
+      $('#moodPrompt').textContent = `Mood ${dayLabel.toLowerCase()}`;
       $('#currentWriter').textContent = `Writing as ${state.activePerson}`;
-      $('#questionText').textContent = questionForDate();
+      $('#questionDayLabel').textContent = `${dayLabel}’s couple question`;
+      $('#questionText').textContent = questionForDate(selectedEntryDate);
+      $$('.entry-day-switch button').forEach(btn => {
+        const active = btn.dataset.entryDay === dayLabel.toLowerCase();
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', String(active));
+      });
+      $$('.save-entry-button').forEach(btn => { btn.textContent = `Save ${entryDayLabel().toLowerCase()}`; });
       $('#reminderTime').value = state.settings.reminderTime || '20:30';
       $('#questionStyle').value = state.settings.questionStyle || 'sometimes';
       updateSyncStatus();
@@ -700,14 +747,14 @@
     }
 
     function renderForm() {
-      const entry = getEntry() || {};
+      const entry = getEntry(state.activePerson, selectedEntryDate) || {};
       $('#smile1').value = entry.smiles?.[0] || '';
       $('#smile2').value = entry.smiles?.[1] || '';
       $('#smile3').value = entry.smiles?.[2] || '';
       $('#answer').value = entry.answer || '';
-      state.mood = entry.mood || state.mood || '';
+      state.mood = entry.mood || '';
       $$('.mood-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mood === state.mood));
-      $('#saveState').textContent = entry.savedAt ? `Saved for ${state.activePerson}` : `Writing as ${state.activePerson}`;
+      $('#saveState').textContent = entry.savedAt ? `Saved ${entryDayLabel().toLowerCase()} for ${state.activePerson}` : `Writing as ${state.activePerson}`;
     }
 
     function renderStats() {
@@ -769,9 +816,9 @@
       evt.preventDefault();
       const smiles = [$('#smile1').value.trim(), $('#smile2').value.trim(), $('#smile3').value.trim()];
       if (smiles.filter(Boolean).length < 1) return toast('Give me at least one smile. We are not monsters.');
-      const date = todayKey();
+      const date = selectedEntryDate;
       state.entries[entryKey(state.activePerson, date)] = { person: state.activePerson, date, smiles, mood: state.mood, question: questionForDate(date), answer: $('#answer').value.trim(), savedAt: new Date().toISOString() };
-      save(); render(); toast('Saved. Small joy successfully captured.');
+      save(); render(); toast(`${entryDayLabel()} saved. Small joy successfully captured.`);
       syncEntry(state.entries[entryKey(state.activePerson, date)]);
     }
 
@@ -806,7 +853,7 @@
     }
 
 
-    function randomizeQuestion() { state.questionIndexByDate[todayKey()] = Math.floor(Math.random() * questions.length); save(); render(); }
+    function randomizeQuestion() { state.questionIndexByDate[selectedEntryDate] = Math.floor(Math.random() * questions.length); save(); render(); }
 
     function setupReminder() {
       state.settings.reminderTime = $('#reminderTime').value || '20:30'; save();
@@ -830,13 +877,14 @@
       reader.readAsText(file);
     }
 
+    $$('.entry-day-switch button').forEach(btn => btn.addEventListener('click', () => selectEntryDay(btn.dataset.entryDay)));
     $$('.mood-btn').forEach(btn => btn.addEventListener('click', () => { state.mood = btn.dataset.mood; $$('.mood-btn').forEach(b=>b.classList.toggle('active', b===btn)); }));
     $('#logoutButton').addEventListener('click', logout);
     $('#entryForm').addEventListener('submit', saveToday);
     $('#sparkQuestion').addEventListener('click', randomizeQuestion);
     $('#enableReminder').addEventListener('click', setupReminder);
     $('#reminderTime').addEventListener('change', e => { state.settings.reminderTime = e.target.value; save(); scheduleReminder(); });
-    $('#questionStyle').addEventListener('change', e => { state.settings.questionStyle = e.target.value; delete state.questionIndexByDate[todayKey()]; save(); render(); });
+    $('#questionStyle').addEventListener('change', e => { state.settings.questionStyle = e.target.value; delete state.questionIndexByDate[selectedEntryDate]; save(); render(); });
     $('#syncNow').addEventListener('click', syncAll);
     $('#randomMemory').addEventListener('click', renderMemories);
     $('#exportData').addEventListener('click', exportData);
