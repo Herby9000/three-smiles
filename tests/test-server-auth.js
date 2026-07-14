@@ -60,9 +60,10 @@ test('server-side auth protects app shell and entries API while public assets re
     const portfolioApp = await requestWithHost(app.base, '/app.html', 'herbyprojects.com');
     assert.equal(portfolioApp.status, 404);
 
-    const portfolioRedirect = await requestWithHost(app.base, '/projects/three-smiles', 'herbyprojects.com');
-    assert.equal(portfolioRedirect.status, 302);
-    assert.equal(portfolioRedirect.headers.location, 'https://three-smiles.herbyprojects.com');
+    const portfolioShowcase = await requestWithHost(app.base, '/projects/three-smiles', 'herbyprojects.com');
+    assert.equal(portfolioShowcase.status, 200);
+    assert.match(portfolioShowcase.text, /data-page="three-smiles-showcase"/);
+    assert.match(portfolioShowcase.text, /Private by design/);
 
     const entries = await fetch(`${app.base}/api/entries`);
     assert.equal(entries.status, 401);

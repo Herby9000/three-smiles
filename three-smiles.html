@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" data-page="three-smiles-showcase">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Three Smiles — A small daily ritual for two</title>
+  <meta name="description" content="Three Smiles is a private daily ritual for two people to notice the good, stay connected, and build a shared memory lane." />
+  <meta name="theme-color" content="#fff8f2" />
+  <meta property="og:title" content="Three Smiles" />
+  <meta property="og:description" content="Three small moments. One better habit. A private daily ritual for two." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --ink:#2b211c;
+      --muted:#76665d;
+      --paper:#fffdfb;
+      --cream:#fff8f2;
+      --peach:#f7cdb4;
+      --coral:#db7447;
+      --coral-dark:#9b4428;
+      --honey:#f3c65b;
+      --rose:#eaa6ae;
+      --sage:#9fbea5;
+      --sky:#9fc6dc;
+      --line:rgba(83,52,35,.13);
+      --shadow:0 24px 70px rgba(87,51,30,.14);
+      --sans:ui-rounded,"SF Pro Rounded","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --serif:Iowan Old Style,"Palatino Linotype",Palatino,Georgia,serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--cream)}
+    body{margin:0;color:var(--ink);background:var(--cream);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{color:inherit}
+    button,a{-webkit-tap-highlight-color:transparent}
+    .ambient{position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(circle at 12% 4%,rgba(243,198,91,.28),transparent 28rem),radial-gradient(circle at 86% 9%,rgba(234,166,174,.26),transparent 30rem),radial-gradient(circle at 54% 88%,rgba(159,198,220,.17),transparent 34rem)}
+    .wrap{width:min(1120px,calc(100% - 36px));margin:0 auto}
+    .site-nav{position:sticky;top:0;z-index:30;border-bottom:1px solid rgba(83,52,35,.09);background:rgba(255,248,242,.78);backdrop-filter:saturate(160%) blur(20px)}
+    .nav-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:inline-flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:780;letter-spacing:-.02em}
+    .brand-mark{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:var(--ink);color:white;font-size:13px;box-shadow:0 7px 20px rgba(43,33,28,.16)}
+    .private-chip{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.7);color:var(--muted);font-size:12px;font-weight:720}
+    .lock-dot{width:7px;height:7px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 4px rgba(159,190,165,.18)}
+    .hero{min-height:calc(100vh - 68px);display:grid;grid-template-columns:minmax(0,.96fr) minmax(390px,.78fr);align-items:center;gap:clamp(38px,8vw,104px);padding:72px 0 86px}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;margin-bottom:20px;color:var(--coral-dark);font-size:12px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+    .eyebrow:before{content:"";width:28px;height:1px;background:currentColor}
+    h1{margin:0;font-family:var(--serif);font-size:clamp(58px,8.5vw,108px);font-weight:500;line-height:.88;letter-spacing:-.065em;max-width:720px}
+    .hero-copy .lede{max-width:610px;margin:28px 0 0;color:var(--muted);font-size:clamp(18px,2vw,22px);line-height:1.55;letter-spacing:-.02em}
+    .hero-copy strong{color:var(--ink)}
+    .actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:30px}
+    .btn{min-height:48px;padding:0 19px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-size:14px;font-weight:780;transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .btn.primary{background:var(--ink);color:#fffaf6;box-shadow:0 13px 30px rgba(43,33,28,.19)}
+    .btn.secondary{border:1px solid var(--line);background:rgba(255,255,255,.68);color:var(--ink)}
+    .microcopy{margin-top:18px;color:#98857a;font-size:12px;line-height:1.5}
+    .phone-stage{position:relative;display:grid;place-items:center;min-height:650px}
+    .orbit{position:absolute;border-radius:50%;filter:blur(.2px)}
+    .orbit.one{width:420px;height:420px;background:rgba(247,205,180,.62);top:70px;right:-30px}
+    .orbit.two{width:210px;height:210px;background:rgba(243,198,91,.48);bottom:22px;left:-28px}
+    .float-note{position:absolute;z-index:3;padding:12px 15px;border:1px solid rgba(83,52,35,.11);border-radius:16px;background:rgba(255,255,255,.82);backdrop-filter:blur(14px);box-shadow:0 15px 40px rgba(87,51,30,.12);font-family:var(--serif);font-size:15px;line-height:1.25;animation:drift 5s ease-in-out infinite}
+    .float-note.top{top:68px;left:-25px;transform:rotate(-4deg)}
+    .float-note.bottom{right:-38px;bottom:98px;transform:rotate(4deg);animation-delay:-2.4s}
+    @keyframes drift{50%{translate:0 -8px}}
+    .phone{position:relative;z-index:2;width:min(100%,360px);padding:10px;border-radius:48px;background:#2a211d;box-shadow:0 40px 90px rgba(67,39,24,.25),0 0 0 1px rgba(255,255,255,.32) inset;transform:rotate(1.6deg)}
+    .screen{min-height:680px;padding:22px 18px 24px;border-radius:39px;overflow:hidden;background:radial-gradient(circle at 92% 2%,rgba(243,198,91,.23),transparent 13rem),linear-gradient(180deg,#fffdfb,#fff4eb)}
+    .phone-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .app-brand{display:flex;align-items:center;gap:9px;font-weight:850;font-size:13px}
+    .app-icon{width:30px;height:30px;border-radius:11px;display:grid;place-items:center;background:conic-gradient(from 210deg,var(--rose),var(--honey),var(--sage),var(--sky),var(--rose));box-shadow:0 7px 16px rgba(164,92,57,.2)}
+    .app-icon svg{width:19px;height:19px}
+    .avatar{font-size:10px;font-weight:780;color:var(--muted);padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.72)}
+    .day-toggle{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:22px 0 12px;padding:4px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.6)}
+    .day-toggle span{padding:8px;text-align:center;border-radius:999px;color:var(--muted);font-size:11px;font-weight:800}
+    .day-toggle .active{background:var(--ink);color:white}
+    .reflection{margin:14px 0 16px;padding:13px 14px;border:1px solid rgba(155,68,40,.14);border-radius:18px;background:rgba(255,255,255,.6)}
+    .reflection small{display:block;margin-bottom:5px;color:var(--coral-dark);font-size:8px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}
+    .reflection p{margin:0;font-family:var(--serif);font-size:15px;line-height:1.25;color:#563326}
+    .screen h2{margin:18px 0 8px;font-family:var(--serif);font-size:34px;line-height:.94;letter-spacing:-.045em;font-weight:500}
+    .screen .sub{margin:0 0 16px;color:var(--muted);font-size:10px;line-height:1.45}
+    .smile-field{display:grid;grid-template-columns:28px 1fr;align-items:center;gap:9px;margin-top:9px;padding:11px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.64)}
+    .num{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:#ffe0ca;color:var(--coral-dark);font-size:10px;font-weight:900}
+    .sample{color:#5e4c43;font-size:10px;line-height:1.35}
+    .moods{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+    .mood{padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:white;color:var(--muted);font-size:9px;font-weight:750}
+    .mood.active{background:#ffe0ca;color:var(--coral-dark);border-color:#efb48f}
+    .save{width:100%;min-height:40px;border:0;border-radius:999px;background:var(--ink);color:white;font-weight:850;font-size:11px}
+    .section{padding:110px 0}
+    .section-intro{max-width:760px;margin-bottom:44px}
+    .kicker{margin-bottom:13px;color:var(--coral-dark);font-size:12px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+    h3.section-title{margin:0;font-family:var(--serif);font-size:clamp(45px,7vw,78px);font-weight:500;line-height:.95;letter-spacing:-.055em}
+    .section-intro p{max-width:620px;margin:20px 0 0;color:var(--muted);font-size:18px;line-height:1.6}
+    .ritual-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .ritual-card{position:relative;min-height:340px;padding:28px;border:1px solid var(--line);border-radius:30px;background:rgba(255,255,255,.68);overflow:hidden;box-shadow:0 10px 40px rgba(87,51,30,.06);transition:transform .25s ease,box-shadow .25s ease}
+    .ritual-card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+    .ritual-card:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-70px;bottom:-70px;background:var(--card-accent);opacity:.65}
+    .step-no{display:grid;place-items:center;width:42px;height:42px;border-radius:15px;background:var(--ink);color:white;font-family:var(--serif);font-size:20px}
+    .ritual-card h4{margin:82px 0 12px;font-family:var(--serif);font-size:31px;font-weight:500;line-height:1;letter-spacing:-.04em}
+    .ritual-card p{position:relative;z-index:1;margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+    .memory-section{padding:34px 0 120px}
+    .memory-shell{display:grid;grid-template-columns:.82fr 1.18fr;gap:34px;align-items:center;padding:clamp(30px,6vw,70px);border-radius:42px;background:#29211d;color:#fff9f4;overflow:hidden;box-shadow:0 35px 90px rgba(43,33,28,.18)}
+    .memory-shell h3{margin:0;font-family:var(--serif);font-size:clamp(44px,6vw,72px);font-weight:500;line-height:.92;letter-spacing:-.055em}
+    .memory-shell .copy{margin:22px 0 0;color:#cdbfb7;font-size:17px;line-height:1.62}
+    .timeline{display:grid;gap:12px}
+    .memory{padding:18px 20px;border:1px solid rgba(255,255,255,.11);border-radius:21px;background:rgba(255,255,255,.07);backdrop-filter:blur(10px)}
+    .memory:nth-child(2){margin-left:42px}.memory:nth-child(3){margin-left:84px}
+    .memory .date{color:#dca27e;font-size:10px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+    .memory p{margin:8px 0 0;font-family:var(--serif);font-size:18px;line-height:1.3;color:#fffaf7}
+    .privacy{padding:100px 0 120px;text-align:center}
+    .privacy-mark{width:68px;height:68px;margin:0 auto 22px;border-radius:24px;display:grid;place-items:center;background:#e9f1e8;color:#3c6545;font-size:28px;box-shadow:0 0 0 10px rgba(159,190,165,.13)}
+    .privacy h3{margin:0;font-family:var(--serif);font-size:clamp(48px,7vw,82px);font-weight:500;line-height:.94;letter-spacing:-.055em}
+    .privacy p{max-width:660px;margin:22px auto 0;color:var(--muted);font-size:18px;line-height:1.65}
+    .privacy-points{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .privacy-points span{padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.62);color:#66554b;font-size:12px;font-weight:720}
+    footer{padding:26px 0 46px;color:var(--muted);font-size:13px}
+    footer .wrap{padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    footer a{text-decoration:none;font-weight:750;color:var(--ink)}
+    @media(max-width:900px){.hero{grid-template-columns:1fr;min-height:auto;padding-top:70px}.hero-copy{text-align:center}.hero-copy .lede{margin-left:auto;margin-right:auto}.eyebrow{justify-content:center}.actions{justify-content:center}.phone-stage{min-height:670px}.ritual-grid{grid-template-columns:1fr}.ritual-card{min-height:280px}.ritual-card h4{margin-top:56px}.memory-shell{grid-template-columns:1fr}.memory:nth-child(2),.memory:nth-child(3){margin-left:0}}
+    @media(max-width:520px){.wrap{width:min(100% - 28px,1120px)}.private-chip{font-size:0;padding:0;width:34px;justify-content:center}.private-chip .lock-dot{margin:0}.hero{padding-top:54px}.hero-copy{text-align:left}.eyebrow{justify-content:flex-start}.actions{justify-content:flex-start}.phone-stage{min-height:615px;margin-top:10px}.phone{width:320px}.screen{min-height:610px;padding:18px 15px}.float-note{font-size:12px}.float-note.top{left:-3px;top:45px}.float-note.bottom{right:-4px;bottom:45px}.orbit.one{width:340px;height:340px;right:-45px}.screen h2{font-size:30px}.section{padding:82px 0}.memory-section{padding-bottom:90px}.memory-shell{padding:30px 22px;border-radius:30px}.privacy{padding:80px 0 94px}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <header class="site-nav">
+    <div class="nav-inner wrap">
+      <a class="brand" href="/" aria-label="Back to Herby Projects"><span class="brand-mark">H</span><span>Herby Projects</span></a>
+      <span class="private-chip"><span class="lock-dot"></span><span>Private family app</span></span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <div class="eyebrow">Three Smiles</div>
+        <h1>Three small moments.<br>One better habit.</h1>
+        <p class="lede">A private daily ritual for two people to <strong>notice the good</strong>, stay connected, and build a shared record of the ordinary moments worth keeping.</p>
+        <div class="actions">
+          <a class="btn primary" href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a>
+          <a class="btn secondary" href="/">Back to Herby Projects</a>
+        </div>
+        <p class="microcopy">A personal project. No download. No public sign-up. Just a thoughtful little app made for two.</p>
+      </div>
+
+      <div class="phone-stage" aria-label="Three Smiles app preview">
+        <div class="orbit one" aria-hidden="true"></div><div class="orbit two" aria-hidden="true"></div>
+        <div class="float-note top" aria-hidden="true">“Small counts.<br>Especially small.”</div>
+        <div class="float-note bottom" aria-hidden="true">A softer way<br>to end the day.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="phone-top">
+              <div class="app-brand"><span class="app-icon"><svg viewBox="0 0 64 64" fill="none"><path d="M32 55s-2.1-1.7-5.2-4.2C15.6 41.8 8 35.7 8 25.7 8 18.6 13.3 13 20.2 13c4 0 7.9 2 11.8 6 3.9-4 7.8-6 11.8-6C50.7 13 56 18.6 56 25.7c0 10-7.6 16.1-18.8 25.1C34.1 53.3 32 55 32 55Z" fill="#fffaf6"/><circle cx="23" cy="27" r="3" fill="#df7f50"/><circle cx="41" cy="27" r="3" fill="#df7f50"/><path d="M23 36c2.2 2.4 5.1 3.6 9 3.6s6.8-1.2 9-3.6" stroke="#df7f50" stroke-width="4" stroke-linecap="round"/></svg></span>Three Smiles</div>
+              <span class="avatar">Writing as You</span>
+            </div>
+            <div class="day-toggle"><span class="active">Today</span><span>Yesterday</span></div>
+            <div class="reflection"><small>Daily reflection</small><p>The ordinary moments are not interruptions to life. They are the life.</p></div>
+            <h2>What made today good?</h2>
+            <p class="sub">Three little moments that made you smile, brought joy, or helped the day feel great.</p>
+            <div class="smile-field"><span class="num">1</span><span class="sample">Breakfast chaos turned into laughter.</span></div>
+            <div class="smile-field"><span class="num">2</span><span class="sample">A ten-minute walk in the sun.</span></div>
+            <div class="smile-field"><span class="num">3</span><span class="sample">The way we handled bedtime together.</span></div>
+            <div class="moods"><span class="mood">☀️ Light</span><span class="mood active">🌿 Grateful</span><span class="mood">💛 Loved</span></div>
+            <button class="save" type="button" tabindex="-1">Save today</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="how-it-works">
+      <div class="section-intro">
+        <div class="kicker">How it works</div>
+        <h3 class="section-title">A two-minute ritual.<br>A surprisingly long echo.</h3>
+        <p>Three Smiles makes reflection small enough to actually happen—and meaningful enough to want to come back to.</p>
+      </div>
+      <div class="ritual-grid">
+        <article class="ritual-card" style="--card-accent:var(--honey)"><span class="step-no">1</span><h4>Notice three good things.</h4><p>Not achievements. Not highlights for an audience. Just three moments that made the day feel warmer, lighter, or more alive.</p></article>
+        <article class="ritual-card" style="--card-accent:var(--rose)"><span class="step-no">2</span><h4>Check in, gently.</h4><p>Add a feeling and answer an optional couple question. Enough structure to invite connection, never enough to feel like homework.</p></article>
+        <article class="ritual-card" style="--card-accent:var(--sage)"><span class="step-no">3</span><h4>Keep what mattered.</h4><p>Each entry joins a private shared history—small memories that would otherwise disappear into the speed of family life.</p></article>
+      </div>
+    </section>
+
+    <section class="memory-section wrap">
+      <div class="memory-shell">
+        <div>
+          <div class="kicker" style="color:#dca27e">A shared memory lane</div>
+          <h3>The good parts stop getting lost.</h3>
+          <p class="copy">Over time, tiny entries become a record of seasons, family jokes, ordinary victories, and all the quiet ways two people showed up for each other.</p>
+        </div>
+        <div class="timeline" aria-label="Illustrative memory entries">
+          <article class="memory"><div class="date">Monday · A saved smile</div><p>“The kids’ kitchen dance party before school.”</p></article>
+          <article class="memory"><div class="date">Last month · A saved smile</div><p>“Coffee together before the house woke up.”</p></article>
+          <article class="memory"><div class="date">One day worth keeping</div><p>“We were both tired, and still found a way to laugh.”</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="privacy wrap">
+      <div class="privacy-mark" aria-hidden="true">⌁</div>
+      <div class="kicker">Private by design</div>
+      <h3>Made to be personal.<br>Not public.</h3>
+      <p>Three Smiles is a private family app with authenticated access and no public registration. This page shows the idea—not the people, their entries, or the app itself.</p>
+      <div class="privacy-points"><span>Server-side login</span><span>No public sign-up</span><span>Private shared history</span><span>Built for two</span></div>
+      <div class="actions" style="justify-content:center"><a class="btn primary" href="/">Explore more Herby Projects</a></div>
+    </section>
+  </main>
+
+  <footer><div class="wrap"><span>Three Smiles · A Herby Project</span><a href="/">HerbyProjects.com</a></div></footer>
+</body>
+</html>

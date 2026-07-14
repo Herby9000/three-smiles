@@ -257,9 +257,9 @@ function createServer(options = {}) {
 
     if (portfolioHost) {
       if (pathname === '/' || pathname === '/index.html') pathname = '/portfolio.html';
-      else if (pathname === '/three-smiles' || pathname === '/projects/three-smiles') return redirect(res, 'https://three-smiles.herbyprojects.com');
+      else if (pathname === '/three-smiles' || pathname === '/projects/three-smiles') pathname = '/three-smiles.html';
       else if (pathname === '/login') return redirect(res, 'https://three-smiles.herbyprojects.com/login');
-      else if (pathname !== '/portfolio.html') return send(res, 404, 'Not found');
+      else if (pathname !== '/portfolio.html' && pathname !== '/three-smiles.html') return send(res, 404, 'Not found');
     }
 
     if (pathname === '/login') pathname = '/login.html';
