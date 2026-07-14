@@ -33,10 +33,10 @@ function cookieFrom(response) {
   return response.headers.get('set-cookie').split(';')[0];
 }
 
-function requestWithHost(base, pathName, host) {
+function requestWithHost(base, pathName, host, extraHeaders = {}) {
   const url = new URL(base);
   return new Promise((resolve, reject) => {
-    const req = http.request({ hostname: url.hostname, port: url.port, path: pathName, method: 'GET', headers: { Host: host } }, res => {
+    const req = http.request({ hostname: url.hostname, port: url.port, path: pathName, method: 'GET', headers: { Host: host, ...extraHeaders } }, res => {
       let body = '';
       res.setEncoding('utf8');
       res.on('data', chunk => body += chunk);
@@ -71,6 +71,21 @@ test('server-side auth protects app shell and entries API while public assets re
       const asset = await fetch(`${app.base}${assetPath}`, { redirect: 'manual' });
       assert.equal(asset.status, 200, `${assetPath} should be available before login so Add to Home Screen can fetch the icon`);
     }
+  } finally {
+    await app.close();
+  }
+});
+
+test('public hostnames redirect forwarded HTTP to HTTPS and send HSTS over HTTPS', async () => {
+  const app = await startTestServer();
+  try {
+    const insecure = await requestWithHost(app.base, '/some/path?x=1', 'herbyprojects.com', { 'X-Forwarded-Proto': 'http' });
+    assert.equal(insecure.status, 301);
+    assert.equal(insecure.headers.location, 'https://herbyprojects.com/some/path?x=1');
+
+    const secure = await requestWithHost(app.base, '/', 'herbyprojects.com', { 'X-Forwarded-Proto': 'https' });
+    assert.equal(secure.status, 200);
+    assert.equal(secure.headers['strict-transport-security'], 'max-age=31536000; includeSubDomains');
   } finally {
     await app.close();
   }

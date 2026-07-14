@@ -176,6 +176,11 @@ function isPortfolioHost(hostHeader = '') {
   return hostname === 'herbyprojects.com' || hostname === 'www.herbyprojects.com';
 }
 
+function isPublicHost(hostHeader = '') {
+  const hostname = String(hostHeader).split(':')[0].toLowerCase();
+  return isPortfolioHost(hostHeader) || hostname === 'three-smiles.herbyprojects.com';
+}
+
 function createServer(options = {}) {
   const dataDir = options.dataDir || DEFAULT_DATA_DIR;
   const dataFile = options.dataFile || path.join(dataDir, 'entries.json');
@@ -295,6 +300,17 @@ function createServer(options = {}) {
 
   return http.createServer(async (req, res) => {
     try {
+      const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
+      if (isPublicHost(req.headers.host) && forwardedProto === 'http') {
+        res.writeHead(301, {
+          location: `https://${req.headers.host}${req.url}`,
+          'cache-control': 'no-store'
+        });
+        return res.end('Moved Permanently');
+      }
+      if (isPublicHost(req.headers.host) && forwardedProto === 'https') {
+        res.setHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
+      }
       const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
       if (url.pathname.startsWith('/api/')) return await handleApi(req, res, url);
       return await serveStatic(req, res, url);
