@@ -60,7 +60,20 @@
     .project p { margin: 0; color: var(--muted); line-height: 1.55; }
     .tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0 22px; }
     .tag { font-family: var(--mono); font-size: 11px; color: #4d4d4d; background: var(--soft); padding: 5px 7px; border-radius: 999px; box-shadow: rgba(0,0,0,.08) 0 0 0 1px; }
-    .project .btn { margin-top: auto; width: fit-content; }
+    .project-actions { margin-top: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .project .btn { width: fit-content; }
+    .source-link { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 0 11px; border-radius: 8px; color: #444; font-family: var(--mono); font-size: 11px; font-weight: 650; box-shadow: rgba(0,0,0,.08) 0 0 0 1px; background: #fff; }
+    .source-link:hover { background: var(--soft); color: #000; }
+    .open-source { padding: clamp(30px, 6vw, 64px); border-radius: 24px; color: #fff; background: #0b0b0c; overflow: hidden; position: relative; }
+    .open-source:before { content:""; position:absolute; inset:auto -100px -150px auto; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle,rgba(10,114,239,.28),transparent 66%); }
+    .oss-grid { position:relative; display:grid; grid-template-columns:1.2fr .8fr; gap:48px; align-items:end; }
+    .oss-label { color:#7ee787; font-family:var(--mono); font-size:12px; font-weight:650; text-transform:uppercase; letter-spacing:.08em; }
+    .open-source h2 { max-width:680px; margin:18px 0 0; font-size:clamp(42px,7vw,78px); }
+    .open-source p { max-width:620px; margin:20px 0 0; color:#aaa; font-size:18px; line-height:1.6; }
+    .oss-side { display:grid; gap:12px; justify-items:start; }
+    .oss-code { width:100%; padding:18px; border:1px solid #2a2a2c; border-radius:14px; background:#151516; color:#d6d6d6; font-family:var(--mono); font-size:12px; line-height:1.75; }
+    .oss-code .green { color:#7ee787; }
+    .oss-code .blue { color:#58a6ff; }
     .workflow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .step { padding: 24px; min-height: 210px; border-radius: 18px; box-shadow: var(--card); background: #fff; }
     .step .label { font-family: var(--mono); font-size: 12px; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 30px; }
@@ -68,7 +81,7 @@
     .step p { margin: 0; color: var(--muted); line-height: 1.55; }
     footer { padding: 54px 0 70px; color: var(--muted); font-size: 14px; position: relative; }
     footer .wrap { border-top: 1px solid var(--line); padding-top: 24px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-    @media (max-width: 880px) { .grid, .workflow { grid-template-columns: 1fr; } .section-head { display:block; } .section-head p { margin-top:12px; } nav .hide-sm { display:none; } .hero { text-align:left; } .pill, h1, .hero p { margin-left:0; } .hero-actions { justify-content:flex-start; } }
+    @media (max-width: 880px) { .grid, .workflow, .oss-grid { grid-template-columns: 1fr; } .section-head { display:block; } .section-head p { margin-top:12px; } nav .hide-sm { display:none; } .hero { text-align:left; } .pill, h1, .hero p { margin-left:0; } .hero-actions { justify-content:flex-start; } }
   </style>
 </head>
 <body>
@@ -78,28 +91,29 @@
       <a class="brand" href="/" aria-label="Herby Projects home"><span class="glyph">H</span><span>Herby Projects</span></a>
       <nav aria-label="Main navigation">
         <a class="hide-sm" href="#apps">Apps</a>
-        <a class="hide-sm" href="#workflow">Workflow</a>
-        <a class="btn dark" href="#apps">View apps</a>
+        <a class="hide-sm" href="#open-source">Open source</a>
+        <a class="btn dark" href="https://github.com/Herby9000" target="_blank" rel="noopener">GitHub ↗</a>
       </nav>
     </div>
   </header>
 
   <main>
     <section class="hero wrap">
-      <div class="pill">Personal software, shipped in small useful bites</div>
+      <div class="pill">Personal software · 100% open source</div>
       <h1>Apps built by Herby for real life.</h1>
-      <p>A living portfolio of the little tools, dashboards and family systems we build together — useful enough for a Home Screen, small enough to actually ship.</p>
+      <p>A living portfolio of the little tools, dashboards and family systems we build together — useful enough for a Home Screen, small enough to actually ship. <strong>The apps are personal. The code is public.</strong></p>
       <div class="hero-actions">
         <a class="btn dark" href="#apps">Explore the portfolio</a>
         <a class="btn" href="/projects/three-smiles">Discover Three Smiles</a>
+        <a class="btn" href="https://github.com/Herby9000" target="_blank" rel="noopener">Browse the source on GitHub ↗</a>
       </div>
       <div class="console" aria-label="Herby build log illustration">
         <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span style="margin-left:8px">herby@projects</span></div>
         <div class="terminal">
           <div><span class="muted">$</span> build something small, useful, and oddly charming</div>
           <div><span class="green">✓</span> three-smiles deployed to <span class="blue">three-smiles.herbyprojects.com</span></div>
-          <div><span class="green">✓</span> portfolio created at <span class="pink">herbyprojects.com</span></div>
-          <div><span class="muted">→ next:</span> add every new app as we build it</div>
+          <div><span class="green">✓</span> every app backed by a <span class="blue">public GitHub repository</span></div>
+          <div><span class="muted">→ source:</span> github.com/<span class="pink">Herby9000</span></div>
         </div>
       </div>
     </section>
@@ -107,7 +121,7 @@
     <section id="apps" class="wrap">
       <div class="section-head">
         <h2>Project shelf</h2>
-        <p>Each card links to a live app. New projects can be added here as soon as they ship.</p>
+        <p>Try the live apps, then open the source. Every project on this shelf is public on GitHub.</p>
       </div>
       <div class="grid">
         <article class="project" style="--accentA:rgba(246,196,83,.45);--accentB:rgba(233,155,166,.45)">
@@ -116,7 +130,7 @@
             <h3>Three Smiles</h3>
             <p>A private daily gratitude/check-in app for Daisy and Charlie, with shared history and iPhone-friendly polish.</p>
             <div class="tags"><span class="tag">family</span><span class="tag">private</span><span class="tag">pwa</span></div>
-            <a class="btn dark" href="/projects/three-smiles">Explore project</a>
+            <div class="project-actions"><a class="btn dark" href="/projects/three-smiles">Explore project</a><a class="source-link" href="https://github.com/Herby9000/three-smiles" target="_blank" rel="noopener">Source ↗</a></div>
           </div>
         </article>
 
@@ -126,7 +140,7 @@
             <h3>Next Rugby Match</h3>
             <p>A quick-glance rugby tracker for the next Saracens or England fixture, built to work beautifully from an iPhone Home Screen.</p>
             <div class="tags"><span class="tag">rugby</span><span class="tag">dashboard</span><span class="tag">github pages</span></div>
-            <a class="btn" href="https://herby9000.github.io/rugby-next-match/" target="_blank" rel="noopener">Open app</a>
+            <div class="project-actions"><a class="btn" href="https://herby9000.github.io/rugby-next-match/" target="_blank" rel="noopener">Open app</a><a class="source-link" href="https://github.com/Herby9000/rugby-next-match" target="_blank" rel="noopener">Source ↗</a></div>
           </div>
         </article>
 
@@ -136,7 +150,7 @@
             <h3>Blue Jays Playoff Dashboard</h3>
             <p>An iPhone-first baseball dashboard for checking the Blue Jays picture without wading through a swamp of sports pages.</p>
             <div class="tags"><span class="tag">blue jays</span><span class="tag">sports</span><span class="tag">mobile</span></div>
-            <a class="btn" href="https://herby9000.github.io/blue-jays-playoff-dashboard/" target="_blank" rel="noopener">Open app</a>
+            <div class="project-actions"><a class="btn" href="https://herby9000.github.io/blue-jays-playoff-dashboard/" target="_blank" rel="noopener">Open app</a><a class="source-link" href="https://github.com/Herby9000/blue-jays-playoff-dashboard" target="_blank" rel="noopener">Source ↗</a></div>
           </div>
         </article>
 
@@ -146,7 +160,7 @@
             <h3>UNO Watch Display</h3>
             <p>A browser recreation of the wonderfully unusual Botta UNO 24-hour watch display—one hand, one day, and a calmer sense of time.</p>
             <div class="tags"><span class="tag">watch</span><span class="tag">design</span><span class="tag">24-hour</span></div>
-            <a class="btn" href="https://herby9000.github.io/uno-watch-display/" target="_blank" rel="noopener">View watch</a>
+            <div class="project-actions"><a class="btn" href="https://herby9000.github.io/uno-watch-display/" target="_blank" rel="noopener">View watch</a><a class="source-link" href="https://github.com/Herby9000/uno-watch-display" target="_blank" rel="noopener">Source ↗</a></div>
           </div>
         </article>
 
@@ -156,7 +170,7 @@
             <h3>After Dark Toronto</h3>
             <p>A sharp, six-month shortlist of Toronto concerts, comedy and memorable outings, automatically refreshed every week.</p>
             <div class="tags"><span class="tag">toronto</span><span class="tag">events</span><span class="tag">github pages</span></div>
-            <a class="btn dark" href="https://herby9000.github.io/toronto-entertainment/" target="_blank" rel="noopener">Explore events</a>
+            <div class="project-actions"><a class="btn dark" href="https://herby9000.github.io/toronto-entertainment/" target="_blank" rel="noopener">Explore events</a><a class="source-link" href="https://github.com/Herby9000/toronto-entertainment" target="_blank" rel="noopener">Source ↗</a></div>
           </div>
         </article>
         <article class="project" style="--accentA:rgba(242,163,60,.42);--accentB:rgba(92,200,255,.30)">
@@ -165,9 +179,30 @@
             <h3>StickLab</h3>
             <p>A practice-pad trainer for hand speed and rudiments — 16 rudiments with audible sticking, auto speed ramps, a 10-second burst test and a full metronome.</p>
             <div class="tags"><span class="tag">drums</span><span class="tag">web audio</span><span class="tag">github pages</span></div>
-            <a class="btn dark" href="https://herby9000.github.io/sticklab/" target="_blank" rel="noopener">Open app</a>
+            <div class="project-actions"><a class="btn dark" href="https://herby9000.github.io/sticklab/" target="_blank" rel="noopener">Open app</a><a class="source-link" href="https://github.com/Herby9000/sticklab" target="_blank" rel="noopener">Source ↗</a></div>
           </div>
         </article>
+      </div>
+    </section>
+
+    <section id="open-source" class="wrap">
+      <div class="open-source">
+        <div class="oss-grid">
+          <div>
+            <div class="oss-label">Open source, all the way down</div>
+            <h2>Every project is open source.</h2>
+            <p>Nothing hidden behind a glossy demo. Browse the actual code, see how each app works, fork an idea, or follow along as the portfolio grows.</p>
+          </div>
+          <div class="oss-side">
+            <div class="oss-code" aria-label="GitHub repository illustration">
+              <div><span class="muted">$</span> gh repo list <span class="blue">Herby9000</span></div>
+              <div><span class="green">public</span> &nbsp;three-smiles</div>
+              <div><span class="green">public</span> &nbsp;sticklab</div>
+              <div><span class="green">public</span> &nbsp;and every project here</div>
+            </div>
+            <a class="btn" style="background:#fff;color:#111;box-shadow:none" href="https://github.com/Herby9000" target="_blank" rel="noopener">View all code on GitHub ↗</a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -187,7 +222,7 @@
   <footer>
     <div class="wrap">
       <div>© Herby Projects</div>
-      <div>Built with Hermes, GitHub, Cloudflare, and possibly too much optimism.</div>
+      <div>Every project is <a href="https://github.com/Herby9000" target="_blank" rel="noopener" style="color:var(--ink);font-weight:650">open source on GitHub ↗</a></div>
     </div>
   </footer>
 </body>
