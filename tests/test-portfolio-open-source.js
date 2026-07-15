@@ -16,6 +16,7 @@ assert.match(html, /The apps are personal\. The code is public\./, 'hero makes t
 assert.match(html, /id="open-source"/, 'portfolio has a dedicated open-source section');
 assert.match(html, /Every project is open source/, 'open-source section states the portfolio-wide policy');
 assert.match(html, /href="https:\/\/github\.com\/Herby9000"[^>]*target="_blank"[^>]*rel="noopener"/, 'portfolio links prominently to the GitHub profile');
+assert.match(html, /href="https:\/\/github\.com\/Herby9000\/herbyprojects"[^>]*target="_blank"[^>]*rel="noopener"/, 'portfolio links directly to its own source repository');
 for (const repo of repositories) {
   const escaped = repo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   assert.match(html, new RegExp(`href="https://github\\.com/Herby9000/${escaped}"[^>]*target="_blank"[^>]*rel="noopener"`), `${repo} card links to its public source repository`);
