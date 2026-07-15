@@ -254,17 +254,28 @@ function createServer(options = {}) {
   async function serveStatic(req, res, url) {
     let pathname = decodeURIComponent(url.pathname);
     const portfolioHost = isPortfolioHost(req.headers.host);
+    const portfolioAssetPaths = new Set([
+      '/portfolio.html',
+      '/three-smiles.html',
+      '/favicon.ico',
+      '/assets/herby-favicon.svg',
+      '/assets/herby-apple-touch-icon.png'
+    ]);
 
     if (portfolioHost) {
       if (pathname === '/' || pathname === '/index.html') pathname = '/portfolio.html';
       else if (pathname === '/three-smiles' || pathname === '/projects/three-smiles') pathname = '/three-smiles.html';
       else if (pathname === '/login') return redirect(res, 'https://three-smiles.herbyprojects.com/login');
-      else if (pathname !== '/portfolio.html' && pathname !== '/three-smiles.html') return send(res, 404, 'Not found');
+      else if (!portfolioAssetPaths.has(pathname)) return send(res, 404, 'Not found');
     }
 
     if (pathname === '/login') pathname = '/login.html';
     const publicAssetPaths = new Set([
       '/portfolio.html',
+      '/three-smiles.html',
+      '/favicon.ico',
+      '/assets/herby-favicon.svg',
+      '/assets/herby-apple-touch-icon.png',
       '/login.html',
       '/site.webmanifest',
       '/sw.js',

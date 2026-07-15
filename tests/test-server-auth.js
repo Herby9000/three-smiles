@@ -57,6 +57,11 @@ test('server-side auth protects app shell and entries API while public assets re
     const portfolio = await requestWithHost(app.base, '/', 'herbyprojects.com');
     assert.equal(portfolio.status, 200);
     assert.match(portfolio.text, /Herby Projects/);
+    assert.match(portfolio.text, /href="\/assets\/herby-favicon\.svg"/);
+    for (const assetPath of ['/assets/herby-favicon.svg', '/assets/herby-apple-touch-icon.png', '/favicon.ico']) {
+      const asset = await requestWithHost(app.base, assetPath, 'herbyprojects.com');
+      assert.equal(asset.status, 200, `${assetPath} should be publicly available on the portfolio hostname`);
+    }
     const portfolioApp = await requestWithHost(app.base, '/app.html', 'herbyprojects.com');
     assert.equal(portfolioApp.status, 404);
 

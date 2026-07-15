@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Herby Projects</title>
+  <desc id="desc">A neon H with a small growing sprout.</desc>
+  <defs>
+    <linearGradient id="edge" x1="8" y1="56" x2="56" y2="8" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#35f2ff"/>
+      <stop offset=".52" stop-color="#8a7dff"/>
+      <stop offset="1" stop-color="#ff3fd1"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="32" y1="14" x2="51" y2="2" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#35f2ff"/>
+      <stop offset="1" stop-color="#9cff57"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="#0b0b12"/>
+  <rect x="3.5" y="3.5" width="57" height="57" rx="13.5" fill="none" stroke="url(#edge)" stroke-width="3"/>
+  <path d="M20 20v28M44 20v28M20 34h24" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M34 18c1-7 5-11 11-13" fill="none" stroke="#6cf8ae" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M43 7c5-4 10-3 13 0-3 5-8 7-13 4Z" fill="url(#leaf)"/>
+</svg>
