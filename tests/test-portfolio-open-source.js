@@ -9,7 +9,8 @@ const repositories = [
   'blue-jays-playoff-dashboard',
   'uno-watch-display',
   'toronto-entertainment',
-  'sticklab'
+  'sticklab',
+  'ros-morris-portfolio'
 ];
 
 assert.match(html, /The apps are personal\. The code is public\./, 'hero makes the open-source promise unmistakable');

@@ -259,7 +259,8 @@ function createServer(options = {}) {
       '/three-smiles.html',
       '/favicon.ico',
       '/assets/herby-favicon.svg',
-      '/assets/herby-apple-touch-icon.png'
+      '/assets/herby-apple-touch-icon.png',
+      '/assets/ros-morris-tulip.jpg'
     ]);
 
     if (portfolioHost) {
@@ -276,6 +277,7 @@ function createServer(options = {}) {
       '/favicon.ico',
       '/assets/herby-favicon.svg',
       '/assets/herby-apple-touch-icon.png',
+      '/assets/ros-morris-tulip.jpg',
       '/login.html',
       '/site.webmanifest',
       '/sw.js',
