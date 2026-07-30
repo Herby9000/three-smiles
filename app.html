@@ -791,11 +791,28 @@
       $('#wordCloud').innerHTML = words.slice(0, 18).map(([w,c]) => `<span class="word" style="font-size:${Math.min(20, 12+c*2)}px">${escapeHtml(w)}</span>`).join('') || '<span class="word">joy</span>';
     }
 
+    const WORD_CLOUD_STOP_WORDS = new Set(`
+      able about above actually after again against all almost also among and any are arent
+      basically because been before being below between both but can cannot cant could couldnt
+      did didnt does doesnt doing dont down during each either else enough especially even ever every
+      feel feels feeling felt few for from further generally get gets getting got had hadnt has hasnt
+      have havent having her here hers herself him himself his how however im into isnt its itself
+      just kind kinds knew know known knows like literally made make makes making may maybe might mine
+      more most much must myself neither nor not now off once only other ought our ours ourselves out
+      over own perhaps probably quite rather really said say saying says same she should shouldnt
+      simply since some something somehow sort sorts stuff such than that thats the their theirs them
+      themselves then there theres these they theyre thing things think thinking thinks this those
+      thought through today too under until very want wanted wanting wants was wasnt well were werent
+      what whats when where whether which while who whom whose why will with wont would wouldnt you youre your yours yourself yourselves
+    `.trim().split(/\s+/));
+
     function countWords(text) {
-      const stop = new Set('the and that with this today from have were was you your our for but not just into had she him her his are they them then when what made feel felt did one thing something about'.split(' '));
       const map = new Map();
-      text.toLowerCase().match(/[a-z’']{3,}/g)?.forEach(w => { w = w.replace(/[’']/g,''); if(!stop.has(w)) map.set(w,(map.get(w)||0)+1); });
-      return [...map.entries()].sort((a,b)=>b[1]-a[1]);
+      text.toLowerCase().match(/[a-z’']{3,}/g)?.forEach(word => {
+        const normalized = word.replace(/[’']/g, '');
+        if (!WORD_CLOUD_STOP_WORDS.has(normalized)) map.set(normalized, (map.get(normalized) || 0) + 1);
+      });
+      return [...map.entries()].sort((a,b) => b[1] - a[1]);
     }
 
     function lastNDates(n) { const out=[]; const d=new Date(); for(let i=0;i<n;i++){ const x=new Date(d); x.setDate(d.getDate()-i); out.push(dateKey(x)); } return out; }
