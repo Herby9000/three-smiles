@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-news-auto>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f3eee4" />
+  <title>The Daily Seven</title>
+  <link rel="icon" href="../assets/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="news.css" />
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand" href="/news/" aria-label="The Daily Seven home">The Daily Seven</a>
+    <p>Signal over noise. A private morning reader.</p>
+  </header>
+
+  <main id="newsApp">
+    <nav class="section-tabs" aria-label="News sections">
+      <button type="button" class="active" data-section="Today" aria-pressed="true">Today</button>
+      <button type="button" data-section="Politics" aria-pressed="false">Politics</button>
+      <button type="button" data-section="Tech" aria-pressed="false">Tech</button>
+      <button type="button" data-section="Sports" aria-pressed="false">Sports</button>
+    </nav>
+
+    <p id="snapshotStatus" class="status" role="status">Loading today’s briefing…</p>
+
+    <section id="leadSection" aria-labelledby="leadTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Today</p>
+        <h1 id="leadTitle">Seven stories worth your time</h1>
+      </div>
+      <div id="topStories" class="top-stories" aria-label="Today’s top seven stories"></div>
+    </section>
+
+    <div id="sectionStories" class="section-stories"></div>
+  </main>
+
+  <dialog id="readerDialog" aria-labelledby="readerTitle" aria-describedby="readerStatus">
+    <article class="reader-panel">
+      <header class="reader-header">
+        <div>
+          <p id="readerSource" class="eyebrow"></p>
+          <h2 id="readerTitle"></h2>
+          <p id="readerByline" class="byline"></p>
+        </div>
+        <button id="readerClose" class="close-button" type="button" aria-label="Close article reader">×</button>
+      </header>
+      <p id="readerStatus" class="reader-status" role="status" aria-live="polite"></p>
+      <div id="readerBody" class="reader-body"></div>
+      <footer class="reader-footer">
+        <a id="readerLink" target="_blank" rel="noopener noreferrer">Read at source ↗</a>
+      </footer>
+    </article>
+  </dialog>
+
+  <script src="news.js"></script>
+</body>
+</html>

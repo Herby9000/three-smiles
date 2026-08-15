@@ -15,4 +15,5 @@ assert.match(splash, /aria-label="Three Smiles app preview"/, 'showcase includes
 assert.doesNotMatch(splash, /href="[^"]*(?:three-smiles\.herbyprojects\.com|\/login)/, 'showcase never links visitors to the private app or login');
 assert.doesNotMatch(splash, />\s*(?:Open app|Sign in|Log in)\s*</i, 'showcase has no private-app access CTA');
 assert.ok((portfolio.match(/href="\/projects\/three-smiles"/g) || []).length >= 2, 'portfolio hero and project card link to the public showcase');
-assert.doesNotMatch(portfolio, /href="https:\/\/three-smiles\.herbyprojects\.com"/, 'portfolio does not expose direct links to the private app');
+const threeSmilesCard = portfolio.slice(portfolio.indexOf('<h3>Three Smiles</h3>'), portfolio.indexOf('</article>', portfolio.indexOf('<h3>Three Smiles</h3>')));
+assert.doesNotMatch(threeSmilesCard, /href="https:\/\/three-smiles\.herbyprojects\.com(?:\/|\")/, 'Three Smiles card does not expose direct access to its private app');

@@ -23,7 +23,8 @@ assert.match(html, /Every project is open source/, 'open-source section states t
 assert.match(html, /href="https:\/\/github\.com\/Herby9000"[^>]*target="_blank"[^>]*rel="noopener"/, 'portfolio links prominently to the GitHub profile');
 assert.match(html, /href="https:\/\/github\.com\/Herby9000\/herbyprojects"[^>]*target="_blank"[^>]*rel="noopener"/, 'portfolio links directly to its own source repository');
 assert.match(dailySevenCard, /<h3>The Daily Seven<\/h3>/, 'The Daily Seven is the first project card');
-assert.match(dailySevenCard, /href="https:\/\/herby9000\.github\.io\/herbyprojects\/news\/"[^>]*target="_blank"[^>]*rel="noopener"/, 'The Daily Seven card opens the absolute GitHub Pages app URL safely');
+assert.match(dailySevenCard, /private full reader/i, 'The Daily Seven card labels the authenticated full reader');
+assert.match(dailySevenCard, /href="https:\/\/three-smiles\.herbyprojects\.com\/news\/"[^>]*target="_blank"[^>]*rel="noopener"/, 'The Daily Seven card opens the private full reader safely');
 for (const repo of repositories) {
   const escaped = repo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   assert.match(html, new RegExp(`href="https://github\\.com/Herby9000/${escaped}"[^>]*target="_blank"[^>]*rel="noopener"`), `${repo} card links to its public source repository`);

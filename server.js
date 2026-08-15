@@ -5,6 +5,7 @@ const http = require('http');
 const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
+const { createArticleService, NewsArticleError } = require('./news/article-service');
 
 const DEFAULT_PORT = Number(process.env.PORT || 8787);
 const DEFAULT_DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
@@ -186,6 +187,7 @@ function createServer(options = {}) {
   const dataFile = options.dataFile || path.join(dataDir, 'entries.json');
   const authFile = options.authFile || DEFAULT_AUTH_FILE;
   const allowedOrigin = options.allowedOrigin ?? process.env.ALLOWED_ORIGIN;
+  const newsArticleService = options.newsArticleService || createArticleService({ cacheRoot: path.join(dataDir, 'news-cache') });
   let authPromise;
   let storeWriteQueue = Promise.resolve();
   const getAuth = () => authPromise ||= loadAuth(authFile);
@@ -225,6 +227,11 @@ function createServer(options = {}) {
   }
 
   async function handleApi(req, res, url) {
+    if (req.method === 'OPTIONS' && url.pathname.startsWith('/api/news/')) {
+      const session = await requireSession(req, res);
+      if (!session) return;
+      return send(res, 204, '', { ...corsHeaders(req, allowedOrigin), 'access-control-allow-methods': 'POST,OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-allow-credentials': 'true' });
+    }
     if (req.method === 'OPTIONS') return send(res, 204, '', { ...corsHeaders(req, allowedOrigin), 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-allow-credentials': 'true' });
     if (url.pathname === '/api/login' && req.method === 'POST') return handleLogin(req, res);
     if (url.pathname === '/api/logout' && req.method === 'POST') return send(res, 200, { ok: true }, { 'set-cookie': clearSessionCookie(), ...corsHeaders(req, allowedOrigin) });
@@ -246,6 +253,22 @@ function createServer(options = {}) {
       const entry = cleanEntry(payload.entry, session);
       await saveEntry(entry);
       return send(res, 200, { ok: true, entry }, corsHeaders(req, allowedOrigin));
+    }
+
+    if (url.pathname === '/api/news/article' && req.method === 'POST') {
+      const payload = await parseBody(req);
+      try {
+        const result = await newsArticleService.extract(payload.url);
+        return send(res, 200, result, corsHeaders(req, allowedOrigin));
+      } catch (error) {
+        const knownError = error instanceof NewsArticleError || (error.code && Number.isInteger(error.status));
+        return send(res, knownError ? error.status : 502, {
+          ok: false,
+          fallback: true,
+          code: knownError ? error.code : 'extraction_failed',
+          error: 'Full article unavailable; showing the feed summary.'
+        }, corsHeaders(req, allowedOrigin));
+      }
     }
 
     return send(res, 404, { error: 'not found' }, corsHeaders(req, allowedOrigin));
@@ -292,6 +315,8 @@ function createServer(options = {}) {
       const session = await requireSession(req, res);
       if (!session) return;
     }
+    if (pathname === '/news') return redirect(res, '/news/');
+    if (pathname === '/news/') pathname = '/news/index.html';
     if (pathname === '/') pathname = '/app.html';
     const filePath = path.normalize(path.join(PUBLIC_DIR, pathname));
     if (!filePath.startsWith(PUBLIC_DIR) || filePath.includes(`${path.sep}data${path.sep}`) || filePath.includes(`${path.sep}.git${path.sep}`)) {
