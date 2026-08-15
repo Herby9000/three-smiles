@@ -308,7 +308,12 @@ function createServer(options = {}) {
       '/assets/icon.svg',
       '/assets/apple-touch-icon.png',
       '/assets/icon-192.png',
-      '/assets/icon-512.png'
+      '/assets/icon-512.png',
+      '/news/manifest.webmanifest',
+      '/news/daily-seven-icon.svg',
+      '/news/daily-seven-apple-touch-icon.png',
+      '/news/daily-seven-icon-192.png',
+      '/news/daily-seven-icon-512.png'
     ]);
     const isLoginAsset = publicAssetPaths.has(pathname);
     if (!portfolioHost && !isLoginAsset) {

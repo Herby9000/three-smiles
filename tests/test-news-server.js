@@ -27,7 +27,7 @@ async function login(base) {
 test('news navigation redirects and article API returns 401 without a session', async () => {
   const app = await startServer({ extract: async () => { throw new Error('must not run'); } });
   try {
-    for (const page of ['/news/', '/news/news.js', '/news/news.css']) {
+    for (const page of ['/news/', '/news/index.html', '/news/news.js', '/news/news.css']) {
       const response = await fetch(`${app.base}${page}`, { redirect: 'manual' });
       assert.equal(response.status, 302, page);
       assert.equal(response.headers.get('location'), '/login');
@@ -36,6 +36,19 @@ test('news navigation redirects and article API returns 401 without a session', 
     assert.equal(api.status, 401);
     const preflight = await fetch(`${app.base}/api/news/article`, { method: 'OPTIONS' });
     assert.equal(preflight.status, 401);
+
+    const publicAssets = [
+      ['/news/manifest.webmanifest', 'application/manifest+json'],
+      ['/news/daily-seven-icon.svg', 'image/svg+xml'],
+      ['/news/daily-seven-apple-touch-icon.png', 'image/png'],
+      ['/news/daily-seven-icon-192.png', 'image/png'],
+      ['/news/daily-seven-icon-512.png', 'image/png']
+    ];
+    for (const [assetPath, contentType] of publicAssets) {
+      const response = await fetch(`${app.base}${assetPath}`, { redirect: 'manual' });
+      assert.equal(response.status, 200, `${assetPath} is available before authentication`);
+      assert.match(response.headers.get('content-type'), new RegExp(`^${contentType.replace('+', '\\+')}`));
+    }
   } finally { await app.close(); }
 });
 
