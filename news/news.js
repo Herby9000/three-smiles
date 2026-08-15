@@ -33,12 +33,52 @@
       }
     }
 
+    function safeImageUrl(value) {
+      try {
+        const url = new URL(value);
+        return url.protocol === 'https:' && !url.username && !url.password && (!url.port || url.port === '443') ? url.href : '';
+      } catch {
+        return '';
+      }
+    }
+
+    function validateEdition(snapshot) {
+      const editionStories = Array.isArray(snapshot?.stories) ? snapshot.stories : [];
+      const editionTopIds = Array.isArray(snapshot?.topStoryIds) ? snapshot.topStoryIds : [];
+      if (editionTopIds.length !== 7 || new Set(editionTopIds).size !== 7) throw new Error('invalid_edition');
+
+      const byId = new Map(editionStories.map(story => [story.id, story]));
+      for (const id of editionTopIds) {
+        const story = byId.get(id);
+        if (!story || story.category === 'Sports' || !safeImageUrl(story.imageUrl)) throw new Error('invalid_edition');
+      }
+      return { stories: editionStories, topIds: editionTopIds };
+    }
+
     function storyButton(story, position) {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'story-card';
       button.dataset.category = story.category || '';
       button.setAttribute('aria-label', `Read ${story.title || 'story'}`);
+
+      if (position) {
+        const media = document.createElement('span');
+        media.className = 'story-media';
+        const image = document.createElement('img');
+        image.className = 'story-image';
+        image.src = safeImageUrl(story.imageUrl);
+        image.alt = '';
+        image.setAttribute('decoding', 'async');
+        image.setAttribute('referrerpolicy', 'no-referrer');
+        const unavailable = document.createElement('span');
+        unavailable.className = 'image-unavailable-label';
+        unavailable.textContent = 'Image unavailable';
+        unavailable.setAttribute('aria-hidden', 'true');
+        image.addEventListener('error', () => button.classList.add('image-unavailable'), { once: true });
+        media.append(image, unavailable);
+        button.append(media);
+      }
 
       const number = document.createElement('span');
       number.className = 'story-number';
@@ -48,7 +88,10 @@
       const details = document.createElement('span');
       details.className = 'story-details';
       details.textContent = [story.source, story.category].filter(Boolean).join(' · ');
-      button.append(number, title, details);
+      const copy = document.createElement('span');
+      copy.className = 'story-copy';
+      copy.append(number, title, details);
+      button.append(copy);
       button.addEventListener('click', () => openStory(story));
       return button;
     }
@@ -57,25 +100,11 @@
       leadSection.hidden = false;
       topStories.replaceChildren();
       const byId = new Map(stories.map(story => [story.id, story]));
-      topIds.slice(0, 7).forEach((id, index) => {
+      topIds.forEach((id, index) => {
         const story = byId.get(id);
         if (story) topStories.append(storyButton(story, index + 1));
       });
-
       sectionStories.replaceChildren();
-      for (const category of ['Politics', 'Tech', 'Sports']) {
-        const categoryStories = stories.filter(story => story.category === category);
-        if (!categoryStories.length) continue;
-        const section = document.createElement('section');
-        section.className = 'story-section';
-        const heading = document.createElement('h2');
-        heading.textContent = category;
-        const grid = document.createElement('div');
-        grid.className = 'story-grid';
-        categoryStories.forEach(story => grid.append(storyButton(story)));
-        section.append(heading, grid);
-        sectionStories.append(section);
-      }
     }
 
     function selectSection(section) {
@@ -167,13 +196,19 @@
         const response = await fetchImpl(snapshotUrl, { headers: { accept: 'application/json' } });
         if (!response.ok) throw new Error('snapshot unavailable');
         const snapshot = await response.json();
-        stories = Array.isArray(snapshot.stories) ? snapshot.stories : [];
-        topIds = Array.isArray(snapshot.topStoryIds) ? snapshot.topStoryIds : [];
+        const edition = validateEdition(snapshot);
+        stories = edition.stories;
+        topIds = edition.topIds;
         renderToday();
         const date = snapshot.generatedAt ? new Date(snapshot.generatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '';
         snapshotStatus.textContent = date ? `Briefing updated ${date}` : 'Today’s briefing';
-      } catch {
-        snapshotStatus.textContent = 'Today’s briefing could not be loaded. Please try again shortly.';
+      } catch (error) {
+        leadSection.hidden = false;
+        topStories.replaceChildren();
+        sectionStories.replaceChildren();
+        snapshotStatus.textContent = error.message === 'invalid_edition'
+          ? 'Edition error: today’s Top 7 is incomplete or unsafe, so it has not been displayed.'
+          : 'Today’s briefing could not be loaded. Please try again shortly.';
       }
     }
 

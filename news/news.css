@@ -30,11 +30,17 @@ h1, h2 { font-family: Georgia, serif; letter-spacing: -.035em; }
 h1 { margin: 0; font-size: clamp(2rem, 8vw, 4rem); line-height: 1; }
 
 .top-stories { display: grid; grid-auto-flow: column; grid-auto-columns: min(82vw, 390px); gap: 14px; overflow-x: auto; overscroll-behavior-inline: contain; scroll-snap-type: inline mandatory; padding: 4px 4px 18px; margin-inline: -4px; }
-.story-card { display: grid; align-content: space-between; gap: 22px; min-height: 190px; padding: 20px; text-align: left; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 6px 20px rgb(37 31 21 / 6%); cursor: pointer; scroll-snap-align: start; }
+.story-card { display: grid; align-content: space-between; gap: 18px; min-height: 190px; padding: 20px; overflow: hidden; text-align: left; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 6px 20px rgb(37 31 21 / 6%); cursor: pointer; scroll-snap-align: start; }
 .story-card:hover { border-color: #a49a89; transform: translateY(-1px); }
 .story-card:focus-visible, .section-tabs button:focus-visible, .close-button:focus-visible, .reader-footer a:focus-visible { outline: 3px solid #1673c8; outline-offset: 3px; }
 .story-card strong { font: 700 1.25rem/1.2 Georgia, serif; }
 .story-number, .story-details { color: var(--muted); font-size: .75rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+.story-copy { display: grid; gap: 18px; }
+.story-media { position: relative; display: block; aspect-ratio: 16 / 9; margin: -20px -20px 0; overflow: hidden; background: #ded8cc; }
+.story-image { width: 100%; height: 100%; display: block; object-fit: cover; }
+.image-unavailable-label { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; color: var(--muted); background: repeating-linear-gradient(135deg, #e8e2d7 0 12px, #ded7cb 12px 24px); font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: 0; }
+.image-unavailable .story-image { opacity: 0; }
+.image-unavailable .image-unavailable-label { opacity: 1; }
 .section-stories { display: grid; gap: 44px; margin-top: 42px; }
 .story-section h2, .selected-heading { margin: 0 0 16px; font-size: 2rem; }
 .story-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; }
