@@ -30,12 +30,20 @@ test('news navigation redirects and article API returns 401 without a session', 
     for (const page of ['/news/', '/news/index.html', '/news/news.js', '/news/news.css']) {
       const response = await fetch(`${app.base}${page}`, { redirect: 'manual' });
       assert.equal(response.status, 302, page);
-      assert.equal(response.headers.get('location'), '/login');
+      assert.equal(response.headers.get('location'), `/login?next=${encodeURIComponent(page)}`);
     }
+    const nested = '/news/archive/today?edition=uk&view=compact';
+    const nestedResponse = await fetch(`${app.base}${nested}`, { redirect: 'manual' });
+    assert.equal(nestedResponse.status, 302);
+    assert.equal(nestedResponse.headers.get('location'), `/login?next=${encodeURIComponent(nested)}`);
+
     const api = await fetch(`${app.base}/api/news/article`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url: 'https://www.bbc.com/story' }) });
     assert.equal(api.status, 401);
+    assert.equal(api.headers.get('location'), null);
+    assert.deepEqual(await api.json(), { error: 'login required' });
     const preflight = await fetch(`${app.base}/api/news/article`, { method: 'OPTIONS' });
     assert.equal(preflight.status, 401);
+    assert.equal(preflight.headers.get('location'), null);
 
     const publicAssets = [
       ['/news/manifest.webmanifest', 'application/manifest+json'],

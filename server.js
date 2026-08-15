@@ -215,12 +215,16 @@ function createServer(options = {}) {
     return send(res, 200, { ok: true, person }, { ...corsHeaders(req, allowedOrigin), 'set-cookie': sessionCookie(token, req) });
   }
 
-  async function requireSession(req, res) {
+  async function requireSession(req, res, url) {
     const auth = await getAuth();
     const session = readSession(req, auth);
     if (!session) {
       if (req.url.startsWith('/api/')) send(res, 401, { error: 'login required' }, corsHeaders(req, allowedOrigin));
-      else redirect(res, '/login');
+      else {
+        const isNewsPath = url && (url.pathname === '/news' || url.pathname.startsWith('/news/'));
+        const loginPath = isNewsPath ? `/login?next=${encodeURIComponent(url.pathname + url.search)}` : '/login';
+        redirect(res, loginPath);
+      }
       return null;
     }
     return session;
@@ -228,7 +232,7 @@ function createServer(options = {}) {
 
   async function handleApi(req, res, url) {
     if (req.method === 'OPTIONS' && url.pathname.startsWith('/api/news/')) {
-      const session = await requireSession(req, res);
+      const session = await requireSession(req, res, url);
       if (!session) return;
       return send(res, 204, '', { ...corsHeaders(req, allowedOrigin), 'access-control-allow-methods': 'POST,OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-allow-credentials': 'true' });
     }
@@ -237,7 +241,7 @@ function createServer(options = {}) {
     if (url.pathname === '/api/logout' && req.method === 'POST') return send(res, 200, { ok: true }, { 'set-cookie': clearSessionCookie(), ...corsHeaders(req, allowedOrigin) });
     if (url.pathname === '/api/health' && req.method === 'GET') return send(res, 200, { ok: true, service: 'three-smiles-backend' });
 
-    const session = await requireSession(req, res);
+    const session = await requireSession(req, res, url);
     if (!session) return;
 
     if (url.pathname === '/api/me' && req.method === 'GET') return send(res, 200, { person: session.person }, corsHeaders(req, allowedOrigin));
@@ -317,7 +321,7 @@ function createServer(options = {}) {
     ]);
     const isLoginAsset = publicAssetPaths.has(pathname);
     if (!portfolioHost && !isLoginAsset) {
-      const session = await requireSession(req, res);
+      const session = await requireSession(req, res, url);
       if (!session) return;
     }
     if (pathname === '/news') return redirect(res, '/news/');

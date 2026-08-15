@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "check": "node --check server.js && node --check news/article-service.js && node --check news/news.js && node --check sw.js && node --check sw-v2.js && npm test",
-    "test": "node tests/test-login-gate.js && node tests/test-three-smiles-splash.js && node tests/test-portfolio-open-source.js && node tests/test-word-cloud.js && node tests/test-app-icons.js && node tests/test-service-worker.js && node --test tests/test-server-auth.js tests/test-news-article.js tests/test-news-server.js tests/test-news-ui.js"
+    "test": "node tests/test-login-gate.js && node tests/test-login-return.js && node tests/test-three-smiles-splash.js && node tests/test-portfolio-open-source.js && node tests/test-word-cloud.js && node tests/test-app-icons.js && node tests/test-service-worker.js && node --test tests/test-server-auth.js tests/test-news-article.js tests/test-news-server.js tests/test-news-ui.js"
   },
   "engines": {
     "node": ">=18"

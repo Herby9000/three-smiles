@@ -46,6 +46,23 @@
     </form>
   </main>
   <script>
+    function loginReturnPath() {
+      const next = new URLSearchParams(window.location.search).get('next');
+      if (!next || next.includes('\\') || next.includes('%') || next.includes('\uFFFD') || /[\u0000-\u001F\u007F]/.test(next)) return '/';
+      if (!next.startsWith('/') || next.startsWith('//')) return '/';
+
+      const rawPath = next.split(/[?#]/, 1)[0];
+      if (rawPath !== '/news' && !rawPath.startsWith('/news/')) return '/';
+
+      try {
+        const target = new URL(next, window.location.origin);
+        if (target.origin !== window.location.origin || target.pathname !== rawPath) return '/';
+        return `${target.pathname}${target.search}${target.hash}`;
+      } catch {
+        return '/';
+      }
+    }
+
     document.querySelector('#loginForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const error = document.querySelector('#error');
@@ -55,7 +72,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ person: document.querySelector('#person').value, passcode: document.querySelector('#passcode').value })
       });
-      if (response.ok) window.location.href = '/';
+      if (response.ok) window.location.href = loginReturnPath();
       else { error.textContent = 'That passcode did not work. Try again.'; document.querySelector('#passcode').value = ''; document.querySelector('#passcode').focus(); }
     });
   </script>
