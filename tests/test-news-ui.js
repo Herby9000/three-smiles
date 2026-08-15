@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const fs = require('node:fs');
 const { JSDOM } = require('jsdom');
+const { createNewsApp, matchesSportsFilter } = require('../news/news');
 
 const fixture = {
   generatedAt: '2026-08-15T08:00:00Z',
@@ -20,7 +21,7 @@ const fixture = {
 function setup(articleFetch, snapshot = fixture) {
   const html = fs.readFileSync('news/index.html', 'utf8');
   const dom = new JSDOM(html, { url: 'https://three-smiles.herbyprojects.com/news/' });
-  const { createNewsApp } = require('../news/news');
+
   const fetchImpl = async (url, options) => {
     if (url === 'fixture://snapshot') return new Response(JSON.stringify(snapshot), { headers: { 'content-type': 'application/json' } });
     return articleFetch(url, options);
@@ -30,6 +31,126 @@ function setup(articleFetch, snapshot = fixture) {
 }
 
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
+
+function sportsStory(id, overrides = {}) {
+  return {
+    id,
+    title: id,
+    summary: `${id} summary`,
+    url: `https://example.test/${id}`,
+    source: 'BBC Sport',
+    category: 'Sports',
+    focus: '',
+    labels: ['Sports'],
+    ...overrides
+  };
+}
+
+function sportsSnapshot(sports) {
+  const snapshot = structuredClone(fixture);
+  snapshot.schemaVersion = 2;
+  snapshot.stories = snapshot.stories.filter(story => story.category !== 'Sports');
+  snapshot.stories.push(...sports);
+  return snapshot;
+}
+
+const contractSports = [
+  ...Array.from({ length: 22 }, (_, index) => sportsStory(`blue-${index + 1}`, { focus: 'Blue Jays', labels: ['Sports', 'Blue Jays'], source: 'Toronto Blue Jays' })),
+  ...Array.from({ length: 7 }, (_, index) => sportsStory(`saracens-${index + 1}`, { focus: 'Saracens', labels: ['Sports', 'Rugby', 'Saracens'], source: 'Saracens' })),
+  ...Array.from({ length: 12 }, (_, index) => sportsStory(`rugby-${index + 1}`, { labels: ['Sports', index % 2 ? 'Rugby' : 'England Rugby'], source: 'BBC Rugby Union' })),
+  sportsStory('leafs-1', { focus: 'Maple Leafs', labels: ['Sports', 'Maple Leafs'], source: 'Sportsnet Maple Leafs' }),
+  ...Array.from({ length: 41 }, (_, index) => sportsStory(`other-${index + 1}`))
+];
+
+test('Sports matching uses only the exact focus, label, and source contract', () => {
+  assert.equal(matchesSportsFilter(sportsStory('focus-saracens', { focus: 'Saracens' }), 'Saracens'), true);
+  assert.equal(matchesSportsFilter(sportsStory('label-saracens', { labels: ['Sports', 'Saracens'] }), 'Saracens'), true);
+  assert.equal(matchesSportsFilter(sportsStory('source-saracens', { source: 'Saracens' }), 'Saracens'), true);
+  assert.equal(matchesSportsFilter(sportsStory('near-saracens', { focus: 'Saracens Women', labels: ['Sports', 'Saracens news'], source: 'Saracens Rugby' }), 'Saracens'), false);
+
+  assert.equal(matchesSportsFilter(sportsStory('focus-blue', { focus: 'Blue Jays' }), 'Blue Jays'), true);
+  assert.equal(matchesSportsFilter(sportsStory('label-blue', { labels: ['Blue Jays'] }), 'Blue Jays'), true);
+  assert.equal(matchesSportsFilter(sportsStory('source-blue', { source: 'Toronto Blue Jays' }), 'Blue Jays'), true);
+  assert.equal(matchesSportsFilter(sportsStory('near-blue', { focus: 'Toronto Blue Jays', labels: ['Blue Jays Baseball'], source: 'Blue Jays' }), 'Blue Jays'), false);
+
+  assert.equal(matchesSportsFilter(sportsStory('focus-leafs', { focus: 'Maple Leafs' }), 'Leafs'), true);
+  assert.equal(matchesSportsFilter(sportsStory('label-leafs', { labels: ['Maple Leafs'] }), 'Leafs'), true);
+  assert.equal(matchesSportsFilter(sportsStory('source-leafs', { source: 'Sportsnet Maple Leafs' }), 'Leafs'), true);
+  assert.equal(matchesSportsFilter(sportsStory('near-leafs', { focus: 'Leafs', labels: ['Toronto Maple Leafs'], source: 'Maple Leafs' }), 'Leafs'), false);
+
+  assert.equal(matchesSportsFilter(sportsStory('rugby-label', { labels: ['Rugby'] }), 'Rugby'), true);
+  assert.equal(matchesSportsFilter(sportsStory('england-rugby-label', { labels: ['England Rugby'] }), 'Rugby'), true);
+  assert.equal(matchesSportsFilter(sportsStory('rugby-source', { source: 'BBC Rugby Union' }), 'Rugby'), true);
+  assert.equal(matchesSportsFilter(sportsStory('rugby-near', { labels: ['Rugby Union'], source: 'BBC Rugby' }), 'Rugby'), false);
+  assert.equal(matchesSportsFilter(sportsStory('rugby-saracens', { labels: ['Rugby', 'Saracens'], source: 'BBC Rugby Union' }), 'Rugby'), false);
+});
+
+test('checked-in schemaVersion 2 contract snapshot has current nonzero Sports group counts', () => {
+  assert.equal(contractSports.length, 83);
+  assert.deepEqual(Object.fromEntries(['Rugby', 'Saracens', 'Blue Jays', 'Leafs'].map(filter => [filter, contractSports.filter(story => matchesSportsFilter(story, filter)).length])), {
+    Rugby: 12,
+    Saracens: 7,
+    'Blue Jays': 22,
+    Leafs: 1
+  });
+});
+
+test('Sports renders five accessible filters, concise All, and every exact named match', async () => {
+  const { dom, app } = setup(async () => new Response('{}'), sportsSnapshot(contractSports));
+  await app.start();
+  const document = dom.window.document;
+  document.querySelector('[data-section="Sports"]').click();
+
+  const heading = document.querySelector('#sectionStories .selected-heading');
+  const filters = [...document.querySelectorAll('[data-sports-filter]')];
+  assert.equal(heading.nextElementSibling.className, 'sports-filters');
+  assert.deepEqual(filters.map(button => button.dataset.sportsFilter), ['All', 'Rugby', 'Saracens', 'Blue Jays', 'Leafs']);
+  assert.ok(filters.every(button => button.tagName === 'BUTTON' && button.type === 'button'));
+  assert.deepEqual(filters.map(button => button.getAttribute('aria-pressed')), ['true', 'false', 'false', 'false', 'false']);
+  assert.deepEqual(filters.map(button => button.getAttribute('aria-label')), ['All, 83 stories', 'Rugby, 12 stories', 'Saracens, 7 stories', 'Blue Jays, 22 stories', 'Leafs, 1 story']);
+  assert.equal(document.querySelectorAll('#sectionStories .story-card').length, 12, 'All remains concise');
+
+  for (const filter of ['Rugby', 'Saracens', 'Blue Jays', 'Leafs']) {
+    document.querySelector(`[data-sports-filter="${filter}"]`).click();
+    const expected = contractSports.filter(story => matchesSportsFilter(story, filter));
+    const cards = [...document.querySelectorAll('#sectionStories .story-card')];
+    assert.equal(cards.length, expected.length, `${filter} is not truncated`);
+    assert.deepEqual(cards.map(card => card.querySelector('strong').textContent), expected.map(story => story.title));
+    assert.equal(document.querySelector('[data-section="Sports"]').getAttribute('aria-pressed'), 'true');
+    assert.equal(document.querySelector(`[data-sports-filter="${filter}"]`).getAttribute('aria-pressed'), 'true');
+    assert.equal(document.querySelector('#leadSection').hidden, true);
+  }
+});
+
+test('Sports filter survives authenticated reader dialog round trip and empty matches are clear', async () => {
+  const emptyLeafs = contractSports.filter(story => story.id !== 'leafs-1');
+  const { dom, app } = setup(async () => new Response(JSON.stringify({ ok: false, error: 'Unavailable' }), { status: 422 }), sportsSnapshot(emptyLeafs));
+  await app.start();
+  const document = dom.window.document;
+  document.querySelector('[data-section="Sports"]').click();
+  document.querySelector('[data-sports-filter="Blue Jays"]').click();
+  document.querySelector('#sectionStories .story-card').click();
+  assert.equal(document.querySelector('#readerDialog').open, true);
+  document.querySelector('#readerClose').click();
+  assert.equal(document.querySelector('#readerDialog').open, false);
+  assert.equal(document.querySelector('[data-section="Sports"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(document.querySelector('[data-sports-filter="Blue Jays"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(document.querySelectorAll('#sectionStories .story-card').length, 22);
+
+  document.querySelector('[data-sports-filter="Leafs"]').click();
+  assert.equal(document.querySelectorAll('#sectionStories .story-card').length, 0);
+  assert.match(document.querySelector('.sports-empty').textContent, /No Leafs stories in this edition/i);
+});
+
+test('Sports filters are touch-sized, non-wrapping, and horizontally scrollable at 320px', () => {
+  const css = fs.readFileSync('news/news.css', 'utf8');
+  assert.match(css, /\.sports-filters\s*\{[^}]*display:\s*flex/i);
+  assert.match(css, /\.sports-filters\s*\{[^}]*overflow-x:\s*auto/i);
+  assert.match(css, /\.sports-filters\s*\{[^}]*flex-wrap:\s*nowrap/i);
+  assert.match(css, /\.sports-filter\s*\{[^}]*flex:\s*0\s+0\s+auto/i);
+  assert.match(css, /\.sports-filter\s*\{[^}]*white-space:\s*nowrap/i);
+  assert.match(css, /\.sports-filter\s*\{[^}]*min-height:\s*44px/i);
+});
 
 test('section pills remain content-sized, single-line, touch-sized, and horizontally scrollable at 320px', () => {
   const css = fs.readFileSync('news/news.css', 'utf8');

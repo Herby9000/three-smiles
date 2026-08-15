@@ -2,6 +2,23 @@
 
 (function newsModule(root) {
   const DEFAULT_SNAPSHOT = 'https://herby9000.github.io/herbyprojects/news/data/news.json';
+  const SPORTS_FILTERS = ['All', 'Rugby', 'Saracens', 'Blue Jays', 'Leafs'];
+
+  function hasExactLabel(story, label) {
+    return Array.isArray(story?.labels) && story.labels.includes(label);
+  }
+
+  function matchesSportsFilter(story, filter) {
+    const isSaracens = story?.focus === 'Saracens' || hasExactLabel(story, 'Saracens') || story?.source === 'Saracens';
+    if (filter === 'All') return true;
+    if (filter === 'Saracens') return isSaracens;
+    if (filter === 'Blue Jays') return story?.focus === 'Blue Jays' || hasExactLabel(story, 'Blue Jays') || story?.source === 'Toronto Blue Jays';
+    if (filter === 'Leafs') return story?.focus === 'Maple Leafs' || hasExactLabel(story, 'Maple Leafs') || story?.source === 'Sportsnet Maple Leafs';
+    if (filter === 'Rugby') {
+      return !isSaracens && (hasExactLabel(story, 'Rugby') || hasExactLabel(story, 'England Rugby') || story?.source === 'BBC Rugby Union');
+    }
+    return false;
+  }
 
   function createNewsApp(options) {
     const document = options.document;
@@ -10,6 +27,7 @@
     let stories = [];
     let topIds = [];
     let requestVersion = 0;
+    let selectedSportsFilter = 'All';
 
     const leadSection = document.querySelector('#leadSection');
     const topStories = document.querySelector('#topStories');
@@ -107,6 +125,55 @@
       sectionStories.replaceChildren();
     }
 
+    function renderSports() {
+      const sports = stories.filter(story => story.category === 'Sports');
+      const heading = document.createElement('h1');
+      heading.className = 'selected-heading';
+      heading.textContent = 'Sports';
+
+      const filters = document.createElement('nav');
+      filters.className = 'sports-filters';
+      filters.setAttribute('aria-label', 'Sports filters');
+      for (const filter of SPORTS_FILTERS) {
+        const count = filter === 'All' ? sports.length : sports.filter(story => matchesSportsFilter(story, filter)).length;
+        const button = document.createElement('button');
+        const selected = filter === selectedSportsFilter;
+        button.type = 'button';
+        button.className = 'sports-filter';
+        button.dataset.sportsFilter = filter;
+        button.setAttribute('aria-pressed', String(selected));
+        button.setAttribute('aria-label', `${filter}, ${count} ${count === 1 ? 'story' : 'stories'}`);
+        button.classList.toggle('active', selected);
+        const label = document.createElement('span');
+        label.textContent = filter;
+        const countLabel = document.createElement('span');
+        countLabel.className = 'sports-filter-count';
+        countLabel.textContent = String(count);
+        countLabel.setAttribute('aria-hidden', 'true');
+        button.append(label, countLabel);
+        button.addEventListener('click', () => {
+          selectedSportsFilter = filter;
+          renderSports();
+        });
+        filters.append(button);
+      }
+
+      const matches = selectedSportsFilter === 'All'
+        ? sports.slice(0, 12)
+        : sports.filter(story => matchesSportsFilter(story, selectedSportsFilter));
+      const grid = document.createElement('div');
+      grid.className = 'story-grid';
+      matches.forEach(story => grid.append(storyButton(story)));
+      sectionStories.replaceChildren(heading, filters, grid);
+      if (!matches.length) {
+        const empty = document.createElement('p');
+        empty.className = 'sports-empty';
+        empty.setAttribute('role', 'status');
+        empty.textContent = `No ${selectedSportsFilter} stories in this edition.`;
+        grid.replaceWith(empty);
+      }
+    }
+
     function selectSection(section) {
       document.querySelectorAll('[data-section]').forEach(button => {
         const selected = button.dataset.section === section;
@@ -116,6 +183,7 @@
       if (section === 'Today') return renderToday();
 
       leadSection.hidden = true;
+      if (section === 'Sports') return renderSports();
       sectionStories.replaceChildren();
       const heading = document.createElement('h1');
       heading.className = 'selected-heading';
@@ -260,7 +328,7 @@
     return { start, selectSection, openStory };
   }
 
-  if (typeof module !== 'undefined' && module.exports) module.exports = { createNewsApp };
+  if (typeof module !== 'undefined' && module.exports) module.exports = { createNewsApp, matchesSportsFilter };
   if (root.document?.documentElement?.hasAttribute('data-news-auto')) {
     createNewsApp({ document: root.document }).start();
   }
