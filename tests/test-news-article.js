@@ -15,6 +15,18 @@ const syntheticHtml = `<!doctype html><html><head><title>A useful fixture articl
 <p>A final paragraph makes this deterministic body meaningful enough to pass the minimum extraction threshold in every test environment.</p>
 <script>globalThis.fixtureWasUnsafe = true</script></article></body></html>`;
 
+const imageHtml = `<!doctype html><html><head><title>Images in order</title></head><body><article>
+<h1>Images in order</h1>
+<p>The opening paragraph is deliberately substantial and appears before the first publisher photograph in this deterministic extraction fixture.</p>
+<figure><img src="/media/market.jpg" alt="  Market &amp; shoppers  " width="1200" height="800"><figcaption> Market activity <em>this morning</em> </figcaption></figure>
+<p>The middle paragraph is also long enough to remain in the extracted article and establish the expected document ordering.</p>
+<img src="data:image/gif;base64,AAAA" alt="unsafe">
+<img src="/pixel.gif" width="1" height="1" alt="tracker">
+<img src="/media/market.jpg" alt="duplicate">
+<img src="data:image/gif;base64,AAAA" data-lazy-src="//media.guim.co.uk/lazy/economy.jpg" alt="  Lazy economy image  " title=" Publisher title ">
+<p>The closing paragraph provides enough additional prose to satisfy the extraction threshold after all unsafe page material is discarded.</p>
+</article></body></html>`;
+
 function htmlResponse(body = syntheticHtml, options = {}) {
   return new Response(body, {
     status: options.status || 200,
@@ -92,6 +104,43 @@ test('synthetic HTML becomes inert clean paragraphs without scripts or navigatio
   assert.ok(result.article.paragraphs.every(paragraph => typeof paragraph === 'string' && !paragraph.includes('<')));
 });
 
+test('Readability content preserves ordered clean paragraphs and unique safe publisher images', async () => {
+  const result = await makeService({ fetchImpl: async () => htmlResponse(imageHtml) })
+    .extract('https://www.theguardian.com/business/economics/fixture');
+  assert.deepEqual(result.article.blocks.map(block => block.type), ['paragraph', 'image', 'paragraph', 'image', 'paragraph']);
+  assert.deepEqual(result.article.blocks.filter(block => block.type === 'image'), [
+    { type: 'image', url: 'https://www.theguardian.com/media/market.jpg', alt: 'Market & shoppers', caption: 'Market activity this morning' },
+    { type: 'image', url: 'https://media.guim.co.uk/lazy/economy.jpg', alt: 'Lazy economy image', title: 'Publisher title' }
+  ]);
+  assert.deepEqual(result.article.paragraphs, result.article.blocks.filter(block => block.type === 'paragraph').map(block => block.text));
+  assert.doesNotMatch(JSON.stringify(result.article.blocks.filter(block => block.type === 'image')), /data:image|pixel\.gif|<em>|duplicate|unsafe|tracker/i);
+});
+
+test('image URLs resolve against the final article URL and reject unsafe URL forms', async () => {
+  const images = [
+    '<img src="../photos/relative.jpg" alt="relative">',
+    '<img src="//cdn.example.test/protocol.jpg" alt="protocol">',
+    '<img src="https://user:pass@cdn.example.test/credential.jpg" alt="credentials">',
+    '<img src="https://cdn.example.test:8443/port.jpg" alt="port">',
+    '<img src="javascript:alert(1)" alt="script">',
+    '<img src="file:///tmp/private.jpg" alt="file">',
+    '<img src="blob:https://cdn.example.test/id" alt="blob">',
+    '<img srcset="http://cdn.example.test/bad.jpg 1x, https://cdn.example.test/good.jpg 2x" alt="srcset">'
+  ].join('');
+  const body = syntheticHtml.replace('<script>', `${images}<script>`);
+  const service = makeService({
+    fetchImpl: async url => url.includes('/start')
+      ? new Response(null, { status: 302, headers: { location: '/section/final/article.html' } })
+      : htmlResponse(body)
+  });
+  const result = await service.extract('https://www.bbc.com/start');
+  assert.deepEqual(result.article.blocks.filter(block => block.type === 'image').map(block => block.url), [
+    'https://www.bbc.com/section/photos/relative.jpg',
+    'https://cdn.example.test/protocol.jpg',
+    'https://cdn.example.test/good.jpg'
+  ]);
+});
+
 test('malformed publisher styles remain inert and do not pollute server logs', async () => {
   const errors = [];
   const originalError = console.error;
@@ -126,4 +175,20 @@ test('successful cache hit avoids a second fetch and uses only the injected data
   const files = await fs.readdir(root);
   assert.equal(files.length, 1);
   assert.match(files[0], /^[a-f0-9]{64}\.json$/);
+});
+
+test('old paragraph-only cache entries are not served as current extraction hits', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'daily-seven-old-cache-'));
+  const url = 'https://www.bbc.com/news/articles/old-cache';
+  const key = crypto.createHash('sha256').update(url).digest('hex');
+  await fs.writeFile(path.join(root, `${key}.json`), JSON.stringify({
+    fetchedAt: Date.now(),
+    article: { title: 'Old cached title', paragraphs: ['Old paragraph one long enough to pass.', 'Old paragraph two long enough to pass.'] }
+  }));
+  let calls = 0;
+  const result = await makeService({ cacheRoot: root, fetchImpl: async () => { calls += 1; return htmlResponse(); } }).extract(url);
+  assert.equal(result.cache, 'miss');
+  assert.equal(calls, 1);
+  assert.ok(Array.isArray(result.article.blocks));
+  assert.notEqual(result.article.title, 'Old cached title');
 });

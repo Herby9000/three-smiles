@@ -21,7 +21,7 @@ main { width: min(1100px, 100%); margin: 0 auto; padding: 18px max(18px, env(saf
 
 .section-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 16px; scrollbar-width: none; }
 .section-tabs::-webkit-scrollbar { display: none; }
-.section-tabs button { min-height: 44px; min-width: 82px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 18px; color: var(--ink); background: transparent; cursor: pointer; }
+.section-tabs button { flex: 0 0 auto; min-height: 44px; min-width: 82px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 18px; color: var(--ink); background: transparent; white-space: nowrap; cursor: pointer; }
 .section-tabs button.active { color: white; border-color: var(--forest); background: var(--forest); }
 .status { min-height: 22px; color: var(--muted); font-size: .82rem; }
 .section-heading { margin: 36px 0 18px; }
@@ -58,6 +58,9 @@ dialog::backdrop { background: rgb(18 20 18 / 62%); backdrop-filter: blur(5px); 
 .reader-body { font: 1.08rem/1.7 Georgia, serif; }
 .reader-body p { margin: 0 0 1.2em; }
 .reader-body .summary-label { font: 800 .72rem/1.4 ui-sans-serif, system-ui, sans-serif; }
+.reader-body figure { margin: 0 0 1.5em; }
+.reader-body figure img { display: block; width: 100%; height: auto; max-height: 70dvh; border-radius: 12px; object-fit: contain; background: #ded8cc; }
+.reader-body figcaption { margin-top: 8px; color: var(--muted); font: .82rem/1.45 ui-sans-serif, system-ui, sans-serif; }
 .reader-footer { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 20px; }
 .reader-footer a { display: inline-flex; min-height: 44px; align-items: center; color: var(--accent); font-weight: 750; }
 

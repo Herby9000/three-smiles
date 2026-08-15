@@ -126,8 +126,37 @@
       sectionStories.append(heading, grid);
     }
 
+    function articleFigure(url, alt, caption, title, className) {
+      const safeUrl = safeImageUrl(url);
+      if (!safeUrl) return null;
+      const figure = document.createElement('figure');
+      figure.className = className;
+      const image = document.createElement('img');
+      image.src = safeUrl;
+      image.alt = typeof alt === 'string' ? alt : '';
+      if (typeof title === 'string') image.title = title;
+      image.setAttribute('loading', 'lazy');
+      image.setAttribute('decoding', 'async');
+      image.setAttribute('referrerpolicy', 'no-referrer');
+      image.addEventListener('error', () => figure.remove(), { once: true });
+      figure.append(image);
+      if (typeof caption === 'string' && caption.trim()) {
+        const figcaption = document.createElement('figcaption');
+        figcaption.textContent = caption;
+        figure.append(figcaption);
+      }
+      return figure;
+    }
+
+    function appendHero(story) {
+      const hero = articleFigure(story.imageUrl, story.title || '', '', '', 'reader-hero');
+      if (hero) readerBody.append(hero);
+      return safeImageUrl(story.imageUrl);
+    }
+
     function setSummary(story) {
       readerBody.replaceChildren();
+      appendHero(story);
       const label = document.createElement('p');
       label.className = 'summary-label';
       label.textContent = 'Feed summary';
@@ -136,12 +165,23 @@
       readerBody.append(label, summary);
     }
 
-    function setFullArticle(article) {
+    function setFullArticle(article, story) {
       readerBody.replaceChildren();
-      for (const text of article.paragraphs || []) {
-        const paragraph = document.createElement('p');
-        paragraph.textContent = text;
-        readerBody.append(paragraph);
+      const heroUrl = appendHero(story);
+      const blocks = Array.isArray(article.blocks)
+        ? article.blocks
+        : (article.paragraphs || []).map(text => ({ type: 'paragraph', text }));
+      for (const block of blocks) {
+        if (block?.type === 'paragraph' && typeof block.text === 'string') {
+          const paragraph = document.createElement('p');
+          paragraph.textContent = block.text;
+          readerBody.append(paragraph);
+        } else if (block?.type === 'image') {
+          const blockUrl = safeImageUrl(block.url);
+          if (!blockUrl || blockUrl === heroUrl) continue;
+          const figure = articleFigure(blockUrl, block.alt, block.caption, block.title, 'reader-article-image');
+          if (figure) readerBody.append(figure);
+        }
       }
     }
 
@@ -175,7 +215,7 @@
         readerTitle.textContent = result.article.title || story.title || 'Untitled story';
         readerSource.textContent = result.article.siteName || story.source || '';
         readerByline.textContent = result.article.byline || '';
-        setFullArticle(result.article);
+        setFullArticle(result.article, story);
         readerStatus.textContent = 'Full article extracted for private reading.';
       } catch {
         if (version === requestVersion && dialog.open) readerStatus.textContent = 'Full article unavailable; showing the feed summary.';

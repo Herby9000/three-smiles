@@ -31,6 +31,16 @@ function setup(articleFetch, snapshot = fixture) {
 
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
 
+test('section pills remain content-sized, single-line, touch-sized, and horizontally scrollable at 320px', () => {
+  const css = fs.readFileSync('news/news.css', 'utf8');
+  assert.match(css, /\.section-tabs\s*\{[^}]*overflow-x:\s*auto/i);
+  assert.match(css, /\.section-tabs button\s*\{[^}]*flex:\s*0\s+0\s+auto/i);
+  assert.match(css, /\.section-tabs button\s*\{[^}]*white-space:\s*nowrap/i);
+  assert.match(css, /\.section-tabs button\s*\{[^}]*min-height:\s*44px/i);
+  assert.match(css, /\.section-tabs button:focus-visible/);
+  assert.ok(5 * 82 + 4 * 8 > 320 - 36, 'minimum pill row is wider than a 320px viewport and can scroll');
+});
+
 test('valid Today edition shows exactly seven image-bearing, sport-free cards and no category grids', async () => {
   const { dom, app } = setup(async () => new Response('{}'));
   await app.start();
@@ -104,7 +114,7 @@ test('image failure marks the visual unavailable and retains the card title and 
   assert.equal(card.tagName, 'BUTTON');
 });
 
-test('story opens immediately, calls private endpoint, and successful body replaces summary', async () => {
+test('story hero appears during loading and ordered full blocks render safely without duplicating it', async () => {
   let request;
   let resolveArticle;
   const pending = new Promise(resolve => { resolveArticle = resolve; });
@@ -115,13 +125,36 @@ test('story opens immediately, calls private endpoint, and successful body repla
   assert.equal(dialog.open, true);
   assert.match(dialog.querySelector('#readerBody').textContent, /Summary 1/);
   assert.match(dialog.querySelector('#readerStatus').textContent, /Loading full article/i);
+  const loadingHero = dialog.querySelector('.reader-hero img');
+  assert.equal(loadingHero.src, fixture.stories[0].imageUrl);
+  assert.equal(loadingHero.getAttribute('loading'), 'lazy');
+  assert.equal(loadingHero.getAttribute('decoding'), 'async');
+  assert.equal(loadingHero.getAttribute('referrerpolicy'), 'no-referrer');
   assert.equal(request.url, '/api/news/article');
   assert.equal(request.options.method, 'POST');
 
-  resolveArticle(new Response(JSON.stringify({ ok: true, article: { title: 'Full title', byline: 'Writer', siteName: 'BBC', paragraphs: ['Full paragraph one.', 'Full paragraph two.'] } }), { headers: { 'content-type': 'application/json' } }));
+  resolveArticle(new Response(JSON.stringify({ ok: true, article: {
+    title: 'Full title', byline: 'Writer', siteName: 'BBC',
+    paragraphs: ['Full paragraph one.', 'Full paragraph two.'],
+    blocks: [
+      { type: 'paragraph', text: 'Full paragraph one.' },
+      { type: 'image', url: fixture.stories[0].imageUrl, alt: 'Duplicate hero' },
+      { type: 'image', url: 'https://ichef.bbci.co.uk/news/body.jpg', alt: 'Body image', caption: 'A plain caption' },
+      { type: 'paragraph', text: 'Full paragraph two.' }
+    ]
+  } }), { headers: { 'content-type': 'application/json' } }));
   await tick();
   assert.match(dialog.querySelector('#readerBody').textContent, /Full paragraph one/);
   assert.doesNotMatch(dialog.querySelector('#readerBody').textContent, /Summary 1/);
+  assert.deepEqual([...dialog.querySelector('#readerBody').children].map(node => node.tagName), ['FIGURE', 'P', 'FIGURE', 'P']);
+  assert.equal(dialog.querySelectorAll(`img[src="${fixture.stories[0].imageUrl}"]`).length, 1);
+  assert.equal(dialog.querySelector('figcaption').textContent, 'A plain caption');
+
+  const bodyFigure = dialog.querySelector('.reader-article-image');
+  bodyFigure.querySelector('img').dispatchEvent(new dom.window.Event('error'));
+  assert.equal(bodyFigure.isConnected, false);
+  assert.match(dialog.querySelector('#readerBody').textContent, /Full paragraph one/);
+  assert.match(dialog.querySelector('#readerBody').textContent, /Full paragraph two/);
 });
 
 test('failure retains a labelled summary and stale response cannot overwrite a newer story', async () => {
@@ -136,6 +169,7 @@ test('failure retains a labelled summary and stale response cannot overwrite a n
   await tick();
   assert.match(dom.window.document.querySelector('#readerStatus').textContent, /Full article unavailable/i);
   assert.match(dom.window.document.querySelector('#readerBody').textContent, /Summary 2/);
+  assert.equal(dom.window.document.querySelector('.reader-hero img').src, fixture.stories[1].imageUrl);
 
   resolvers[0](new Response(JSON.stringify({ ok: true, article: { paragraphs: ['Stale full body must not appear.'] } }), { headers: { 'content-type': 'application/json' } }));
   await tick();

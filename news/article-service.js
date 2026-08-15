@@ -8,6 +8,8 @@ const path = require('node:path');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const { Readability } = require('@mozilla/readability');
 
+const CACHE_FORMAT_VERSION = 2;
+
 const ALLOWED_HOSTS = new Set([
   'bbc.com', 'www.bbc.com', 'bbc.co.uk', 'www.bbc.co.uk', 'news.bbc.co.uk',
   'cbc.ca', 'www.cbc.ca',
@@ -26,6 +28,7 @@ const DEFAULTS = {
   maxRedirects: 4,
   cacheTtlMs: 12 * 60 * 60 * 1000,
   maxCacheEntries: 100,
+  maxImages: 20,
   minTextLength: 300
 };
 
@@ -90,7 +93,49 @@ function parseTarget(rawUrl) {
 }
 
 function plainText(value) {
-  return String(value || '').replace(/\s+/g, ' ').trim();
+  return String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function safeImageUrl(value, articleUrl) {
+  try {
+    const rawUrl = plainText(value);
+    if (!rawUrl) return '';
+    const url = new URL(rawUrl, articleUrl);
+    if (url.protocol !== 'https:' || url.username || url.password || (url.port && url.port !== '443')) return '';
+    return url.href;
+  } catch {
+    return '';
+  }
+}
+
+function srcsetCandidates(value) {
+  const withoutDataUrls = String(value || '').replace(/data:[^,\s]+,[^\s,]+(?:\s+\d+(?:\.\d+)?[wx])?/gi, '');
+  return plainText(withoutDataUrls).split(',').map((candidate, index) => {
+    const [url, descriptor = ''] = candidate.trim().split(/\s+/);
+    const match = descriptor.match(/^(\d+(?:\.\d+)?)(w|x)$/);
+    return { url, score: match ? Number(match[1]) : 0, index };
+  }).filter(candidate => candidate.url).sort((a, b) => b.score - a.score || a.index - b.index);
+}
+
+function imageSource(node, articleUrl) {
+  const candidates = ['data-src', 'data-lazy-src', 'data-original']
+    .map(attribute => node.getAttribute(attribute))
+    .filter(Boolean);
+  candidates.push(...srcsetCandidates(node.getAttribute('srcset')).map(candidate => candidate.url));
+  const src = node.getAttribute('src');
+  if (src) candidates.push(src);
+  for (const candidate of candidates) {
+    const url = safeImageUrl(candidate, articleUrl);
+    if (url) return url;
+  }
+  return '';
+}
+
+function isDeclaredTinyImage(node) {
+  const width = Number.parseFloat(node.getAttribute('width'));
+  const height = Number.parseFloat(node.getAttribute('height'));
+  return (Number.isFinite(width) && width > 0 && width <= 32) ||
+    (Number.isFinite(height) && height > 0 && height <= 32);
 }
 
 async function readResponseBody(response, maxBytes) {
@@ -120,17 +165,39 @@ async function readResponseBody(response, maxBytes) {
   return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
 }
 
-function sanitizeExtraction(html, articleUrl, minTextLength) {
+function sanitizeExtraction(html, articleUrl, minTextLength, maxImages) {
   const virtualConsole = new VirtualConsole();
   const dom = new JSDOM(html, { url: articleUrl, virtualConsole });
   const parsed = new Readability(dom.window.document).parse();
   if (!parsed?.content) fail('extraction_failed', 'No readable article body was found.', 422);
 
   const articleDom = new JSDOM(`<main>${parsed.content}</main>`, { virtualConsole });
-  const paragraphs = [...articleDom.window.document.querySelectorAll('p')]
-    .map(node => plainText(node.textContent))
-    .filter(paragraph => paragraph.length >= 30)
-    .slice(0, 250);
+  const blocks = [];
+  const paragraphs = [];
+  const imageUrls = new Set();
+  let imageCount = 0;
+  for (const node of articleDom.window.document.querySelectorAll('p, img')) {
+    if (node.localName === 'p') {
+      if (node.closest('figcaption')) continue;
+      const text = plainText(node.textContent);
+      if (text.length < 30 || paragraphs.length >= 250) continue;
+      paragraphs.push(text);
+      blocks.push({ type: 'paragraph', text });
+      continue;
+    }
+    if (imageCount >= maxImages || isDeclaredTinyImage(node)) continue;
+    const url = imageSource(node, articleUrl);
+    if (!url || imageUrls.has(url)) continue;
+    const block = { type: 'image', url, alt: plainText(node.getAttribute('alt')) };
+    const figure = node.closest('figure');
+    const caption = plainText(figure?.querySelector('figcaption')?.textContent);
+    const title = plainText(node.getAttribute('title'));
+    if (caption) block.caption = caption;
+    if (title) block.title = title;
+    imageUrls.add(url);
+    imageCount += 1;
+    blocks.push(block);
+  }
   const bodyLength = paragraphs.reduce((total, paragraph) => total + paragraph.length, 0);
   if (paragraphs.length < 2 || bodyLength < minTextLength) {
     fail('extraction_too_short', 'The article did not contain enough readable text.', 422);
@@ -141,7 +208,8 @@ function sanitizeExtraction(html, articleUrl, minTextLength) {
     byline: plainText(parsed.byline),
     siteName: plainText(parsed.siteName),
     excerpt: plainText(parsed.excerpt),
-    paragraphs
+    paragraphs,
+    blocks
   };
 }
 
@@ -168,7 +236,14 @@ function createArticleService(options = {}) {
   async function readCache(target) {
     try {
       const cached = JSON.parse(await fs.readFile(cachePath(target), 'utf8'));
-      if (cached.fetchedAt + config.cacheTtlMs > now() && cached.article?.paragraphs?.length >= 2) return cached.article;
+      const blocks = cached.article?.blocks;
+      const validBlocks = Array.isArray(blocks) && blocks.length >= 2 && blocks.every(block =>
+        (block?.type === 'paragraph' && typeof block.text === 'string') ||
+        (block?.type === 'image' && safeImageUrl(block.url) === block.url && typeof block.alt === 'string' &&
+          (block.caption === undefined || typeof block.caption === 'string') &&
+          (block.title === undefined || typeof block.title === 'string')));
+      if (cached.version === CACHE_FORMAT_VERSION && validBlocks &&
+          cached.fetchedAt + config.cacheTtlMs > now() && cached.article.paragraphs?.length >= 2) return cached.article;
     } catch (error) {
       if (error.code !== 'ENOENT' && !(error instanceof SyntaxError)) throw error;
     }
@@ -189,7 +264,7 @@ function createArticleService(options = {}) {
     await fs.mkdir(cacheRoot, { recursive: true });
     const destination = cachePath(target);
     const temporary = `${destination}.${process.pid}.${crypto.randomBytes(6).toString('hex')}.tmp`;
-    await fs.writeFile(temporary, JSON.stringify({ fetchedAt: now(), article }), { mode: 0o600 });
+    await fs.writeFile(temporary, JSON.stringify({ version: CACHE_FORMAT_VERSION, fetchedAt: now(), article }), { mode: 0o600 });
     await fs.rename(temporary, destination);
     await pruneCache();
   }
@@ -238,7 +313,7 @@ function createArticleService(options = {}) {
     const cached = await readCache(target);
     if (cached) return { ok: true, cache: 'hit', article: cached };
     const { html, finalUrl } = await fetchHtml(target);
-    const article = sanitizeExtraction(html, finalUrl, config.minTextLength);
+    const article = sanitizeExtraction(html, finalUrl, config.minTextLength, config.maxImages);
     await writeCache(target, article);
     return { ok: true, cache: 'miss', article };
   }
