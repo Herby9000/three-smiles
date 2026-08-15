@@ -157,6 +157,42 @@ test('story hero appears during loading and ordered full blocks render safely wi
   assert.match(dialog.querySelector('#readerBody').textContent, /Full paragraph two/);
 });
 
+test('extracted lead replaces a low feed hero, natural-size checks remove only low images, and duplicate lead blocks are omitted', async () => {
+  const feedUrl = fixture.stories[0].imageUrl;
+  const leadUrl = 'https://ichef.bbci.co.uk/news/lead-1200.jpg';
+  const lowUrl = 'https://ichef.bbci.co.uk/news/body-low.jpg';
+  const exactUrl = 'https://ichef.bbci.co.uk/news/body-exact.jpg';
+  const { dom, app } = setup(async () => new Response(JSON.stringify({ ok: true, article: {
+    title: 'High resolution article', paragraphs: ['Paragraph one remains.', 'Paragraph two remains.'],
+    leadImage: { url: leadUrl, width: 1200, height: 630, alt: 'Publisher lead' },
+    blocks: [
+      { type: 'paragraph', text: 'Paragraph one remains.' },
+      { type: 'image', url: leadUrl, width: 1200, height: 630, alt: 'Duplicate lead' },
+      { type: 'image', url: lowUrl, alt: 'Low natural size' },
+      { type: 'image', url: exactUrl, width: 960, height: 540, alt: 'Exact minimum' },
+      { type: 'paragraph', text: 'Paragraph two remains.' }
+    ]
+  } }), { headers: { 'content-type': 'application/json' } }));
+  await app.start();
+  dom.window.document.querySelector('.story-card').click();
+  assert.equal(dom.window.document.querySelector('.reader-hero img').src, feedUrl);
+  await tick();
+
+  const body = dom.window.document.querySelector('#readerBody');
+  assert.equal(body.querySelector('.reader-hero img').src, leadUrl);
+  assert.equal(body.querySelectorAll(`img[src="${leadUrl}"]`).length, 1);
+  const low = body.querySelector(`img[src="${lowUrl}"]`);
+  Object.defineProperties(low, { naturalWidth: { value: 959 }, naturalHeight: { value: 540 } });
+  low.dispatchEvent(new dom.window.Event('load'));
+  assert.equal(low.isConnected, false);
+  const exact = body.querySelector(`img[src="${exactUrl}"]`);
+  Object.defineProperties(exact, { naturalWidth: { value: 960 }, naturalHeight: { value: 540 } });
+  exact.dispatchEvent(new dom.window.Event('load'));
+  assert.equal(exact.isConnected, true);
+  assert.match(body.textContent, /Paragraph one remains/);
+  assert.match(body.textContent, /Paragraph two remains/);
+});
+
 test('failure retains a labelled summary and stale response cannot overwrite a newer story', async () => {
   const resolvers = [];
   const { dom, app } = setup(async () => new Promise(resolve => resolvers.push(resolve)));

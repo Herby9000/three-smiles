@@ -138,6 +138,9 @@
       image.setAttribute('loading', 'lazy');
       image.setAttribute('decoding', 'async');
       image.setAttribute('referrerpolicy', 'no-referrer');
+      image.addEventListener('load', () => {
+        if (image.naturalWidth < 960 || image.naturalHeight < 540) figure.remove();
+      }, { once: true });
       image.addEventListener('error', () => figure.remove(), { once: true });
       figure.append(image);
       if (typeof caption === 'string' && caption.trim()) {
@@ -148,10 +151,12 @@
       return figure;
     }
 
-    function appendHero(story) {
-      const hero = articleFigure(story.imageUrl, story.title || '', '', '', 'reader-hero');
+    function appendHero(story, leadImage) {
+      const leadUrl = safeImageUrl(leadImage?.url);
+      const heroUrl = leadUrl || safeImageUrl(story.imageUrl);
+      const hero = articleFigure(heroUrl, leadUrl ? leadImage.alt : (story.title || ''), '', '', 'reader-hero');
       if (hero) readerBody.append(hero);
-      return safeImageUrl(story.imageUrl);
+      return heroUrl;
     }
 
     function setSummary(story) {
@@ -167,7 +172,7 @@
 
     function setFullArticle(article, story) {
       readerBody.replaceChildren();
-      const heroUrl = appendHero(story);
+      const heroUrl = appendHero(story, article.leadImage);
       const blocks = Array.isArray(article.blocks)
         ? article.blocks
         : (article.paragraphs || []).map(text => ({ type: 'paragraph', text }));

@@ -27,6 +27,23 @@ const imageHtml = `<!doctype html><html><head><title>Images in order</title></he
 <p>The closing paragraph provides enough additional prose to satisfy the extraction threshold after all unsafe page material is discarded.</p>
 </article></body></html>`;
 
+const highResolutionHtml = `<!doctype html><html><head>
+<title>High resolution images</title>
+<meta content="https://user:secret@images.example.test/unsafe.jpg" property="og:image">
+<meta property="og:image" content="/media/too-narrow.jpg"><meta content="959" property="og:image:width"><meta property="og:image:height" content="540">
+<meta property="og:image" content="/media/too-short.jpg"><meta property="og:image:width" content="960"><meta property="og:image:height" content="539">
+<meta content="/media/lead-large.jpg?label=Market&amp;day=Today" property="og:image">
+<meta content="1200" property="og:image:width"><meta content="630" property="og:image:height"><meta content=" Markets &amp; shoppers " property="og:image:alt">
+<meta name="twitter:image:height" content="600"><meta content="/media/twitter.jpg" name="twitter:image"><meta content="1000" name="twitter:image:width">
+<meta property="og:image" content="/media/lead-large.jpg?label=Market&amp;day=Today"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+</head><body><article><h1>High resolution images</h1>
+<p>The opening paragraph contains enough substantial fixture prose to make this high resolution metadata article readable and deterministic.</p>
+<img src="/media/fallback.jpg" srcset="/media/inline-960.jpg 960w, /media/inline-1600.jpg 1600w" width="1200" height="800" alt="Inline large">
+<img src="/media/inline-low.jpg" width="959" height="540" alt="Inline too narrow">
+<img src="/media/inline-unknown.jpg" alt="Inline dimensions unknown">
+<p>The closing paragraph contains enough additional fixture prose to satisfy extraction while preserving ordered safe article blocks.</p>
+</article></body></html>`;
+
 function htmlResponse(body = syntheticHtml, options = {}) {
   return new Response(body, {
     status: options.status || 200,
@@ -109,11 +126,39 @@ test('Readability content preserves ordered clean paragraphs and unique safe pub
     .extract('https://www.theguardian.com/business/economics/fixture');
   assert.deepEqual(result.article.blocks.map(block => block.type), ['paragraph', 'image', 'paragraph', 'image', 'paragraph']);
   assert.deepEqual(result.article.blocks.filter(block => block.type === 'image'), [
-    { type: 'image', url: 'https://www.theguardian.com/media/market.jpg', alt: 'Market & shoppers', caption: 'Market activity this morning' },
+    { type: 'image', url: 'https://www.theguardian.com/media/market.jpg', alt: 'Market & shoppers', width: 1200, height: 800, caption: 'Market activity this morning' },
     { type: 'image', url: 'https://media.guim.co.uk/lazy/economy.jpg', alt: 'Lazy economy image', title: 'Publisher title' }
   ]);
   assert.deepEqual(result.article.paragraphs, result.article.blocks.filter(block => block.type === 'paragraph').map(block => block.text));
   assert.doesNotMatch(JSON.stringify(result.article.blocks.filter(block => block.type === 'image')), /data:image|pixel\.gif|<em>|duplicate|unsafe|tracker/i);
+});
+
+test('publisher metadata selects the largest qualifying safe lead and inline images enforce declared dimensions', async () => {
+  const result = await makeService({ fetchImpl: async () => htmlResponse(highResolutionHtml) })
+    .extract('https://www.theguardian.com/business/economics/high-resolution');
+  assert.deepEqual(result.article.leadImage, {
+    url: 'https://www.theguardian.com/media/lead-large.jpg?label=Market&day=Today',
+    width: 1200,
+    height: 630,
+    alt: 'Markets & shoppers'
+  });
+  assert.deepEqual(result.article.blocks.filter(block => block.type === 'image'), [
+    { type: 'image', url: 'https://www.theguardian.com/media/inline-1600.jpg', width: 1200, height: 800, alt: 'Inline large' },
+    { type: 'image', url: 'https://www.theguardian.com/media/inline-unknown.jpg', alt: 'Inline dimensions unknown' }
+  ]);
+  assert.doesNotMatch(JSON.stringify(result.article), /too-narrow|too-short|unsafe|inline-low|fallback/);
+});
+
+test('lead metadata accepts exact minimum, handles attribute order and entities, deduplicates, and rejects SVG', async () => {
+  const html = highResolutionHtml.replace(/<meta[\s\S]*?<\/head>/, `<meta content="540" property="og:image:height">
+    <meta content="/media/exact.jpg?one=1&amp;two=2" property="og:image"><meta content="960" property="og:image:width">
+    <meta content="/media/exact.jpg?one=1&amp;two=2" name="twitter:image"><meta content="960" name="twitter:image:width"><meta content="540" name="twitter:image:height">
+    <meta property="og:image" content="https://images.example.test/vector.svg"><meta property="og:image:width" content="2000"><meta property="og:image:height" content="1200"></head>`);
+  const result = await makeService({ fetchImpl: async () => htmlResponse(html) })
+    .extract('https://www.bbc.com/news/articles/metadata-order');
+  assert.deepEqual(result.article.leadImage, {
+    url: 'https://www.bbc.com/media/exact.jpg?one=1&two=2', width: 960, height: 540, alt: ''
+  });
 });
 
 test('image URLs resolve against the final article URL and reject unsafe URL forms', async () => {
@@ -191,4 +236,24 @@ test('old paragraph-only cache entries are not served as current extraction hits
   assert.equal(calls, 1);
   assert.ok(Array.isArray(result.article.blocks));
   assert.notEqual(result.article.title, 'Old cached title');
+});
+
+test('previous structured cache schema without high-resolution lead metadata is invalidated', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'daily-seven-v2-cache-'));
+  const url = 'https://www.bbc.com/news/articles/v2-cache';
+  const key = crypto.createHash('sha256').update(url).digest('hex');
+  await fs.writeFile(path.join(root, `${key}.json`), JSON.stringify({
+    version: 2,
+    fetchedAt: Date.now(),
+    article: {
+      title: 'Previous structured cache',
+      paragraphs: ['Old paragraph one long enough to pass.', 'Old paragraph two long enough to pass.'],
+      blocks: [{ type: 'paragraph', text: 'Old paragraph one long enough to pass.' }, { type: 'paragraph', text: 'Old paragraph two long enough to pass.' }]
+    }
+  }));
+  let calls = 0;
+  const result = await makeService({ cacheRoot: root, fetchImpl: async () => { calls += 1; return htmlResponse(highResolutionHtml); } }).extract(url);
+  assert.equal(result.cache, 'miss');
+  assert.equal(calls, 1);
+  assert.equal(result.article.leadImage.width, 1200);
 });

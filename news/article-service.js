@@ -8,7 +8,9 @@ const path = require('node:path');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const { Readability } = require('@mozilla/readability');
 
-const CACHE_FORMAT_VERSION = 2;
+const CACHE_FORMAT_VERSION = 3;
+const MIN_IMAGE_WIDTH = 960;
+const MIN_IMAGE_HEIGHT = 540;
 
 const ALLOWED_HOSTS = new Set([
   'bbc.com', 'www.bbc.com', 'bbc.co.uk', 'www.bbc.co.uk', 'news.bbc.co.uk',
@@ -101,7 +103,7 @@ function safeImageUrl(value, articleUrl) {
     const rawUrl = plainText(value);
     if (!rawUrl) return '';
     const url = new URL(rawUrl, articleUrl);
-    if (url.protocol !== 'https:' || url.username || url.password || (url.port && url.port !== '443')) return '';
+    if (url.protocol !== 'https:' || url.username || url.password || (url.port && url.port !== '443') || /\.svgz?$/i.test(url.pathname)) return '';
     return url.href;
   } catch {
     return '';
@@ -118,10 +120,10 @@ function srcsetCandidates(value) {
 }
 
 function imageSource(node, articleUrl) {
-  const candidates = ['data-src', 'data-lazy-src', 'data-original']
+  const candidates = srcsetCandidates(node.getAttribute('srcset')).map(candidate => candidate.url);
+  candidates.push(...['data-src', 'data-lazy-src', 'data-original']
     .map(attribute => node.getAttribute(attribute))
-    .filter(Boolean);
-  candidates.push(...srcsetCandidates(node.getAttribute('srcset')).map(candidate => candidate.url));
+    .filter(Boolean));
   const src = node.getAttribute('src');
   if (src) candidates.push(src);
   for (const candidate of candidates) {
@@ -131,11 +133,49 @@ function imageSource(node, articleUrl) {
   return '';
 }
 
-function isDeclaredTinyImage(node) {
+function declaredDimensions(node) {
   const width = Number.parseFloat(node.getAttribute('width'));
   const height = Number.parseFloat(node.getAttribute('height'));
-  return (Number.isFinite(width) && width > 0 && width <= 32) ||
-    (Number.isFinite(height) && height > 0 && height <= 32);
+  return {
+    width: Number.isFinite(width) && width > 0 ? Math.round(width) : undefined,
+    height: Number.isFinite(height) && height > 0 ? Math.round(height) : undefined
+  };
+}
+
+function publisherLeadImage(document, articleUrl) {
+  const groups = new Map();
+  for (const meta of document.querySelectorAll('meta')) {
+    const key = String(meta.getAttribute('property') || meta.getAttribute('name') || '').trim().toLowerCase();
+    const match = key.match(/^(og|twitter):image(?::(url|secure_url|width|height|alt))?$/);
+    if (!match) continue;
+    const namespace = match[1];
+    const field = match[2] || 'url';
+    if (!groups.has(namespace)) groups.set(namespace, { candidates: [], current: null, pending: {} });
+    const group = groups.get(namespace);
+    const content = meta.getAttribute('content') || '';
+    if (field === 'url' || field === 'secure_url') {
+      const candidate = { url: safeImageUrl(content, articleUrl), alt: '', ...group.pending };
+      group.pending = {};
+      group.candidates.push(candidate);
+      group.current = candidate;
+    } else {
+      const value = field === 'alt' ? plainText(content) : Number.parseInt(content, 10);
+      if (field !== 'alt' && (!Number.isInteger(value) || value <= 0)) continue;
+      if (group.current) group.current[field] = value;
+      else group.pending[field] = value;
+    }
+  }
+
+  const byUrl = new Map();
+  for (const group of groups.values()) {
+    for (const candidate of group.candidates) {
+      if (!candidate.url || candidate.width < MIN_IMAGE_WIDTH || candidate.height < MIN_IMAGE_HEIGHT) continue;
+      const existing = byUrl.get(candidate.url);
+      if (!existing || candidate.width * candidate.height > existing.width * existing.height) byUrl.set(candidate.url, candidate);
+    }
+  }
+  const best = [...byUrl.values()].sort((a, b) => b.width * b.height - a.width * a.height)[0];
+  return best ? { url: best.url, width: best.width, height: best.height, alt: best.alt || '' } : undefined;
 }
 
 async function readResponseBody(response, maxBytes) {
@@ -168,6 +208,7 @@ async function readResponseBody(response, maxBytes) {
 function sanitizeExtraction(html, articleUrl, minTextLength, maxImages) {
   const virtualConsole = new VirtualConsole();
   const dom = new JSDOM(html, { url: articleUrl, virtualConsole });
+  const leadImage = publisherLeadImage(dom.window.document, articleUrl);
   const parsed = new Readability(dom.window.document).parse();
   if (!parsed?.content) fail('extraction_failed', 'No readable article body was found.', 422);
 
@@ -185,10 +226,15 @@ function sanitizeExtraction(html, articleUrl, minTextLength, maxImages) {
       blocks.push({ type: 'paragraph', text });
       continue;
     }
-    if (imageCount >= maxImages || isDeclaredTinyImage(node)) continue;
+    if (imageCount >= maxImages) continue;
+    const dimensions = declaredDimensions(node);
+    if ((dimensions.width !== undefined && dimensions.width < MIN_IMAGE_WIDTH) ||
+        (dimensions.height !== undefined && dimensions.height < MIN_IMAGE_HEIGHT)) continue;
     const url = imageSource(node, articleUrl);
     if (!url || imageUrls.has(url)) continue;
     const block = { type: 'image', url, alt: plainText(node.getAttribute('alt')) };
+    if (dimensions.width !== undefined) block.width = dimensions.width;
+    if (dimensions.height !== undefined) block.height = dimensions.height;
     const figure = node.closest('figure');
     const caption = plainText(figure?.querySelector('figcaption')?.textContent);
     const title = plainText(node.getAttribute('title'));
@@ -203,7 +249,7 @@ function sanitizeExtraction(html, articleUrl, minTextLength, maxImages) {
     fail('extraction_too_short', 'The article did not contain enough readable text.', 422);
   }
 
-  return {
+  const article = {
     title: plainText(parsed.title),
     byline: plainText(parsed.byline),
     siteName: plainText(parsed.siteName),
@@ -211,6 +257,8 @@ function sanitizeExtraction(html, articleUrl, minTextLength, maxImages) {
     paragraphs,
     blocks
   };
+  if (leadImage) article.leadImage = leadImage;
+  return article;
 }
 
 function createArticleService(options = {}) {
@@ -237,12 +285,18 @@ function createArticleService(options = {}) {
     try {
       const cached = JSON.parse(await fs.readFile(cachePath(target), 'utf8'));
       const blocks = cached.article?.blocks;
+      const leadImage = cached.article?.leadImage;
+      const validLeadImage = leadImage === undefined || (safeImageUrl(leadImage?.url) === leadImage.url &&
+        Number.isInteger(leadImage.width) && leadImage.width >= MIN_IMAGE_WIDTH &&
+        Number.isInteger(leadImage.height) && leadImage.height >= MIN_IMAGE_HEIGHT && typeof leadImage.alt === 'string');
       const validBlocks = Array.isArray(blocks) && blocks.length >= 2 && blocks.every(block =>
         (block?.type === 'paragraph' && typeof block.text === 'string') ||
         (block?.type === 'image' && safeImageUrl(block.url) === block.url && typeof block.alt === 'string' &&
+          (block.width === undefined || (Number.isInteger(block.width) && block.width >= MIN_IMAGE_WIDTH)) &&
+          (block.height === undefined || (Number.isInteger(block.height) && block.height >= MIN_IMAGE_HEIGHT)) &&
           (block.caption === undefined || typeof block.caption === 'string') &&
           (block.title === undefined || typeof block.title === 'string')));
-      if (cached.version === CACHE_FORMAT_VERSION && validBlocks &&
+      if (cached.version === CACHE_FORMAT_VERSION && validLeadImage && validBlocks &&
           cached.fetchedAt + config.cacheTtlMs > now() && cached.article.paragraphs?.length >= 2) return cached.article;
     } catch (error) {
       if (error.code !== 'ENOENT' && !(error instanceof SyntaxError)) throw error;
