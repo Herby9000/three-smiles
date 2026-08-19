@@ -27,7 +27,7 @@ async function login(base) {
 test('news navigation redirects and article API returns 401 without a session', async () => {
   const app = await startServer({ extract: async () => { throw new Error('must not run'); } });
   try {
-    for (const page of ['/news/', '/news/index.html', '/news/news.js', '/news/news.css']) {
+    for (const page of ['/news/', '/news/index.html', '/news/assets/news.js', '/news/assets/news.css', '/news/assets/editorial.css', '/news/data/news.json']) {
       const response = await fetch(`${app.base}${page}`, { redirect: 'manual' });
       assert.equal(response.status, 302, page);
       assert.equal(response.headers.get('location'), `/login?next=${encodeURIComponent(page)}`);
@@ -66,10 +66,16 @@ test('authenticated news shell, assets and article endpoint work without exposin
   const app = await startServer(articleService);
   try {
     const cookie = await login(app.base);
-    for (const asset of ['/news/', '/news/news.js', '/news/news.css']) {
+    for (const asset of ['/news/', '/news/assets/news.js', '/news/assets/news.css', '/news/assets/editorial.css']) {
       const response = await fetch(`${app.base}${asset}`, { headers: { cookie } });
       assert.equal(response.status, 200, asset);
     }
+    const shell = await fetch(`${app.base}/news/`, { headers: { cookie } }).then(result => result.text());
+    assert.match(shell, /data-filter="Editorial"/);
+    assert.match(shell, /assets\/editorial\.css/);
+
+    const dataResponse = await fetch(`${app.base}/news/data/news.json`, { headers: { cookie } });
+    assert.equal(dataResponse.status, 403, 'private server does not expose repository data directories');
     const response = await fetch(`${app.base}/api/news/article`, { method: 'POST', headers: { cookie, 'content-type': 'application/json' }, body: JSON.stringify({ url: 'https://www.bbc.com/story' }) });
     assert.equal(response.status, 200);
     assert.equal(receivedUrl, 'https://www.bbc.com/story');
