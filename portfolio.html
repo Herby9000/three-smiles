@@ -9,9 +9,51 @@
   <link rel="icon" href="/assets/herby-favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/assets/herby-apple-touch-icon.png" />
+  <link rel="canonical" href="https://herbyprojects.com/" />
   <meta property="og:title" content="Herby Projects" />
   <meta property="og:description" content="A portfolio of useful, personal apps built by Herby." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://herbyprojects.com/" />
+  <meta property="og:image" content="https://herbyprojects.com/assets/herby-projects-og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://herbyprojects.com/#organization",
+        "name": "Herby Projects",
+        "description": "A personal open-source portfolio of small, useful apps built by Herby for real life.",
+        "url": "https://herbyprojects.com/",
+        "logo": "https://herbyprojects.com/assets/herby-apple-touch-icon.png",
+        "sameAs": ["https://github.com/Herby9000"],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "technical support",
+          "url": "https://herbyprojects.com/contact",
+          "availableLanguage": "English"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Toronto",
+          "addressRegion": "Ontario",
+          "addressCountry": "CA"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://herbyprojects.com/#website",
+        "url": "https://herbyprojects.com/",
+        "name": "Herby Projects",
+        "description": "Small, useful apps built by Herby for real life.",
+        "publisher": {"@id": "https://herbyprojects.com/#organization"},
+        "inLanguage": "en"
+      }
+    ]
+  }
+  </script>
   <style>
     :root {
       --ink:#171717; --muted:#666; --soft:#fafafa; --line:#ebebeb; --blue:#0a72ef; --pink:#de1d8d; --red:#ff5b4f; --green:#10a37f;
@@ -253,7 +295,7 @@
   <footer>
     <div class="wrap">
       <div>© Herby Projects</div>
-      <div>This site is <a href="https://github.com/Herby9000/herbyprojects" target="_blank" rel="noopener" style="color:var(--ink);font-weight:650">open source on GitHub ↗</a></div>
+      <div><a href="/about">About</a> · <a href="/contact">Contact</a> · <a href="/privacy">Privacy</a> · <a href="/llms.txt">Agents</a> · This site is <a href="https://github.com/Herby9000/herbyprojects" target="_blank" rel="noopener" style="color:var(--ink);font-weight:650">open source on GitHub ↗</a></div>
     </div>
   </footer>
 </body>

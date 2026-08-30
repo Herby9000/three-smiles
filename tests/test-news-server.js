@@ -24,10 +24,14 @@ async function login(base) {
   return response.headers.get('set-cookie').split(';')[0];
 }
 
-test('news navigation redirects and article API returns 401 without a session', async () => {
+test('news landing has a public summary while private assets and article API require a session', async () => {
   const app = await startServer({ extract: async () => { throw new Error('must not run'); } });
   try {
-    for (const page of ['/news/', '/news/index.html', '/news/assets/news.js', '/news/assets/news.css', '/news/assets/editorial.css', '/news/data/news.json']) {
+    const publicSummary = await fetch(`${app.base}/news/`, { redirect: 'manual' });
+    assert.equal(publicSummary.status, 200);
+    assert.match(await publicSummary.text(), /Public summary/);
+
+    for (const page of ['/news/index.html', '/news/assets/news.js', '/news/assets/news.css', '/news/assets/editorial.css', '/news/data/news.json']) {
       const response = await fetch(`${app.base}${page}`, { redirect: 'manual' });
       assert.equal(response.status, 302, page);
       assert.equal(response.headers.get('location'), `/login?next=${encodeURIComponent(page)}`);

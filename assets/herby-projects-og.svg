@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="translate(180 40) rotate(35) scale(650 430)" gradientUnits="userSpaceOnUse"><stop stop-color="#ddecff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="b" cx="0" cy="0" r="1" gradientTransform="translate(1080 40) rotate(145) scale(570 390)" gradientUnits="userSpaceOnUse"><stop stop-color="#fbe0f1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#fff"/>
+  <rect width="1200" height="630" fill="url(#a)"/><rect width="1200" height="630" fill="url(#b)"/>
+  <rect x="76" y="70" width="72" height="72" rx="20" fill="#171717"/>
+  <text x="112" y="119" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="34" font-weight="800" fill="#fff">H</text>
+  <text x="76" y="250" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="86" font-weight="720" letter-spacing="-5" fill="#171717">Herby Projects</text>
+  <text x="80" y="328" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="35" fill="#555">Small, useful apps built for real life.</text>
+  <rect x="80" y="410" width="520" height="78" rx="18" fill="#0b0b0c"/>
+  <circle cx="116" cy="449" r="9" fill="#ff5f57"/><circle cx="145" cy="449" r="9" fill="#febc2e"/><circle cx="174" cy="449" r="9" fill="#28c840"/>
+  <text x="210" y="460" font-family="ui-monospace, Menlo, monospace" font-size="25" fill="#7ee787">the code is public ✓</text>
+  <text x="80" y="566" font-family="ui-monospace, Menlo, monospace" font-size="23" fill="#666">herbyprojects.com</text>
+</svg>

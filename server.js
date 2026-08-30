@@ -25,8 +25,42 @@ const mimeTypes = {
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+  '.md': 'text/markdown; charset=utf-8',
+  '.txt': 'text/plain; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8'
 };
+
+const NEGOTIATED_VARY = 'Accept, Accept-Encoding';
+
+function preferredRepresentation(acceptHeader) {
+  if (!acceptHeader) return 'html';
+  const ranges = String(acceptHeader).split(',').map((part, index) => {
+    const [rawType, ...parameters] = part.trim().toLowerCase().split(';');
+    let q = 1;
+    for (const parameter of parameters) {
+      const [key, value] = parameter.trim().split('=');
+      if (key === 'q') q = Number(value);
+    }
+    const specificity = rawType === '*/*' ? 0 : rawType.endsWith('/*') ? 1 : 2;
+    return { type: rawType, q: Number.isFinite(q) && q >= 0 && q <= 1 ? q : 0, specificity, index };
+  });
+
+  function qualityFor(type) {
+    const [major] = type.split('/');
+    const matches = ranges.filter(range => range.type === type || range.type === `${major}/*` || range.type === '*/*');
+    matches.sort((a, b) => b.specificity - a.specificity || a.index - b.index);
+    return matches[0] || { q: 0, specificity: -1, index: Number.MAX_SAFE_INTEGER };
+  }
+
+  const markdown = qualityFor('text/markdown');
+  const html = qualityFor('text/html');
+  if (markdown.q <= 0 && html.q <= 0) return null;
+  if (markdown.q !== html.q) return markdown.q > html.q ? 'markdown' : 'html';
+  if (markdown.specificity !== html.specificity) return markdown.specificity > html.specificity ? 'markdown' : 'html';
+  if (markdown.index !== html.index) return markdown.index < html.index ? 'markdown' : 'html';
+  return 'html';
+}
 
 function timingSafeEqual(a, b) {
   const aa = Buffer.from(String(a));
@@ -115,6 +149,22 @@ function send(res, status, payload, headers = {}) {
 function redirect(res, location, headers = {}) {
   res.writeHead(302, { location, 'cache-control': 'no-store', ...headers });
   res.end('Found');
+}
+
+async function sendFile(res, filePath, options = {}) {
+  const data = await fs.readFile(filePath);
+  res.writeHead(options.status || 200, {
+    'content-type': options.contentType || mimeTypes[path.extname(filePath)] || 'application/octet-stream',
+    'cache-control': options.cacheControl || 'no-store',
+    ...(options.vary ? { vary: options.vary } : {}),
+    ...options.headers
+  });
+  res.end(data);
+}
+
+function sendPortfolio404(res) {
+  const body = `# 404 — Herby Projects page not found\n\nThe requested path does not exist. Try one of these recovery points:\n\n- [Herby Projects home](https://herbyprojects.com/)\n- [XML sitemap](https://herbyprojects.com/sitemap.xml)\n- [Agent guidance](https://herbyprojects.com/llms.txt)\n- [About](https://herbyprojects.com/about)\n- [Contact](https://herbyprojects.com/contact)\n`;
+  return send(res, 404, body, { 'content-type': 'text/markdown; charset=utf-8', vary: NEGOTIATED_VARY });
 }
 
 function cleanEntry(entry, session) {
@@ -281,20 +331,59 @@ function createServer(options = {}) {
   async function serveStatic(req, res, url) {
     let pathname = decodeURIComponent(url.pathname);
     const portfolioHost = isPortfolioHost(req.headers.host);
-    const portfolioAssetPaths = new Set([
-      '/portfolio.html',
-      '/three-smiles.html',
-      '/favicon.ico',
-      '/assets/herby-favicon.svg',
-      '/assets/herby-apple-touch-icon.png',
-      '/assets/ros-morris-tulip.jpg'
-    ]);
 
     if (portfolioHost) {
-      if (pathname === '/' || pathname === '/index.html') pathname = '/portfolio.html';
-      else if (pathname === '/three-smiles' || pathname === '/projects/three-smiles') pathname = '/three-smiles.html';
+      const negotiatedPages = new Map([
+        ['/', { html: '/portfolio.html', markdown: '/portfolio.md' }],
+        ['/index.html', { html: '/portfolio.html', markdown: '/portfolio.md' }],
+        ['/portfolio.html', { html: '/portfolio.html', markdown: '/portfolio.md' }],
+        ['/about', { html: '/about.html', markdown: '/about.md' }],
+        ['/contact', { html: '/contact.html', markdown: '/contact.md' }],
+        ['/privacy', { html: '/privacy.html', markdown: '/privacy.md' }]
+      ]);
+      if (['/about.html', '/contact.html', '/privacy.html'].includes(pathname)) {
+        return redirect(res, pathname.replace(/\.html$/, ''));
+      }
+      if (negotiatedPages.has(pathname)) {
+        const representation = preferredRepresentation(req.headers.accept);
+        if (!representation) return send(res, 406, 'Not Acceptable', { vary: NEGOTIATED_VARY });
+        const selectedPath = negotiatedPages.get(pathname)[representation];
+        return sendFile(res, path.join(PUBLIC_DIR, selectedPath), { vary: NEGOTIATED_VARY });
+      }
+
+      const portfolioRoutes = new Map([
+        ['/three-smiles', '/three-smiles.html'],
+        ['/projects/three-smiles', '/three-smiles.html']
+      ]);
+      if (portfolioRoutes.has(pathname)) pathname = portfolioRoutes.get(pathname);
       else if (pathname === '/login') return redirect(res, 'https://three-smiles.herbyprojects.com/login');
-      else if (!portfolioAssetPaths.has(pathname)) return send(res, 404, 'Not found');
+
+      const portfolioAssetPaths = new Set([
+        '/three-smiles.html',
+        '/favicon.ico',
+        '/assets/herby-favicon.svg',
+        '/assets/herby-apple-touch-icon.png',
+        '/assets/herby-projects-og.svg',
+        '/assets/herby-projects-og.png',
+        '/assets/ros-morris-tulip.jpg',
+        '/llms.txt',
+        '/robots.txt',
+        '/sitemap.xml'
+      ]);
+      if (!portfolioAssetPaths.has(pathname)) return sendPortfolio404(res);
+    }
+
+    if (!portfolioHost && pathname === '/news') return redirect(res, '/news/');
+    if (!portfolioHost && pathname === '/news/') {
+      const representation = preferredRepresentation(req.headers.accept);
+      if (!representation) return send(res, 406, 'Not Acceptable', { vary: NEGOTIATED_VARY });
+      if (representation === 'markdown') {
+        return sendFile(res, path.join(PUBLIC_DIR, '/news/public.md'), { vary: NEGOTIATED_VARY });
+      }
+      const auth = await getAuth();
+      const session = readSession(req, auth);
+      const selectedPath = session ? '/news/index.html' : '/news/public.html';
+      return sendFile(res, path.join(PUBLIC_DIR, selectedPath), { vary: NEGOTIATED_VARY });
     }
 
     if (pathname === '/login') pathname = '/login.html';
@@ -304,6 +393,7 @@ function createServer(options = {}) {
       '/favicon.ico',
       '/assets/herby-favicon.svg',
       '/assets/herby-apple-touch-icon.png',
+      '/assets/herby-projects-og.png',
       '/assets/ros-morris-tulip.jpg',
       '/login.html',
       '/site.webmanifest',
@@ -319,28 +409,21 @@ function createServer(options = {}) {
       '/news/daily-seven-icon-192.png',
       '/news/daily-seven-icon-512.png'
     ]);
-    const isLoginAsset = publicAssetPaths.has(pathname);
-    if (!portfolioHost && !isLoginAsset) {
+    const isPublicAsset = publicAssetPaths.has(pathname);
+    if (!portfolioHost && !isPublicAsset) {
       const session = await requireSession(req, res, url);
       if (!session) return;
     }
-    if (pathname === '/news') return redirect(res, '/news/');
-    if (pathname === '/news/') pathname = '/news/index.html';
     if (pathname === '/') pathname = '/app.html';
     const filePath = path.normalize(path.join(PUBLIC_DIR, pathname));
     if (!filePath.startsWith(PUBLIC_DIR) || filePath.includes(`${path.sep}data${path.sep}`) || filePath.includes(`${path.sep}.git${path.sep}`)) {
       return send(res, 403, 'Forbidden');
     }
     try {
-      const data = await fs.readFile(filePath);
       const noCache = pathname.endsWith('.html') || pathname.endsWith('.webmanifest') || pathname === '/sw.js' || pathname === '/sw-v2.js';
-      res.writeHead(200, {
-        'content-type': mimeTypes[path.extname(filePath)] || 'application/octet-stream',
-        'cache-control': noCache ? 'no-store' : 'public, max-age=3600'
-      });
-      res.end(data);
+      return await sendFile(res, filePath, { cacheControl: noCache ? 'no-store' : 'public, max-age=3600' });
     } catch (error) {
-      if (error.code === 'ENOENT') return send(res, 404, 'Not found');
+      if (error.code === 'ENOENT') return portfolioHost ? sendPortfolio404(res) : send(res, 404, 'Not found');
       throw error;
     }
   }
