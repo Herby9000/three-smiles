@@ -11,6 +11,20 @@ const DEFAULT_PORT = Number(process.env.PORT || 8787);
 const DEFAULT_DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const DEFAULT_AUTH_FILE = process.env.AUTH_FILE || path.join(DEFAULT_DATA_DIR, 'auth.json');
 const PUBLIC_DIR = __dirname;
+const CANADIAN_TECH_CHALLENGE_ROUTE = '/projects/canadian-tech-challenge';
+const CANADIAN_TECH_CHALLENGE_DIR = path.join(PUBLIC_DIR, 'public-projects', 'canadian-tech-challenge');
+const CANADIAN_TECH_CHALLENGE_FILES = new Map([
+  ['', 'index.html'],
+  ['manifest.webmanifest', 'manifest.webmanifest'],
+  ['data/questions.json', 'data/questions.json'],
+  ['assets/styles.css', 'assets/styles.css'],
+  ['assets/core.js', 'assets/core.js'],
+  ['assets/app.js', 'assets/app.js'],
+  ['assets/icon.svg', 'assets/icon.svg'],
+  ['assets/icon-180.png', 'assets/icon-180.png'],
+  ['assets/icon-192.png', 'assets/icon-192.png'],
+  ['assets/icon-512.png', 'assets/icon-512.png']
+]);
 const MAX_BODY = 64 * 1024;
 const SESSION_COOKIE = 'three_smiles_session';
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -333,6 +347,19 @@ function createServer(options = {}) {
     const portfolioHost = isPortfolioHost(req.headers.host);
 
     if (portfolioHost) {
+      if (pathname === CANADIAN_TECH_CHALLENGE_ROUTE) {
+        return redirect(res, `${CANADIAN_TECH_CHALLENGE_ROUTE}/`);
+      }
+      if (pathname.startsWith(`${CANADIAN_TECH_CHALLENGE_ROUTE}/`)) {
+        const relativePath = pathname.slice(CANADIAN_TECH_CHALLENGE_ROUTE.length + 1);
+        const allowedPath = CANADIAN_TECH_CHALLENGE_FILES.get(relativePath);
+        if (!allowedPath) return sendPortfolio404(res);
+        const noCache = allowedPath === 'index.html' || allowedPath === 'manifest.webmanifest';
+        return sendFile(res, path.join(CANADIAN_TECH_CHALLENGE_DIR, allowedPath), {
+          cacheControl: noCache ? 'no-store' : 'public, max-age=3600'
+        });
+      }
+
       const negotiatedPages = new Map([
         ['/', { html: '/portfolio.html', markdown: '/portfolio.md' }],
         ['/index.html', { html: '/portfolio.html', markdown: '/portfolio.md' }],

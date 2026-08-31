@@ -6,6 +6,7 @@ Herby Projects collects practical personal software: family tools, concise news 
 
 ## Projects
 
+- [North Star Tech Challenge](https://herbyprojects.com/projects/canadian-tech-challenge/) — a fast, friendly Canadian technology trivia game with 72 sourced questions across six categories. [Source](https://github.com/Herby9000/herbyprojects/tree/cd1805e89d752a041d7e8f22c0e1254ff0a5c403/projects/canadian-tech-challenge).
 - [The Daily Seven](https://three-smiles.herbyprojects.com/news/) — a calm daily briefing across politics, technology, economics, and sport. An ungated public summary is available; the personal full reader remains private. [Source](https://github.com/Herby9000/herbyprojects/tree/main/news).
 - [Three Smiles](https://herbyprojects.com/projects/three-smiles) — a private daily gratitude and check-in app for Daisy and Charlie. The public project page explains the product without exposing private entries. [Source](https://github.com/Herby9000/three-smiles).
 - [Ros Morris](https://ros-morris.herbyprojects.com/) — a portfolio for a Chilterns floral artist. [Source](https://github.com/Herby9000/ros-morris-portfolio).

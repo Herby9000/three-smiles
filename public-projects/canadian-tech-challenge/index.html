@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>North Star Tech Challenge — Canadian Tech Trivia</title>
+  <meta name="description" content="A pass-and-play office trivia game with 72 sourced questions about Canadian technology companies.">
+  <meta name="theme-color" content="#07182f">
+  <link rel="canonical" href="https://herbyprojects.com/projects/canadian-tech-challenge/">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icon-180.png">
+  <meta property="og:title" content="North Star Tech Challenge">
+  <meta property="og:description" content="How well do you know Canada's technology ecosystem? Play 72 sourced questions across six categories.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://herbyprojects.com/projects/canadian-tech-challenge/">
+  <meta property="og:image" content="https://herbyprojects.com/projects/canadian-tech-challenge/assets/icon-512.png">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/core.js" defer></script>
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="North Star Tech Challenge home"><img src="assets/icon.svg" alt="" width="42" height="42"><span>North Star<br><small>Tech Challenge</small></span></a>
+    <button class="ghost compact" id="about-open" type="button">How to play</button>
+  </header>
+
+  <main id="app" class="shell">
+    <section id="home-screen" class="screen home-screen" aria-labelledby="home-title">
+      <div class="hero-copy">
+        <p class="eyebrow">The Canadian tech ecosystem · 72 sourced questions</p>
+        <h1 id="home-title">Find your<br><em>true north.</em></h1>
+        <p class="lede">A fast, friendly office challenge spanning the builders, breakthroughs and bold bets shaping Canadian technology.</p>
+      </div>
+      <div class="mode-grid">
+        <button class="mode-card team-card" type="button" data-action="setup-team"><span class="mode-icon">✦</span><span><strong>Team Play</strong><small>2–6 teams · race to the target</small></span><span aria-hidden="true">→</span></button>
+        <button class="mode-card" type="button" data-action="quick"><span class="mode-icon">⚡</span><span><strong>Quick Play</strong><small>Jump into a solo mixed quiz</small></span><span aria-hidden="true">→</span></button>
+        <button class="mode-card" type="button" data-action="study"><span class="mode-icon">⌁</span><span><strong>Study Mode</strong><small>Browse every category and source</small></span><span aria-hidden="true">→</span></button>
+      </div>
+      <button id="resume-button" class="resume hidden" type="button">Resume saved game <span aria-hidden="true">→</span></button>
+      <div class="category-ribbon" aria-label="Six game categories"><span class="cat-ai">AI & Data</span><span class="cat-fin">Fintech & Crypto</span><span class="cat-saas">SaaS & Enterprise</span><span class="cat-consumer">Consumer & Commerce</span><span class="cat-deep">Deep Tech & Climate</span><span class="cat-builders">Builders & Breakthroughs</span></div>
+    </section>
+
+    <section id="setup-screen" class="screen hidden" aria-labelledby="setup-title">
+      <button class="back-link" type="button" data-action="home">← Back</button>
+      <div class="panel setup-panel">
+        <p class="eyebrow">Pass-and-play</p><h2 id="setup-title">Build your teams</h2>
+        <form id="team-form">
+          <div id="team-fields" class="team-fields"></div>
+          <button class="ghost" id="add-team" type="button">+ Add a team</button>
+          <div class="settings-grid">
+            <label>Winning score<select id="target-score"><option>3</option><option selected>5</option><option>7</option><option>10</option></select></label>
+            <label>Question timer<select id="timer-setting"><option value="0">Off</option><option value="30">30 seconds</option><option value="45" selected>45 seconds</option><option value="60">60 seconds</option></select></label>
+          </div>
+          <button class="primary wide" type="submit">Start the challenge</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="category-screen" class="screen hidden" aria-labelledby="category-title">
+      <div class="game-top"><div><span id="round-label" class="kicker">Round 1</span><h2 id="category-title">Choose a category</h2><p id="turn-label" class="turn-label"></p></div><button class="ghost compact" type="button" data-action="quit">End game</button></div>
+      <div id="scoreboard" class="scoreboard" aria-label="Scores"></div>
+      <div id="category-grid" class="category-grid"></div>
+    </section>
+
+    <section id="question-screen" class="screen hidden" aria-labelledby="question-text">
+      <div class="question-top"><div><span id="question-category" class="category-chip"></span><span id="question-progress" class="kicker"></span></div><div id="timer" class="timer" role="timer" aria-live="off"></div></div>
+      <article class="question-card">
+        <div class="question-meta"><span id="company-label"></span><span id="difficulty-label"></span></div>
+        <h2 id="question-text"></h2>
+        <div id="answers" class="answers" role="radiogroup" aria-label="Answer choices"></div>
+        <button id="submit-answer" class="primary wide" type="button" disabled>Lock in answer</button>
+        <div id="result" class="result hidden" role="status" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <section id="winner-screen" class="screen hidden winner-screen" aria-labelledby="winner-title">
+      <div class="starburst" aria-hidden="true">✦</div><p class="eyebrow">Challenge complete</p><h1 id="winner-title"></h1><p id="winner-copy" class="lede"></p><div id="final-scores" class="final-scores"></div>
+      <div class="button-row"><button class="primary" type="button" data-action="rematch">Rematch</button><button class="ghost" type="button" data-action="home">Main menu</button></div>
+    </section>
+
+    <section id="study-screen" class="screen hidden" aria-labelledby="study-title">
+      <div class="game-top"><div><p class="eyebrow">Learn at your pace</p><h2 id="study-title">Study the ecosystem</h2></div><button class="ghost compact" type="button" data-action="home">Done</button></div>
+      <div id="study-filters" class="filter-row" aria-label="Filter study questions"></div>
+      <p id="study-count" class="study-count" aria-live="polite"></p>
+      <div id="study-list" class="study-list"></div>
+    </section>
+  </main>
+
+  <noscript><main class="shell nojs"><article class="panel"><h1>North Star needs JavaScript to keep score.</h1><p>You can still sample the challenge:</p><h2>Which Canadian company builds photonic quantum computers?</h2><ol><li>Xanadu</li><li>Clio</li><li>Hopper</li><li>Wealthsimple</li></ol><p><strong>Answer: Xanadu.</strong> The Toronto company uses photons—particles of light—to process quantum information.</p><p><a href="https://www.xanadu.ai/about">Source: Xanadu — About</a></p></article></main></noscript>
+
+  <dialog id="about-dialog"><button class="dialog-close" type="button" aria-label="Close">×</button><img src="assets/icon.svg" alt="" width="64" height="64"><h2>How to play</h2><h3>Team Play</h3><p>Name 2–6 teams, choose a winning score and optional timer. On your turn, pick a category (or go random), select one answer, then lock it in. The device passes to the next team after each reveal.</p><h3>Quick Play</h3><p>Start immediately with a never-repeating, seeded mix. No score pressure—just keep exploring.</p><h3>Study Mode</h3><p>Filter all 72 cards by category. Reveal each answer, explanation and direct source when you are ready.</p><p class="fine-print">Company facts change. The linked source and as-of date govern each card. This original learning game is not affiliated with the companies featured.</p></dialog>
+  <div id="live-region" class="sr-only" aria-live="polite"></div>
+</body>
+</html>
