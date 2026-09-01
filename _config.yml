@@ -1,0 +1,4 @@
+exclude:
+  - public-projects
+  - tests
+  - node_modules

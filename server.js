@@ -285,8 +285,11 @@ function createServer(options = {}) {
     if (!session) {
       if (req.url.startsWith('/api/')) send(res, 401, { error: 'login required' }, corsHeaders(req, allowedOrigin));
       else {
-        const isNewsPath = url && (url.pathname === '/news' || url.pathname.startsWith('/news/'));
-        const loginPath = isNewsPath ? `/login?next=${encodeURIComponent(url.pathname + url.search)}` : '/login';
+        const supportsReturnPath = url && (
+          url.pathname === '/news' || url.pathname.startsWith('/news/') ||
+          url.pathname === CANADIAN_TECH_CHALLENGE_ROUTE || url.pathname.startsWith(`${CANADIAN_TECH_CHALLENGE_ROUTE}/`)
+        );
+        const loginPath = supportsReturnPath ? `/login?next=${encodeURIComponent(url.pathname + url.search)}` : '/login';
         redirect(res, loginPath);
       }
       return null;
@@ -347,6 +350,10 @@ function createServer(options = {}) {
     const portfolioHost = isPortfolioHost(req.headers.host);
 
     if (portfolioHost) {
+      if (pathname === CANADIAN_TECH_CHALLENGE_ROUTE || pathname.startsWith(`${CANADIAN_TECH_CHALLENGE_ROUTE}/`)) {
+        const session = await requireSession(req, res, url);
+        if (!session) return;
+      }
       if (pathname === CANADIAN_TECH_CHALLENGE_ROUTE) {
         return redirect(res, `${CANADIAN_TECH_CHALLENGE_ROUTE}/`);
       }
@@ -383,11 +390,17 @@ function createServer(options = {}) {
         ['/projects/three-smiles', '/three-smiles.html']
       ]);
       if (portfolioRoutes.has(pathname)) pathname = portfolioRoutes.get(pathname);
-      else if (pathname === '/login') return redirect(res, 'https://three-smiles.herbyprojects.com/login');
+      else if (pathname === '/login') pathname = '/login.html';
 
       const portfolioAssetPaths = new Set([
         '/three-smiles.html',
+        '/login.html',
         '/favicon.ico',
+        '/site.webmanifest',
+        '/assets/icon.svg',
+        '/assets/apple-touch-icon.png',
+        '/assets/icon-192.png',
+        '/assets/icon-512.png',
         '/assets/herby-favicon.svg',
         '/assets/herby-apple-touch-icon.png',
         '/assets/herby-projects-og.svg',

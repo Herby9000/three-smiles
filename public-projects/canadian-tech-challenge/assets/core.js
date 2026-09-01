@@ -5,7 +5,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   "use strict";
 
-  const CATEGORIES = ["AI & Data", "Fintech & Crypto", "SaaS & Enterprise", "Consumer & Commerce", "Deep Tech & Climate", "Builders & Breakthroughs"];
+  const CATEGORIES = ["AI & Data", "Fintech & Crypto", "SaaS & Enterprise", "Consumer & Commerce", "Deep Tech & Climate", "Builders & Breakthroughs", "Frontier & Defence"];
 
   function hashSeed(value) {
     let h = 2166136261;

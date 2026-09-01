@@ -6,7 +6,8 @@
   const STORAGE_SETTINGS = "north-star-tech-settings-v1";
   const categoryClasses = {
     "AI & Data": "cat-ai", "Fintech & Crypto": "cat-fin", "SaaS & Enterprise": "cat-saas",
-    "Consumer & Commerce": "cat-consumer", "Deep Tech & Climate": "cat-deep", "Builders & Breakthroughs": "cat-builders"
+    "Consumer & Commerce": "cat-consumer", "Deep Tech & Climate": "cat-deep", "Builders & Breakthroughs": "cat-builders",
+    "Frontier & Defence": "cat-frontier"
   };
   let questions = [];
   let state = null;

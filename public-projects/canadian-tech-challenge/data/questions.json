@@ -1,79 +1,3800 @@
 [
-  {"id":"ai-01","category":"AI & Data","difficulty":1,"company":"Cohere","question":"What kind of technology is at the core of Cohere's enterprise platform?","options":["Large language models","Quantum annealing","Payment terminals","Satellite imaging"],"answer":0,"explanation":"Cohere builds enterprise AI products around large language models, including generation, retrieval and reranking models.","sourceUrl":"https://cohere.com/about","sourceLabel":"Cohere — About","asOf":"2026-08-31"},
-  {"id":"ai-02","category":"AI & Data","difficulty":2,"company":"Cohere","question":"In which Canadian city is Cohere headquartered?","options":["Vancouver","Toronto","Montréal","Calgary"],"answer":1,"explanation":"Cohere is headquartered in Toronto and operates internationally.","sourceUrl":"https://cohere.com/about","sourceLabel":"Cohere — About","asOf":"2026-08-31"},
-  {"id":"ai-03","category":"AI & Data","difficulty":2,"company":"Cohere","question":"Which Cohere model family is designed to rank search results by relevance?","options":["Embed","Command","Rerank","Aya"],"answer":2,"explanation":"Cohere's Rerank models reorder candidate results according to semantic relevance.","sourceUrl":"https://docs.cohere.com/docs/rerank-overview","sourceLabel":"Cohere Docs — Rerank overview","asOf":"2026-08-31"},
-  {"id":"ai-04","category":"AI & Data","difficulty":1,"company":"Waabi","question":"Which industry is Waabi primarily building AI systems for?","options":["Autonomous trucking","Retail banking","Legal billing","Restaurant delivery"],"answer":0,"explanation":"Toronto-founded Waabi develops an AI-first autonomous trucking system.","sourceUrl":"https://waabi.ai/","sourceLabel":"Waabi","asOf":"2026-08-31"},
-  {"id":"ai-05","category":"AI & Data","difficulty":2,"company":"Waabi","question":"What is the name of Waabi's high-fidelity closed-loop simulator?","options":["Waabi Driver","Waabi World","Waabi Cloud","Waabi Atlas"],"answer":1,"explanation":"Waabi World is the company's scalable, high-fidelity closed-loop simulator for autonomous driving development.","sourceUrl":"https://waabi.ai/waabi-world","sourceLabel":"Waabi — Waabi World","asOf":"2026-08-31"},
-  {"id":"ai-06","category":"AI & Data","difficulty":1,"company":"Ada","question":"Ada's AI platform is designed mainly to automate what business function?","options":["Customer service","Payroll","Freight routing","Chip design"],"answer":0,"explanation":"Ada provides an AI-powered customer service automation platform.","sourceUrl":"https://www.ada.cx/platform/","sourceLabel":"Ada — AI customer service platform","asOf":"2026-08-31"},
-  {"id":"ai-07","category":"AI & Data","difficulty":2,"company":"Coveo","question":"Coveo describes its core platform with which three-letter term?","options":["ERP","CDN","AI","CAD"],"answer":2,"explanation":"Québec-founded Coveo provides an AI relevance platform for search, recommendations and personalization.","sourceUrl":"https://www.coveo.com/en/company/about-us","sourceLabel":"Coveo — About us","asOf":"2026-08-31"},
-  {"id":"ai-08","category":"AI & Data","difficulty":2,"company":"BenchSci","question":"BenchSci's ASCEND platform supports which kind of research?","options":["Preclinical life-science R&D","Consumer credit scoring","Mineral exploration","Autonomous navigation"],"answer":0,"explanation":"BenchSci applies AI to preclinical life-science research and development.","sourceUrl":"https://www.benchsci.com/about","sourceLabel":"BenchSci — About","asOf":"2026-08-31"},
-  {"id":"ai-09","category":"AI & Data","difficulty":2,"company":"MindBridge","question":"MindBridge applies AI to which professional domain?","options":["Financial risk and audit","Video game animation","Weather forecasting","Legal discovery"],"answer":0,"explanation":"Ottawa-based MindBridge uses AI to help analyze financial data for risk and audit work.","sourceUrl":"https://www.mindbridge.ai/company/","sourceLabel":"MindBridge — Company","asOf":"2026-08-31"},
-  {"id":"ai-10","category":"AI & Data","difficulty":2,"company":"BlueDot","question":"BlueDot uses AI and data primarily to provide intelligence about what?","options":["Infectious-disease threats","Online fraud","Forest inventories","Hiring pipelines"],"answer":0,"explanation":"BlueDot provides infectious-disease intelligence using global data and analytics.","sourceUrl":"https://bluedot.global/about/","sourceLabel":"BlueDot — About","asOf":"2026-08-31"},
-  {"id":"ai-11","category":"AI & Data","difficulty":1,"company":"Vector Institute","question":"The Vector Institute is headquartered in which city?","options":["Edmonton","Halifax","Toronto","Waterloo"],"answer":2,"explanation":"Vector is an independent, not-for-profit AI institute headquartered in Toronto.","sourceUrl":"https://vectorinstitute.ai/about/","sourceLabel":"Vector Institute — About","asOf":"2026-08-31"},
-  {"id":"ai-12","category":"AI & Data","difficulty":2,"company":"Mila","question":"Mila is most closely associated with which Canadian AI hub?","options":["Montréal","Ottawa","Winnipeg","Victoria"],"answer":0,"explanation":"Mila is the Québec AI institute rooted in Montréal's machine-learning research community.","sourceUrl":"https://mila.quebec/en/mila/","sourceLabel":"Mila — About","asOf":"2026-08-31"},
-
-  {"id":"fin-01","category":"Fintech & Crypto","difficulty":1,"company":"Wealthsimple","question":"Which description best fits Wealthsimple?","options":["A digital financial-services company","A quantum hardware maker","A legal practice platform","A carbon-removal company"],"answer":0,"explanation":"Toronto-founded Wealthsimple offers digital investing, saving, spending and tax products.","sourceUrl":"https://www.wealthsimple.com/en-ca/about","sourceLabel":"Wealthsimple — About","asOf":"2026-08-31"},
-  {"id":"fin-02","category":"Fintech & Crypto","difficulty":2,"company":"Wealthsimple","question":"Wealthsimple says it was founded in which year?","options":["2004","2009","2014","2019"],"answer":2,"explanation":"Wealthsimple was founded in 2014.","sourceUrl":"https://www.wealthsimple.com/en-ca/about","sourceLabel":"Wealthsimple — About","asOf":"2026-08-31"},
-  {"id":"fin-03","category":"Fintech & Crypto","difficulty":1,"company":"Nuvei","question":"Montréal-founded Nuvei primarily provides what?","options":["Payment technology","Cybersecurity vaults","Autonomous trucks","Medical imaging"],"answer":0,"explanation":"Nuvei provides payment technology and commerce solutions to businesses.","sourceUrl":"https://www.nuvei.com/","sourceLabel":"Nuvei","asOf":"2026-08-31"},
-  {"id":"fin-04","category":"Fintech & Crypto","difficulty":1,"company":"KOHO","question":"KOHO's core consumer product is paired with which everyday payment tool?","options":["A prepaid Mastercard","A paper bond","A wire-transfer terminal","A merchant cash register"],"answer":0,"explanation":"KOHO offers a spending and savings account with a reloadable prepaid Mastercard.","sourceUrl":"https://www.koho.ca/about/","sourceLabel":"KOHO — About","asOf":"2026-08-31"},
-  {"id":"fin-05","category":"Fintech & Crypto","difficulty":2,"company":"Neo Financial","question":"Neo Financial was founded in which Prairie city?","options":["Regina","Calgary","Winnipeg","Saskatoon"],"answer":1,"explanation":"Neo Financial is a Calgary-founded financial technology company.","sourceUrl":"https://www.neofinancial.com/about","sourceLabel":"Neo Financial — About","asOf":"2026-08-31"},
-  {"id":"fin-06","category":"Fintech & Crypto","difficulty":1,"company":"Shakepay","question":"Shakepay lets Canadians buy and sell which two cryptoassets?","options":["Bitcoin and ether","Solana and dogecoin","XRP and litecoin","Only stablecoins"],"answer":0,"explanation":"Shakepay's Canadian platform focuses on buying and selling bitcoin and ether.","sourceUrl":"https://shakepay.com/about","sourceLabel":"Shakepay — About","asOf":"2026-08-31"},
-  {"id":"fin-07","category":"Fintech & Crypto","difficulty":2,"company":"Coinsquare","question":"Coinsquare operates in which regulated market?","options":["Crypto trading","Property insurance","Freight brokerage","Patent licensing"],"answer":0,"explanation":"Coinsquare operates a Canadian crypto asset trading platform.","sourceUrl":"https://www.coinsquare.com/about","sourceLabel":"Coinsquare — About","asOf":"2026-08-31"},
-  {"id":"fin-08","category":"Fintech & Crypto","difficulty":2,"company":"Trulioo","question":"Vancouver-based Trulioo helps businesses verify what?","options":["People and businesses","Quantum circuits","Concrete strength","Truck routes"],"answer":0,"explanation":"Trulioo provides global identity verification for people and organizations.","sourceUrl":"https://www.trulioo.com/company","sourceLabel":"Trulioo — Company","asOf":"2026-08-31"},
-  {"id":"fin-09","category":"Fintech & Crypto","difficulty":1,"company":"Float","question":"Float's platform is built chiefly for which users?","options":["Canadian businesses managing spend","Consumers booking flights","Hospitals managing beds","Scientists choosing antibodies"],"answer":0,"explanation":"Float provides corporate cards, expense management and related financial tools for Canadian businesses.","sourceUrl":"https://floatfinancial.com/about-us","sourceLabel":"Float — About us","asOf":"2026-08-31"},
-  {"id":"fin-10","category":"Fintech & Crypto","difficulty":1,"company":"Borrowell","question":"Which personal-finance metric can Canadians check through Borrowell?","options":["Credit score","Carbon intensity","Code coverage","Driving range"],"answer":0,"explanation":"Borrowell offers free credit scores and credit education alongside product recommendations.","sourceUrl":"https://borrowell.com/","sourceLabel":"Borrowell","asOf":"2026-08-31"},
-  {"id":"fin-11","category":"Fintech & Crypto","difficulty":1,"company":"Interac","question":"Which Interac service lets Canadians send money using online or mobile banking?","options":["Interac e-Transfer","Interac Orbit","Interac Ledger","Interac Beacon"],"answer":0,"explanation":"Interac e-Transfer moves money through participating financial institutions' online and mobile banking services.","sourceUrl":"https://www.interac.ca/en/payments/personal/interac-e-transfer/","sourceLabel":"Interac — e-Transfer","asOf":"2026-08-31"},
-  {"id":"fin-12","category":"Fintech & Crypto","difficulty":2,"company":"Payments Canada","question":"What is Lynx in Canada's financial infrastructure?","options":["A high-value payment system","A stock exchange","A tax-filing app","A rewards card"],"answer":0,"explanation":"Lynx is Canada's high-value payment system, owned and operated by Payments Canada.","sourceUrl":"https://www.payments.ca/systems-services/payment-systems/high-value-payment-system-lynx","sourceLabel":"Payments Canada — Lynx","asOf":"2026-08-31"},
-
-  {"id":"saas-01","category":"SaaS & Enterprise","difficulty":1,"company":"Clio","question":"Clio builds cloud software for which profession?","options":["Legal professionals","Civil engineers","Airline pilots","Biochemists"],"answer":0,"explanation":"Clio provides law firms with cloud software for legal-practice tasks such as client intake, documents, billing and trust accounting.","sourceUrl":"https://ised-isde.canada.ca/site/accelerated-growth-service/en/ghp-company-profile-clio","sourceLabel":"Innovation, Science and Economic Development Canada — Clio profile","asOf":"2026-08-31"},
-  {"id":"saas-02","category":"SaaS & Enterprise","difficulty":2,"company":"Clio","question":"Where is Clio headquartered?","options":["Burnaby","Québec City","Kitchener","Halifax"],"answer":0,"explanation":"Innovation, Science and Economic Development Canada identifies Clio as a legal-technology company headquartered in Burnaby, British Columbia.","sourceUrl":"https://ised-isde.canada.ca/site/accelerated-growth-service/en/ghp-company-profile-clio","sourceLabel":"Innovation, Science and Economic Development Canada — Clio profile","asOf":"2026-08-31"},
-  {"id":"saas-03","category":"SaaS & Enterprise","difficulty":1,"company":"1Password","question":"What does 1Password primarily help people and companies manage?","options":["Passwords and digital credentials","Inventory shipments","Patient appointments","Electricity demand"],"answer":0,"explanation":"Toronto-founded 1Password provides password and access management products.","sourceUrl":"https://1password.com/company","sourceLabel":"1Password — Company","asOf":"2026-08-31"},
-  {"id":"saas-04","category":"SaaS & Enterprise","difficulty":2,"company":"1Password","question":"Which security approach does 1Password's Extended Access Management product emphasize?","options":["Securing every sign-in on every device","Replacing all cloud storage","Mining cryptocurrency","Routing delivery vehicles"],"answer":0,"explanation":"1Password Extended Access Management focuses on securing sign-ins and devices, including unmanaged applications.","sourceUrl":"https://1password.com/product/xam","sourceLabel":"1Password — Extended Access Management","asOf":"2026-08-31"},
-  {"id":"saas-05","category":"SaaS & Enterprise","difficulty":1,"company":"PointClickCare","question":"PointClickCare's software serves which sector?","options":["Health care","Mining","Film production","Grocery delivery"],"answer":0,"explanation":"PointClickCare provides cloud-based health-care software, with deep roots in long-term, post-acute and senior care.","sourceUrl":"https://pointclickcare.com/company/about-us/","sourceLabel":"PointClickCare — About us","asOf":"2026-08-31"},
-  {"id":"saas-06","category":"SaaS & Enterprise","difficulty":1,"company":"League","question":"League's platform helps organizations deliver what kind of experiences?","options":["Digital health","Freight customs","Sports betting","Home renovation"],"answer":0,"explanation":"Toronto-founded League powers consumer health experiences for payers, providers and employers.","sourceUrl":"https://league.com/digital-health-platform/","sourceLabel":"League — Digital health platform","asOf":"2026-08-31"},
-  {"id":"saas-07","category":"SaaS & Enterprise","difficulty":1,"company":"Hootsuite","question":"Vancouver-founded Hootsuite is best known for managing what?","options":["Social media","Quantum computers","Mortgage underwriting","Laboratory samples"],"answer":0,"explanation":"Hootsuite provides social media management and analytics software.","sourceUrl":"https://www.hootsuite.com/about","sourceLabel":"Hootsuite — About","asOf":"2026-08-31"},
-  {"id":"saas-08","category":"SaaS & Enterprise","difficulty":1,"company":"FreshBooks","question":"FreshBooks originally focused on invoicing and accounting for whom?","options":["Small businesses and self-employed professionals","National central banks","Public transit agencies","Semiconductor fabs"],"answer":0,"explanation":"Toronto-founded FreshBooks builds accounting software for small businesses and self-employed professionals.","sourceUrl":"https://www.freshbooks.com/about","sourceLabel":"FreshBooks — About","asOf":"2026-08-31"},
-  {"id":"saas-09","category":"SaaS & Enterprise","difficulty":2,"company":"Docebo","question":"Docebo's software is used to manage what?","options":["Enterprise learning","Restaurant reservations","Crypto custody","Autonomous fleets"],"answer":0,"explanation":"Docebo provides an AI-powered learning platform for enterprises.","sourceUrl":"https://www.docebo.com/company/","sourceLabel":"Docebo — Company","asOf":"2026-08-31"},
-  {"id":"saas-10","category":"SaaS & Enterprise","difficulty":2,"company":"OpenText","question":"Which field has a dedicated technology category on OpenText's official blog?","options":["Information management","Wind-turbine maintenance","Food delivery","Credit-card issuing"],"answer":0,"explanation":"OpenText's official technology blog groups articles about managing enterprise information in a dedicated Information Management category.","sourceUrl":"https://blogs.opentext.com/category/information-management/","sourceLabel":"OpenText Blogs — Information Management","asOf":"2026-08-31"},
-  {"id":"saas-11","category":"SaaS & Enterprise","difficulty":1,"company":"Jobber","question":"Jobber's platform is designed for which businesses?","options":["Home-service businesses","Investment banks","Airlines","Universities"],"answer":0,"explanation":"Jobber provides operations software for home-service businesses.","sourceUrl":"https://www.getjobber.com/","sourceLabel":"Jobber — Home service software","asOf":"2026-08-31"},
-  {"id":"saas-12","category":"SaaS & Enterprise","difficulty":2,"company":"Vidyard","question":"Kitchener-based Vidyard helps businesses use which medium in sales and marketing?","options":["Video","Radio spectrum","Printed cheques","Satellite radar"],"answer":0,"explanation":"Vidyard provides video tools for virtual selling and marketing.","sourceUrl":"https://www.vidyard.com/about/","sourceLabel":"Vidyard — About","asOf":"2026-08-31"},
-
-  {"id":"con-01","category":"Consumer & Commerce","difficulty":1,"company":"Shopify","question":"Shopify's core platform helps merchants do what?","options":["Start, run and grow commerce businesses","Train self-driving trucks","Build quantum processors","Audit bank ledgers"],"answer":0,"explanation":"Ottawa-based Shopify provides commerce infrastructure for merchants to sell online and in person.","sourceUrl":"https://www.shopify.com/ca/about","sourceLabel":"Shopify — About","asOf":"2026-08-31"},
-  {"id":"con-02","category":"Consumer & Commerce","difficulty":2,"company":"Shopify","question":"Shopify began after its founders tried to open an online store selling what?","options":["Snowboards","Books","Coffee","Bicycles"],"answer":0,"explanation":"Shopify grew from the founders' effort to build an online snowboard store called Snowdevil.","sourceUrl":"https://www.shopify.com/ca/about","sourceLabel":"Shopify — About","asOf":"2026-08-31"},
-  {"id":"con-03","category":"Consumer & Commerce","difficulty":2,"company":"Shopify","question":"Shopify's point-of-sale product connects online commerce with what?","options":["In-person selling","Weather satellites","Legal discovery","Drug screening"],"answer":0,"explanation":"Shopify POS lets merchants sell in person while connecting inventory and customer data with their Shopify store.","sourceUrl":"https://www.shopify.com/ca/pos","sourceLabel":"Shopify — Point of Sale","asOf":"2026-08-31"},
-  {"id":"con-04","category":"Consumer & Commerce","difficulty":1,"company":"Lightspeed","question":"Montréal-founded Lightspeed provides commerce tools mainly to which operators?","options":["Retailers and hospitality businesses","Research hospitals only","Railway companies","National militaries"],"answer":0,"explanation":"Lightspeed's commerce platform serves retail and hospitality businesses.","sourceUrl":"https://www.lightspeedhq.com/about/","sourceLabel":"Lightspeed — About","asOf":"2026-08-31"},
-  {"id":"con-05","category":"Consumer & Commerce","difficulty":1,"company":"Hopper","question":"Hopper's consumer app is chiefly used for what?","options":["Travel booking","Tax filing","Password storage","Home-energy control"],"answer":0,"explanation":"Montréal-founded Hopper operates a mobile travel marketplace for flights, hotels, homes and car rentals.","sourceUrl":"https://hopper.com/about","sourceLabel":"Hopper — About","asOf":"2026-08-31"},
-  {"id":"con-06","category":"Consumer & Commerce","difficulty":2,"company":"Hopper","question":"What does Hopper's B2B initiative HTS stand for?","options":["Hopper Technology Solutions","Hotel Transit Service","Hosted Ticket Standard","Highway Tourism System"],"answer":0,"explanation":"HTS stands for Hopper Technology Solutions, the company's travel-commerce B2B offering.","sourceUrl":"https://hts.hopper.com/","sourceLabel":"Hopper Technology Solutions","asOf":"2026-08-31"},
-  {"id":"con-07","category":"Consumer & Commerce","difficulty":1,"company":"ApplyBoard","question":"ApplyBoard's platform connects international students with what?","options":["Educational programs and institutions","Crypto exchanges","Medical devices","Freight carriers"],"answer":0,"explanation":"Kitchener-founded ApplyBoard helps international students discover and apply to educational programs.","sourceUrl":"https://www.applyboard.com/about","sourceLabel":"ApplyBoard — About","asOf":"2026-08-31"},
-  {"id":"con-08","category":"Consumer & Commerce","difficulty":2,"company":"Wattpad","question":"Toronto-founded Wattpad built a global community around what activity?","options":["Reading and writing stories","Trading carbon credits","Managing payroll","Booking campsites"],"answer":0,"explanation":"Wattpad is a social storytelling platform where people read and write original stories.","sourceUrl":"https://company.wattpad.com/","sourceLabel":"Wattpad — Company","asOf":"2026-08-31"},
-  {"id":"con-09","category":"Consumer & Commerce","difficulty":1,"company":"Ritual","question":"Ritual's app is centered on ordering from which local businesses?","options":["Restaurants and cafés","Law firms","Auto factories","Cloud data centres"],"answer":0,"explanation":"Toronto-founded Ritual connects customers with local restaurants and cafés for pickup ordering.","sourceUrl":"https://ritual.co/about","sourceLabel":"Ritual — About","asOf":"2026-08-31"},
-  {"id":"con-10","category":"Consumer & Commerce","difficulty":1,"company":"TouchBistro","question":"TouchBistro makes management and point-of-sale software for what industry?","options":["Restaurants","Airlines","Mining","Pharmaceutical research"],"answer":0,"explanation":"TouchBistro is a Toronto-founded restaurant management platform.","sourceUrl":"https://www.touchbistro.com/about-us/","sourceLabel":"TouchBistro — About us","asOf":"2026-08-31"},
-  {"id":"con-11","category":"Consumer & Commerce","difficulty":2,"company":"Mejuri","question":"Mejuri is a Toronto-founded brand in which product category?","options":["Fine jewelry","Outdoor footwear","Smart thermostats","Accounting software"],"answer":0,"explanation":"Mejuri is a direct-to-consumer fine jewelry brand founded in Toronto.","sourceUrl":"https://mejuri.com/ca/en/company/about-us","sourceLabel":"Mejuri — About us","asOf":"2026-08-31"},
-  {"id":"con-12","category":"Consumer & Commerce","difficulty":2,"company":"Article","question":"Vancouver-founded Article sells which kind of products primarily online?","options":["Furniture and home goods","Business insurance","Lab equipment","Payment terminals"],"answer":0,"explanation":"Article is a direct-to-consumer furniture and home-goods company.","sourceUrl":"https://www.article.com/about","sourceLabel":"Article — About","asOf":"2026-08-31"},
-
-  {"id":"deep-01","category":"Deep Tech & Climate","difficulty":1,"company":"Xanadu","question":"Toronto-based Xanadu builds quantum computers using which particles?","options":["Photons","Neutrons","Muons","Protons"],"answer":0,"explanation":"Xanadu develops photonic quantum computers that encode and process information using light.","sourceUrl":"https://www.xanadu.ai/about","sourceLabel":"Xanadu — About","asOf":"2026-08-31"},
-  {"id":"deep-02","category":"Deep Tech & Climate","difficulty":2,"company":"Xanadu","question":"What is the name of Xanadu's open-source quantum programming library?","options":["PennyLane","MapleLane","PhotonPath","QNorth"],"answer":0,"explanation":"PennyLane is Xanadu's open-source software library for quantum programming and quantum machine learning.","sourceUrl":"https://pennylane.ai/","sourceLabel":"PennyLane","asOf":"2026-08-31"},
-  {"id":"deep-03","category":"Deep Tech & Climate","difficulty":1,"company":"D-Wave","question":"D-Wave is best known for commercializing which computing approach?","options":["Quantum annealing","Optical character recognition","Edge video streaming","Blockchain mining"],"answer":0,"explanation":"Burnaby-founded D-Wave pioneered commercial quantum annealing systems.","sourceUrl":"https://www.dwavequantum.com/company/about-d-wave/","sourceLabel":"D-Wave — About","asOf":"2026-08-31"},
-  {"id":"deep-04","category":"Deep Tech & Climate","difficulty":2,"company":"D-Wave","question":"What is D-Wave's cloud quantum service called?","options":["Leap","Jump","Orbit","North"],"answer":0,"explanation":"Leap is D-Wave's real-time quantum cloud service.","sourceUrl":"https://www.dwavequantum.com/solutions-and-products/cloud-platform/","sourceLabel":"D-Wave — Leap cloud platform","asOf":"2026-08-31"},
-  {"id":"deep-05","category":"Deep Tech & Climate","difficulty":1,"company":"CarbonCure","question":"CarbonCure's technology permanently stores captured CO₂ in what material?","options":["Concrete","Timber","Glass","Asphalt shingles"],"answer":0,"explanation":"CarbonCure injects captured carbon dioxide into concrete, where it mineralizes and is permanently stored.","sourceUrl":"https://www.carboncure.com/technologies/","sourceLabel":"CarbonCure — Technologies","asOf":"2026-08-31"},
-  {"id":"deep-06","category":"Deep Tech & Climate","difficulty":2,"company":"CarbonCure","question":"CarbonCure was founded in which Atlantic province?","options":["Nova Scotia","New Brunswick","Prince Edward Island","Newfoundland and Labrador"],"answer":0,"explanation":"CarbonCure was founded in Nova Scotia and is headquartered in Dartmouth.","sourceUrl":"https://www.carboncure.com/about/","sourceLabel":"CarbonCure — About","asOf":"2026-08-31"},
-  {"id":"deep-07","category":"Deep Tech & Climate","difficulty":1,"company":"Geotab","question":"Oakville-based Geotab specializes in data from what?","options":["Connected vehicles and fleets","Retail loyalty cards","Court filings","Medical scans"],"answer":0,"explanation":"Geotab provides connected transportation and fleet-management telematics.","sourceUrl":"https://www.geotab.com/about/","sourceLabel":"Geotab — About","asOf":"2026-08-31"},
-  {"id":"deep-08","category":"Deep Tech & Climate","difficulty":2,"company":"GHGSat","question":"GHGSat's satellites detect emissions of which greenhouse gas at industrial sites?","options":["Methane","Oxygen","Nitrogen","Helium"],"answer":0,"explanation":"Montréal-based GHGSat uses satellites and aircraft sensors to detect and quantify methane emissions.","sourceUrl":"https://www.ghgsat.com/en/about/","sourceLabel":"GHGSat — About","asOf":"2026-08-31"},
-  {"id":"deep-09","category":"Deep Tech & Climate","difficulty":2,"company":"General Fusion","question":"General Fusion's power-plant approach is called what?","options":["Magnetized target fusion","Cold fission","Solar annealing","Photonic capture"],"answer":0,"explanation":"General Fusion is advancing practical fusion energy with its magnetized target fusion technology.","sourceUrl":"https://generalfusion.com/","sourceLabel":"General Fusion","asOf":"2026-08-31"},
-  {"id":"deep-10","category":"Deep Tech & Climate","difficulty":1,"company":"ecobee","question":"Toronto-founded ecobee first became known for which connected-home product?","options":["Smart thermostats","Video doorbells","Robot vacuums","Solar roof tiles"],"answer":0,"explanation":"ecobee launched a smart thermostat and expanded into smart-home products and services.","sourceUrl":"https://www.ecobee.com/en-ca/about/","sourceLabel":"ecobee — About","asOf":"2026-08-31"},
-  {"id":"deep-11","category":"Deep Tech & Climate","difficulty":1,"company":"Li-Cycle","question":"Li-Cycle's technology is designed to recover materials from what?","options":["Lithium-ion batteries","Concrete buildings","Forest waste","Data-centre servers"],"answer":0,"explanation":"Toronto-founded Li-Cycle develops resource-recovery processes for lithium-ion batteries.","sourceUrl":"https://li-cycle.com/about-us/","sourceLabel":"Li-Cycle — About us","asOf":"2026-08-31"},
-  {"id":"deep-12","category":"Deep Tech & Climate","difficulty":2,"company":"Svante","question":"Burnaby-based Svante captures carbon using what type of industrial material?","options":["Solid sorbent filters","Liquid-metal batteries","Wood pellets","Silicon wafers"],"answer":0,"explanation":"Svante makes solid-sorbent filter technology for point-source carbon capture.","sourceUrl":"https://svanteinc.com/about-us/","sourceLabel":"Svante — About us","asOf":"2026-08-31"},
-
-  {"id":"build-01","category":"Builders & Breakthroughs","difficulty":1,"company":"Research In Motion","question":"Which globally known smartphone was created by Waterloo's Research In Motion?","options":["BlackBerry","Palm Pilot","Nokia Communicator","Sidekick"],"answer":0,"explanation":"Research In Motion, later renamed BlackBerry, created the BlackBerry wireless handheld and smartphone.","sourceUrl":"https://www.blackberry.com/us/en/company/overview","sourceLabel":"BlackBerry — Company overview","asOf":"2026-08-31"},
-  {"id":"build-02","category":"Builders & Breakthroughs","difficulty":2,"company":"Nortel","question":"Nortel was historically a major Canadian company in which industry?","options":["Telecommunications equipment","Grocery retail","Rail transport","Pharmaceuticals"],"answer":0,"explanation":"Nortel was a Canadian telecommunications and data-networking equipment manufacturer with roots dating to 1895.","sourceUrl":"https://thecanadianencyclopedia.ca/en/article/nortel","sourceLabel":"The Canadian Encyclopedia — Nortel","asOf":"2026-08-31"},
-  {"id":"build-03","category":"Builders & Breakthroughs","difficulty":1,"company":"University of Waterloo","question":"What makes Waterloo's co-op program especially relevant to Canadian technology companies?","options":["Students alternate study with paid work terms","It grants patents automatically","It operates a stock exchange","It funds only medical trials"],"answer":0,"explanation":"Waterloo's co-operative education model combines academic terms with paid work experiences.","sourceUrl":"https://uwaterloo.ca/future-students/co-op","sourceLabel":"University of Waterloo — Co-op","asOf":"2026-08-31"},
-  {"id":"build-04","category":"Builders & Breakthroughs","difficulty":2,"company":"MaRS Discovery District","question":"MaRS Discovery District is located in which city?","options":["Toronto","Vancouver","Montréal","Edmonton"],"answer":0,"explanation":"MaRS is a Toronto innovation hub supporting startups and scale-ups.","sourceUrl":"https://www.marsdd.com/about/","sourceLabel":"MaRS — About","asOf":"2026-08-31"},
-  {"id":"build-05","category":"Builders & Breakthroughs","difficulty":2,"company":"Communitech","question":"Communitech is the technology hub for which Ontario region?","options":["Waterloo Region","Niagara Region","Muskoka","Thunder Bay"],"answer":0,"explanation":"Communitech supports founders and technology companies in Waterloo Region and across Canada.","sourceUrl":"https://communitech.ca/","sourceLabel":"Communitech","asOf":"2026-08-31"},
-  {"id":"build-06","category":"Builders & Breakthroughs","difficulty":2,"company":"Creative Destruction Lab","question":"Creative Destruction Lab began at which Canadian business school?","options":["Rotman School of Management","Ivey Business School","HEC Montréal","Sauder School of Business"],"answer":0,"explanation":"CDL was founded at the University of Toronto's Rotman School of Management.","sourceUrl":"https://creativedestructionlab.com/about/","sourceLabel":"Creative Destruction Lab — About","asOf":"2026-08-31"},
-  {"id":"build-07","category":"Builders & Breakthroughs","difficulty":2,"company":"Pan-Canadian AI Strategy","question":"Canada's national AI strategy initially centred investment around institutes in Edmonton, Montréal and which city?","options":["Toronto","Ottawa","Halifax","Calgary"],"answer":0,"explanation":"The strategy supports Amii in Edmonton, Mila in Montréal and the Vector Institute in Toronto.","sourceUrl":"https://cifar.ca/ai/","sourceLabel":"CIFAR — Pan-Canadian AI Strategy","asOf":"2026-08-31"},
-  {"id":"build-08","category":"Builders & Breakthroughs","difficulty":2,"company":"Wattpad","question":"Wattpad is part of which global digital-storytelling group?","options":["WEBTOON Entertainment","Rakuten Group","Spotify","Tencent Music"],"answer":0,"explanation":"Toronto-founded Wattpad is part of WEBTOON Entertainment's global storytelling ecosystem.","sourceUrl":"https://company.wattpad.com/","sourceLabel":"Wattpad — Company","asOf":"2026-08-31"},
-  {"id":"build-09","category":"Builders & Breakthroughs","difficulty":2,"company":"DMZ","question":"The DMZ technology incubator is based at which Toronto university?","options":["Toronto Metropolitan University","York University","OCAD University","University of Guelph"],"answer":0,"explanation":"DMZ is a technology incubator at Toronto Metropolitan University.","sourceUrl":"https://dmz.torontomu.ca/about/","sourceLabel":"DMZ — About","asOf":"2026-08-31"},
-  {"id":"build-10","category":"Builders & Breakthroughs","difficulty":2,"company":"NRC IRAP","question":"Which federal organization runs Canada's Industrial Research Assistance Program?","options":["National Research Council of Canada","Bank of Canada","Statistics Canada","Canada Council for the Arts"],"answer":0,"explanation":"The National Research Council of Canada delivers IRAP support to innovative Canadian small and medium-sized businesses.","sourceUrl":"https://nrc.canada.ca/en/support-technology-innovation","sourceLabel":"National Research Council Canada — Innovation support","asOf":"2026-08-31"},
-  {"id":"build-11","category":"Builders & Breakthroughs","difficulty":1,"company":"Shopify","question":"Which Canadian city is home to Shopify's headquarters?","options":["Ottawa","Toronto","Vancouver","Montréal"],"answer":0,"explanation":"Shopify is headquartered in Ottawa, where the company grew from its early online-store origins.","sourceUrl":"https://www.shopify.com/ca/about","sourceLabel":"Shopify — About","asOf":"2026-08-31"},
-  {"id":"build-12","category":"Builders & Breakthroughs","difficulty":2,"company":"Amii","question":"The Alberta Machine Intelligence Institute is based in which city?","options":["Edmonton","Calgary","Red Deer","Lethbridge"],"answer":0,"explanation":"Amii is an Edmonton-based institute for machine intelligence research and commercialization.","sourceUrl":"https://www.amii.ca/about","sourceLabel":"Amii — About","asOf":"2026-08-31"}
+  {
+    "id": "ai-01",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "company": "Cohere",
+    "question": "What kind of technology is at the core of Cohere's enterprise platform?",
+    "options": [
+      "Large language models",
+      "Quantum annealing",
+      "Payment terminals",
+      "Satellite imaging"
+    ],
+    "answer": 0,
+    "explanation": "Cohere builds enterprise AI products around large language models, including generation, retrieval and reranking models.",
+    "sourceUrl": "https://cohere.com/about",
+    "sourceLabel": "Cohere — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-02",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "company": "Cohere",
+    "question": "In which Canadian city is Cohere headquartered?",
+    "options": [
+      "Vancouver",
+      "Toronto",
+      "Montréal",
+      "Calgary"
+    ],
+    "answer": 1,
+    "explanation": "Cohere is headquartered in Toronto and operates internationally.",
+    "sourceUrl": "https://cohere.com/about",
+    "sourceLabel": "Cohere — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-03",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "company": "Cohere",
+    "question": "Which Cohere model family is designed to rank search results by relevance?",
+    "options": [
+      "Embed",
+      "Command",
+      "Rerank",
+      "Aya"
+    ],
+    "answer": 2,
+    "explanation": "Cohere's Rerank models reorder candidate results according to semantic relevance.",
+    "sourceUrl": "https://docs.cohere.com/docs/rerank-overview",
+    "sourceLabel": "Cohere Docs — Rerank overview",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-04",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "company": "Waabi",
+    "question": "Which industry is Waabi primarily building AI systems for?",
+    "options": [
+      "Autonomous trucking",
+      "Retail banking",
+      "Legal billing",
+      "Restaurant delivery"
+    ],
+    "answer": 0,
+    "explanation": "Toronto-founded Waabi develops an AI-first autonomous trucking system.",
+    "sourceUrl": "https://waabi.ai/",
+    "sourceLabel": "Waabi",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-05",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "company": "Waabi",
+    "question": "What is the name of Waabi's high-fidelity closed-loop simulator?",
+    "options": [
+      "Waabi Driver",
+      "Waabi World",
+      "Waabi Cloud",
+      "Waabi Atlas"
+    ],
+    "answer": 1,
+    "explanation": "Waabi World is the company's scalable, high-fidelity closed-loop simulator for autonomous driving development.",
+    "sourceUrl": "https://waabi.ai/waabi-world",
+    "sourceLabel": "Waabi — Waabi World",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-06",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "company": "Ada",
+    "question": "Ada's AI platform is designed mainly to automate what business function?",
+    "options": [
+      "Customer service",
+      "Payroll",
+      "Freight routing",
+      "Chip design"
+    ],
+    "answer": 0,
+    "explanation": "Ada provides an AI-powered customer service automation platform.",
+    "sourceUrl": "https://www.ada.cx/platform/",
+    "sourceLabel": "Ada — AI customer service platform",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-07",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "company": "Coveo",
+    "question": "Coveo describes its core platform with which three-letter term?",
+    "options": [
+      "ERP",
+      "CDN",
+      "AI",
+      "CAD"
+    ],
+    "answer": 2,
+    "explanation": "Québec-founded Coveo provides an AI relevance platform for search, recommendations and personalization.",
+    "sourceUrl": "https://www.coveo.com/en/company/about-us",
+    "sourceLabel": "Coveo — About us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-08",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "company": "BenchSci",
+    "question": "BenchSci's ASCEND platform supports which kind of research?",
+    "options": [
+      "Preclinical life-science R&D",
+      "Consumer credit scoring",
+      "Mineral exploration",
+      "Autonomous navigation"
+    ],
+    "answer": 0,
+    "explanation": "BenchSci applies AI to preclinical life-science research and development.",
+    "sourceUrl": "https://www.benchsci.com/about",
+    "sourceLabel": "BenchSci — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-09",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "company": "MindBridge",
+    "question": "MindBridge applies AI to which professional domain?",
+    "options": [
+      "Financial risk and audit",
+      "Video game animation",
+      "Weather forecasting",
+      "Legal discovery"
+    ],
+    "answer": 0,
+    "explanation": "Ottawa-based MindBridge uses AI to help analyze financial data for risk and audit work.",
+    "sourceUrl": "https://www.mindbridge.ai/company/",
+    "sourceLabel": "MindBridge — Company",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-10",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "company": "BlueDot",
+    "question": "BlueDot uses AI and data primarily to provide intelligence about what?",
+    "options": [
+      "Infectious-disease threats",
+      "Online fraud",
+      "Forest inventories",
+      "Hiring pipelines"
+    ],
+    "answer": 0,
+    "explanation": "BlueDot provides infectious-disease intelligence using global data and analytics.",
+    "sourceUrl": "https://bluedot.global/about/",
+    "sourceLabel": "BlueDot — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-11",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "company": "Vector Institute",
+    "question": "The Vector Institute is headquartered in which city?",
+    "options": [
+      "Edmonton",
+      "Halifax",
+      "Toronto",
+      "Waterloo"
+    ],
+    "answer": 2,
+    "explanation": "Vector is an independent, not-for-profit AI institute headquartered in Toronto.",
+    "sourceUrl": "https://vectorinstitute.ai/about/",
+    "sourceLabel": "Vector Institute — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-12",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "company": "Mila",
+    "question": "Mila is most closely associated with which Canadian AI hub?",
+    "options": [
+      "Montréal",
+      "Ottawa",
+      "Winnipeg",
+      "Victoria"
+    ],
+    "answer": 0,
+    "explanation": "Mila is the Québec AI institute rooted in Montréal's machine-learning research community.",
+    "sourceUrl": "https://mila.quebec/en/mila/",
+    "sourceLabel": "Mila — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-01",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "company": "Wealthsimple",
+    "question": "Which description best fits Wealthsimple?",
+    "options": [
+      "A digital financial-services company",
+      "A quantum hardware maker",
+      "A legal practice platform",
+      "A carbon-removal company"
+    ],
+    "answer": 0,
+    "explanation": "Toronto-founded Wealthsimple offers digital investing, saving, spending and tax products.",
+    "sourceUrl": "https://www.wealthsimple.com/en-ca/about",
+    "sourceLabel": "Wealthsimple — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-02",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "company": "Wealthsimple",
+    "question": "Wealthsimple says it was founded in which year?",
+    "options": [
+      "2004",
+      "2009",
+      "2014",
+      "2019"
+    ],
+    "answer": 2,
+    "explanation": "Wealthsimple was founded in 2014.",
+    "sourceUrl": "https://www.wealthsimple.com/en-ca/about",
+    "sourceLabel": "Wealthsimple — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-03",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "company": "Nuvei",
+    "question": "Montréal-founded Nuvei primarily provides what?",
+    "options": [
+      "Payment technology",
+      "Cybersecurity vaults",
+      "Autonomous trucks",
+      "Medical imaging"
+    ],
+    "answer": 0,
+    "explanation": "Nuvei provides payment technology and commerce solutions to businesses.",
+    "sourceUrl": "https://www.nuvei.com/",
+    "sourceLabel": "Nuvei",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-04",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "company": "KOHO",
+    "question": "KOHO's core consumer product is paired with which everyday payment tool?",
+    "options": [
+      "A prepaid Mastercard",
+      "A paper bond",
+      "A wire-transfer terminal",
+      "A merchant cash register"
+    ],
+    "answer": 0,
+    "explanation": "KOHO offers a spending and savings account with a reloadable prepaid Mastercard.",
+    "sourceUrl": "https://www.koho.ca/about/",
+    "sourceLabel": "KOHO — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-05",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "company": "Neo Financial",
+    "question": "Neo Financial was founded in which Prairie city?",
+    "options": [
+      "Regina",
+      "Calgary",
+      "Winnipeg",
+      "Saskatoon"
+    ],
+    "answer": 1,
+    "explanation": "Neo Financial is a Calgary-founded financial technology company.",
+    "sourceUrl": "https://www.neofinancial.com/about",
+    "sourceLabel": "Neo Financial — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-06",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "company": "Shakepay",
+    "question": "Shakepay lets Canadians buy and sell which two cryptoassets?",
+    "options": [
+      "Bitcoin and ether",
+      "Solana and dogecoin",
+      "XRP and litecoin",
+      "Only stablecoins"
+    ],
+    "answer": 0,
+    "explanation": "Shakepay's Canadian platform focuses on buying and selling bitcoin and ether.",
+    "sourceUrl": "https://shakepay.com/about",
+    "sourceLabel": "Shakepay — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-07",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "company": "Coinsquare",
+    "question": "Coinsquare operates in which regulated market?",
+    "options": [
+      "Crypto trading",
+      "Property insurance",
+      "Freight brokerage",
+      "Patent licensing"
+    ],
+    "answer": 0,
+    "explanation": "Coinsquare operates a Canadian crypto asset trading platform.",
+    "sourceUrl": "https://www.coinsquare.com/about",
+    "sourceLabel": "Coinsquare — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-08",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "company": "Trulioo",
+    "question": "Vancouver-based Trulioo helps businesses verify what?",
+    "options": [
+      "People and businesses",
+      "Quantum circuits",
+      "Concrete strength",
+      "Truck routes"
+    ],
+    "answer": 0,
+    "explanation": "Trulioo provides global identity verification for people and organizations.",
+    "sourceUrl": "https://www.trulioo.com/company",
+    "sourceLabel": "Trulioo — Company",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-09",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "company": "Float",
+    "question": "Float's platform is built chiefly for which users?",
+    "options": [
+      "Canadian businesses managing spend",
+      "Consumers booking flights",
+      "Hospitals managing beds",
+      "Scientists choosing antibodies"
+    ],
+    "answer": 0,
+    "explanation": "Float provides corporate cards, expense management and related financial tools for Canadian businesses.",
+    "sourceUrl": "https://floatfinancial.com/about-us",
+    "sourceLabel": "Float — About us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-10",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "company": "Borrowell",
+    "question": "Which personal-finance metric can Canadians check through Borrowell?",
+    "options": [
+      "Credit score",
+      "Carbon intensity",
+      "Code coverage",
+      "Driving range"
+    ],
+    "answer": 0,
+    "explanation": "Borrowell offers free credit scores and credit education alongside product recommendations.",
+    "sourceUrl": "https://borrowell.com/",
+    "sourceLabel": "Borrowell",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-11",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "company": "Interac",
+    "question": "Which Interac service lets Canadians send money using online or mobile banking?",
+    "options": [
+      "Interac e-Transfer",
+      "Interac Orbit",
+      "Interac Ledger",
+      "Interac Beacon"
+    ],
+    "answer": 0,
+    "explanation": "Interac e-Transfer moves money through participating financial institutions' online and mobile banking services.",
+    "sourceUrl": "https://www.interac.ca/en/payments/personal/interac-e-transfer/",
+    "sourceLabel": "Interac — e-Transfer",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-12",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "company": "Payments Canada",
+    "question": "What is Lynx in Canada's financial infrastructure?",
+    "options": [
+      "A high-value payment system",
+      "A stock exchange",
+      "A tax-filing app",
+      "A rewards card"
+    ],
+    "answer": 0,
+    "explanation": "Lynx is Canada's high-value payment system, owned and operated by Payments Canada.",
+    "sourceUrl": "https://www.payments.ca/systems-services/payment-systems/high-value-payment-system-lynx",
+    "sourceLabel": "Payments Canada — Lynx",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-01",
+    "category": "SaaS & Enterprise",
+    "difficulty": 1,
+    "company": "Clio",
+    "question": "Clio builds cloud software for which profession?",
+    "options": [
+      "Legal professionals",
+      "Civil engineers",
+      "Airline pilots",
+      "Biochemists"
+    ],
+    "answer": 0,
+    "explanation": "Clio provides law firms with cloud software for legal-practice tasks such as client intake, documents, billing and trust accounting.",
+    "sourceUrl": "https://ised-isde.canada.ca/site/accelerated-growth-service/en/ghp-company-profile-clio",
+    "sourceLabel": "Innovation, Science and Economic Development Canada — Clio profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-02",
+    "category": "SaaS & Enterprise",
+    "difficulty": 2,
+    "company": "Clio",
+    "question": "Where is Clio headquartered?",
+    "options": [
+      "Burnaby",
+      "Québec City",
+      "Kitchener",
+      "Halifax"
+    ],
+    "answer": 0,
+    "explanation": "Innovation, Science and Economic Development Canada identifies Clio as a legal-technology company headquartered in Burnaby, British Columbia.",
+    "sourceUrl": "https://ised-isde.canada.ca/site/accelerated-growth-service/en/ghp-company-profile-clio",
+    "sourceLabel": "Innovation, Science and Economic Development Canada — Clio profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-03",
+    "category": "SaaS & Enterprise",
+    "difficulty": 1,
+    "company": "1Password",
+    "question": "What does 1Password primarily help people and companies manage?",
+    "options": [
+      "Passwords and digital credentials",
+      "Inventory shipments",
+      "Patient appointments",
+      "Electricity demand"
+    ],
+    "answer": 0,
+    "explanation": "Toronto-founded 1Password provides password and access management products.",
+    "sourceUrl": "https://1password.com/company",
+    "sourceLabel": "1Password — Company",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-04",
+    "category": "SaaS & Enterprise",
+    "difficulty": 2,
+    "company": "1Password",
+    "question": "Which security approach does 1Password's Extended Access Management product emphasize?",
+    "options": [
+      "Securing every sign-in on every device",
+      "Replacing all cloud storage",
+      "Mining cryptocurrency",
+      "Routing delivery vehicles"
+    ],
+    "answer": 0,
+    "explanation": "1Password Extended Access Management focuses on securing sign-ins and devices, including unmanaged applications.",
+    "sourceUrl": "https://1password.com/product/xam",
+    "sourceLabel": "1Password — Extended Access Management",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-05",
+    "category": "SaaS & Enterprise",
+    "difficulty": 1,
+    "company": "PointClickCare",
+    "question": "PointClickCare's software serves which sector?",
+    "options": [
+      "Health care",
+      "Mining",
+      "Film production",
+      "Grocery delivery"
+    ],
+    "answer": 0,
+    "explanation": "PointClickCare provides cloud-based health-care software, with deep roots in long-term, post-acute and senior care.",
+    "sourceUrl": "https://pointclickcare.com/company/about-us/",
+    "sourceLabel": "PointClickCare — About us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-06",
+    "category": "SaaS & Enterprise",
+    "difficulty": 1,
+    "company": "League",
+    "question": "League's platform helps organizations deliver what kind of experiences?",
+    "options": [
+      "Digital health",
+      "Freight customs",
+      "Sports betting",
+      "Home renovation"
+    ],
+    "answer": 0,
+    "explanation": "Toronto-founded League powers consumer health experiences for payers, providers and employers.",
+    "sourceUrl": "https://league.com/digital-health-platform/",
+    "sourceLabel": "League — Digital health platform",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-07",
+    "category": "SaaS & Enterprise",
+    "difficulty": 1,
+    "company": "Hootsuite",
+    "question": "Vancouver-founded Hootsuite is best known for managing what?",
+    "options": [
+      "Social media",
+      "Quantum computers",
+      "Mortgage underwriting",
+      "Laboratory samples"
+    ],
+    "answer": 0,
+    "explanation": "Hootsuite provides social media management and analytics software.",
+    "sourceUrl": "https://www.hootsuite.com/about",
+    "sourceLabel": "Hootsuite — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-08",
+    "category": "SaaS & Enterprise",
+    "difficulty": 1,
+    "company": "FreshBooks",
+    "question": "FreshBooks originally focused on invoicing and accounting for whom?",
+    "options": [
+      "Small businesses and self-employed professionals",
+      "National central banks",
+      "Public transit agencies",
+      "Semiconductor fabs"
+    ],
+    "answer": 0,
+    "explanation": "Toronto-founded FreshBooks builds accounting software for small businesses and self-employed professionals.",
+    "sourceUrl": "https://www.freshbooks.com/about",
+    "sourceLabel": "FreshBooks — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-09",
+    "category": "SaaS & Enterprise",
+    "difficulty": 2,
+    "company": "Docebo",
+    "question": "Docebo's software is used to manage what?",
+    "options": [
+      "Enterprise learning",
+      "Restaurant reservations",
+      "Crypto custody",
+      "Autonomous fleets"
+    ],
+    "answer": 0,
+    "explanation": "Docebo provides an AI-powered learning platform for enterprises.",
+    "sourceUrl": "https://www.docebo.com/company/",
+    "sourceLabel": "Docebo — Company",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-10",
+    "category": "SaaS & Enterprise",
+    "difficulty": 2,
+    "company": "OpenText",
+    "question": "Which field has a dedicated technology category on OpenText's official blog?",
+    "options": [
+      "Information management",
+      "Wind-turbine maintenance",
+      "Food delivery",
+      "Credit-card issuing"
+    ],
+    "answer": 0,
+    "explanation": "OpenText's official technology blog groups articles about managing enterprise information in a dedicated Information Management category.",
+    "sourceUrl": "https://blogs.opentext.com/category/information-management/",
+    "sourceLabel": "OpenText Blogs — Information Management",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-11",
+    "category": "SaaS & Enterprise",
+    "difficulty": 1,
+    "company": "Jobber",
+    "question": "Jobber's platform is designed for which businesses?",
+    "options": [
+      "Home-service businesses",
+      "Investment banks",
+      "Airlines",
+      "Universities"
+    ],
+    "answer": 0,
+    "explanation": "Jobber provides operations software for home-service businesses.",
+    "sourceUrl": "https://www.getjobber.com/",
+    "sourceLabel": "Jobber — Home service software",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "saas-12",
+    "category": "SaaS & Enterprise",
+    "difficulty": 2,
+    "company": "Vidyard",
+    "question": "Kitchener-based Vidyard helps businesses use which medium in sales and marketing?",
+    "options": [
+      "Video",
+      "Radio spectrum",
+      "Printed cheques",
+      "Satellite radar"
+    ],
+    "answer": 0,
+    "explanation": "Vidyard provides video tools for virtual selling and marketing.",
+    "sourceUrl": "https://www.vidyard.com/about/",
+    "sourceLabel": "Vidyard — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-01",
+    "category": "Consumer & Commerce",
+    "difficulty": 1,
+    "company": "Shopify",
+    "question": "Shopify's core platform helps merchants do what?",
+    "options": [
+      "Start, run and grow commerce businesses",
+      "Train self-driving trucks",
+      "Build quantum processors",
+      "Audit bank ledgers"
+    ],
+    "answer": 0,
+    "explanation": "Ottawa-based Shopify provides commerce infrastructure for merchants to sell online and in person.",
+    "sourceUrl": "https://www.shopify.com/ca/about",
+    "sourceLabel": "Shopify — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-02",
+    "category": "Consumer & Commerce",
+    "difficulty": 2,
+    "company": "Shopify",
+    "question": "Shopify began after its founders tried to open an online store selling what?",
+    "options": [
+      "Snowboards",
+      "Books",
+      "Coffee",
+      "Bicycles"
+    ],
+    "answer": 0,
+    "explanation": "Shopify grew from the founders' effort to build an online snowboard store called Snowdevil.",
+    "sourceUrl": "https://www.shopify.com/ca/about",
+    "sourceLabel": "Shopify — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-03",
+    "category": "Consumer & Commerce",
+    "difficulty": 2,
+    "company": "Shopify",
+    "question": "Shopify's point-of-sale product connects online commerce with what?",
+    "options": [
+      "In-person selling",
+      "Weather satellites",
+      "Legal discovery",
+      "Drug screening"
+    ],
+    "answer": 0,
+    "explanation": "Shopify POS lets merchants sell in person while connecting inventory and customer data with their Shopify store.",
+    "sourceUrl": "https://www.shopify.com/ca/pos",
+    "sourceLabel": "Shopify — Point of Sale",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-04",
+    "category": "Consumer & Commerce",
+    "difficulty": 1,
+    "company": "Lightspeed",
+    "question": "Montréal-founded Lightspeed provides commerce tools mainly to which operators?",
+    "options": [
+      "Retailers and hospitality businesses",
+      "Research hospitals only",
+      "Railway companies",
+      "National militaries"
+    ],
+    "answer": 0,
+    "explanation": "Lightspeed's commerce platform serves retail and hospitality businesses.",
+    "sourceUrl": "https://www.lightspeedhq.com/about/",
+    "sourceLabel": "Lightspeed — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-05",
+    "category": "Consumer & Commerce",
+    "difficulty": 1,
+    "company": "Hopper",
+    "question": "Hopper's consumer app is chiefly used for what?",
+    "options": [
+      "Travel booking",
+      "Tax filing",
+      "Password storage",
+      "Home-energy control"
+    ],
+    "answer": 0,
+    "explanation": "Montréal-founded Hopper operates a mobile travel marketplace for flights, hotels, homes and car rentals.",
+    "sourceUrl": "https://hopper.com/about",
+    "sourceLabel": "Hopper — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-06",
+    "category": "Consumer & Commerce",
+    "difficulty": 2,
+    "company": "Hopper",
+    "question": "What does Hopper's B2B initiative HTS stand for?",
+    "options": [
+      "Hopper Technology Solutions",
+      "Hotel Transit Service",
+      "Hosted Ticket Standard",
+      "Highway Tourism System"
+    ],
+    "answer": 0,
+    "explanation": "HTS stands for Hopper Technology Solutions, the company's travel-commerce B2B offering.",
+    "sourceUrl": "https://hts.hopper.com/",
+    "sourceLabel": "Hopper Technology Solutions",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-07",
+    "category": "Consumer & Commerce",
+    "difficulty": 1,
+    "company": "ApplyBoard",
+    "question": "ApplyBoard's platform connects international students with what?",
+    "options": [
+      "Educational programs and institutions",
+      "Crypto exchanges",
+      "Medical devices",
+      "Freight carriers"
+    ],
+    "answer": 0,
+    "explanation": "Kitchener-founded ApplyBoard helps international students discover and apply to educational programs.",
+    "sourceUrl": "https://www.applyboard.com/about",
+    "sourceLabel": "ApplyBoard — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-08",
+    "category": "Consumer & Commerce",
+    "difficulty": 2,
+    "company": "Wattpad",
+    "question": "Toronto-founded Wattpad built a global community around what activity?",
+    "options": [
+      "Reading and writing stories",
+      "Trading carbon credits",
+      "Managing payroll",
+      "Booking campsites"
+    ],
+    "answer": 0,
+    "explanation": "Wattpad is a social storytelling platform where people read and write original stories.",
+    "sourceUrl": "https://company.wattpad.com/",
+    "sourceLabel": "Wattpad — Company",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-09",
+    "category": "Consumer & Commerce",
+    "difficulty": 1,
+    "company": "Ritual",
+    "question": "Ritual's app is centered on ordering from which local businesses?",
+    "options": [
+      "Restaurants and cafés",
+      "Law firms",
+      "Auto factories",
+      "Cloud data centres"
+    ],
+    "answer": 0,
+    "explanation": "Toronto-founded Ritual connects customers with local restaurants and cafés for pickup ordering.",
+    "sourceUrl": "https://ritual.co/about",
+    "sourceLabel": "Ritual — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-10",
+    "category": "Consumer & Commerce",
+    "difficulty": 1,
+    "company": "TouchBistro",
+    "question": "TouchBistro makes management and point-of-sale software for what industry?",
+    "options": [
+      "Restaurants",
+      "Airlines",
+      "Mining",
+      "Pharmaceutical research"
+    ],
+    "answer": 0,
+    "explanation": "TouchBistro is a Toronto-founded restaurant management platform.",
+    "sourceUrl": "https://www.touchbistro.com/about-us/",
+    "sourceLabel": "TouchBistro — About us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-11",
+    "category": "Consumer & Commerce",
+    "difficulty": 2,
+    "company": "Mejuri",
+    "question": "Mejuri is a Toronto-founded brand in which product category?",
+    "options": [
+      "Fine jewelry",
+      "Outdoor footwear",
+      "Smart thermostats",
+      "Accounting software"
+    ],
+    "answer": 0,
+    "explanation": "Mejuri is a direct-to-consumer fine jewelry brand founded in Toronto.",
+    "sourceUrl": "https://mejuri.com/ca/en/company/about-us",
+    "sourceLabel": "Mejuri — About us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "con-12",
+    "category": "Consumer & Commerce",
+    "difficulty": 2,
+    "company": "Article",
+    "question": "Vancouver-founded Article sells which kind of products primarily online?",
+    "options": [
+      "Furniture and home goods",
+      "Business insurance",
+      "Lab equipment",
+      "Payment terminals"
+    ],
+    "answer": 0,
+    "explanation": "Article is a direct-to-consumer furniture and home-goods company.",
+    "sourceUrl": "https://www.article.com/about",
+    "sourceLabel": "Article — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-01",
+    "category": "Deep Tech & Climate",
+    "difficulty": 1,
+    "company": "Xanadu",
+    "question": "Toronto-based Xanadu builds quantum computers using which particles?",
+    "options": [
+      "Photons",
+      "Neutrons",
+      "Muons",
+      "Protons"
+    ],
+    "answer": 0,
+    "explanation": "Xanadu develops photonic quantum computers that encode and process information using light.",
+    "sourceUrl": "https://www.xanadu.ai/about",
+    "sourceLabel": "Xanadu — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-02",
+    "category": "Deep Tech & Climate",
+    "difficulty": 2,
+    "company": "Xanadu",
+    "question": "What is the name of Xanadu's open-source quantum programming library?",
+    "options": [
+      "PennyLane",
+      "MapleLane",
+      "PhotonPath",
+      "QNorth"
+    ],
+    "answer": 0,
+    "explanation": "PennyLane is Xanadu's open-source software library for quantum programming and quantum machine learning.",
+    "sourceUrl": "https://pennylane.ai/",
+    "sourceLabel": "PennyLane",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-03",
+    "category": "Deep Tech & Climate",
+    "difficulty": 1,
+    "company": "D-Wave",
+    "question": "D-Wave is best known for commercializing which computing approach?",
+    "options": [
+      "Quantum annealing",
+      "Optical character recognition",
+      "Edge video streaming",
+      "Blockchain mining"
+    ],
+    "answer": 0,
+    "explanation": "Burnaby-founded D-Wave pioneered commercial quantum annealing systems.",
+    "sourceUrl": "https://www.dwavequantum.com/company/about-d-wave/",
+    "sourceLabel": "D-Wave — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-04",
+    "category": "Deep Tech & Climate",
+    "difficulty": 2,
+    "company": "D-Wave",
+    "question": "What is D-Wave's cloud quantum service called?",
+    "options": [
+      "Leap",
+      "Jump",
+      "Orbit",
+      "North"
+    ],
+    "answer": 0,
+    "explanation": "Leap is D-Wave's real-time quantum cloud service.",
+    "sourceUrl": "https://www.dwavequantum.com/solutions-and-products/cloud-platform/",
+    "sourceLabel": "D-Wave — Leap cloud platform",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-05",
+    "category": "Deep Tech & Climate",
+    "difficulty": 1,
+    "company": "CarbonCure",
+    "question": "CarbonCure's technology permanently stores captured CO₂ in what material?",
+    "options": [
+      "Concrete",
+      "Timber",
+      "Glass",
+      "Asphalt shingles"
+    ],
+    "answer": 0,
+    "explanation": "CarbonCure injects captured carbon dioxide into concrete, where it mineralizes and is permanently stored.",
+    "sourceUrl": "https://www.carboncure.com/technologies/",
+    "sourceLabel": "CarbonCure — Technologies",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-06",
+    "category": "Deep Tech & Climate",
+    "difficulty": 2,
+    "company": "CarbonCure",
+    "question": "CarbonCure was founded in which Atlantic province?",
+    "options": [
+      "Nova Scotia",
+      "New Brunswick",
+      "Prince Edward Island",
+      "Newfoundland and Labrador"
+    ],
+    "answer": 0,
+    "explanation": "CarbonCure was founded in Nova Scotia and is headquartered in Dartmouth.",
+    "sourceUrl": "https://www.carboncure.com/about/",
+    "sourceLabel": "CarbonCure — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-07",
+    "category": "Deep Tech & Climate",
+    "difficulty": 1,
+    "company": "Geotab",
+    "question": "Oakville-based Geotab specializes in data from what?",
+    "options": [
+      "Connected vehicles and fleets",
+      "Retail loyalty cards",
+      "Court filings",
+      "Medical scans"
+    ],
+    "answer": 0,
+    "explanation": "Geotab provides connected transportation and fleet-management telematics.",
+    "sourceUrl": "https://www.geotab.com/about/",
+    "sourceLabel": "Geotab — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-08",
+    "category": "Deep Tech & Climate",
+    "difficulty": 2,
+    "company": "GHGSat",
+    "question": "GHGSat's satellites detect emissions of which greenhouse gas at industrial sites?",
+    "options": [
+      "Methane",
+      "Oxygen",
+      "Nitrogen",
+      "Helium"
+    ],
+    "answer": 0,
+    "explanation": "Montréal-based GHGSat uses satellites and aircraft sensors to detect and quantify methane emissions.",
+    "sourceUrl": "https://www.ghgsat.com/en/about/",
+    "sourceLabel": "GHGSat — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-09",
+    "category": "Deep Tech & Climate",
+    "difficulty": 2,
+    "company": "General Fusion",
+    "question": "General Fusion's power-plant approach is called what?",
+    "options": [
+      "Magnetized target fusion",
+      "Cold fission",
+      "Solar annealing",
+      "Photonic capture"
+    ],
+    "answer": 0,
+    "explanation": "General Fusion is advancing practical fusion energy with its magnetized target fusion technology.",
+    "sourceUrl": "https://generalfusion.com/",
+    "sourceLabel": "General Fusion",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-10",
+    "category": "Deep Tech & Climate",
+    "difficulty": 1,
+    "company": "ecobee",
+    "question": "Toronto-founded ecobee first became known for which connected-home product?",
+    "options": [
+      "Smart thermostats",
+      "Video doorbells",
+      "Robot vacuums",
+      "Solar roof tiles"
+    ],
+    "answer": 0,
+    "explanation": "ecobee launched a smart thermostat and expanded into smart-home products and services.",
+    "sourceUrl": "https://www.ecobee.com/en-ca/about/",
+    "sourceLabel": "ecobee — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-11",
+    "category": "Deep Tech & Climate",
+    "difficulty": 1,
+    "company": "Li-Cycle",
+    "question": "Li-Cycle's technology is designed to recover materials from what?",
+    "options": [
+      "Lithium-ion batteries",
+      "Concrete buildings",
+      "Forest waste",
+      "Data-centre servers"
+    ],
+    "answer": 0,
+    "explanation": "Toronto-founded Li-Cycle develops resource-recovery processes for lithium-ion batteries.",
+    "sourceUrl": "https://li-cycle.com/about-us/",
+    "sourceLabel": "Li-Cycle — About us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "deep-12",
+    "category": "Deep Tech & Climate",
+    "difficulty": 2,
+    "company": "Svante",
+    "question": "Burnaby-based Svante captures carbon using what type of industrial material?",
+    "options": [
+      "Solid sorbent filters",
+      "Liquid-metal batteries",
+      "Wood pellets",
+      "Silicon wafers"
+    ],
+    "answer": 0,
+    "explanation": "Svante makes solid-sorbent filter technology for point-source carbon capture.",
+    "sourceUrl": "https://svanteinc.com/about-us/",
+    "sourceLabel": "Svante — About us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-01",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 1,
+    "company": "Research In Motion",
+    "question": "Which globally known smartphone was created by Waterloo's Research In Motion?",
+    "options": [
+      "BlackBerry",
+      "Palm Pilot",
+      "Nokia Communicator",
+      "Sidekick"
+    ],
+    "answer": 0,
+    "explanation": "Research In Motion, later renamed BlackBerry, created the BlackBerry wireless handheld and smartphone.",
+    "sourceUrl": "https://www.blackberry.com/us/en/company/overview",
+    "sourceLabel": "BlackBerry — Company overview",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-02",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 2,
+    "company": "Nortel",
+    "question": "Nortel was historically a major Canadian company in which industry?",
+    "options": [
+      "Telecommunications equipment",
+      "Grocery retail",
+      "Rail transport",
+      "Pharmaceuticals"
+    ],
+    "answer": 0,
+    "explanation": "Nortel was a Canadian telecommunications and data-networking equipment manufacturer with roots dating to 1895.",
+    "sourceUrl": "https://thecanadianencyclopedia.ca/en/article/nortel",
+    "sourceLabel": "The Canadian Encyclopedia — Nortel",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-03",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 1,
+    "company": "University of Waterloo",
+    "question": "What makes Waterloo's co-op program especially relevant to Canadian technology companies?",
+    "options": [
+      "Students alternate study with paid work terms",
+      "It grants patents automatically",
+      "It operates a stock exchange",
+      "It funds only medical trials"
+    ],
+    "answer": 0,
+    "explanation": "Waterloo's co-operative education model combines academic terms with paid work experiences.",
+    "sourceUrl": "https://uwaterloo.ca/future-students/co-op",
+    "sourceLabel": "University of Waterloo — Co-op",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-04",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 2,
+    "company": "MaRS Discovery District",
+    "question": "MaRS Discovery District is located in which city?",
+    "options": [
+      "Toronto",
+      "Vancouver",
+      "Montréal",
+      "Edmonton"
+    ],
+    "answer": 0,
+    "explanation": "MaRS is a Toronto innovation hub supporting startups and scale-ups.",
+    "sourceUrl": "https://www.marsdd.com/about/",
+    "sourceLabel": "MaRS — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-05",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 2,
+    "company": "Communitech",
+    "question": "Communitech is the technology hub for which Ontario region?",
+    "options": [
+      "Waterloo Region",
+      "Niagara Region",
+      "Muskoka",
+      "Thunder Bay"
+    ],
+    "answer": 0,
+    "explanation": "Communitech supports founders and technology companies in Waterloo Region and across Canada.",
+    "sourceUrl": "https://communitech.ca/",
+    "sourceLabel": "Communitech",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-06",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 2,
+    "company": "Creative Destruction Lab",
+    "question": "Creative Destruction Lab began at which Canadian business school?",
+    "options": [
+      "Rotman School of Management",
+      "Ivey Business School",
+      "HEC Montréal",
+      "Sauder School of Business"
+    ],
+    "answer": 0,
+    "explanation": "CDL was founded at the University of Toronto's Rotman School of Management.",
+    "sourceUrl": "https://creativedestructionlab.com/about/",
+    "sourceLabel": "Creative Destruction Lab — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-07",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 2,
+    "company": "Pan-Canadian AI Strategy",
+    "question": "Canada's national AI strategy initially centred investment around institutes in Edmonton, Montréal and which city?",
+    "options": [
+      "Toronto",
+      "Ottawa",
+      "Halifax",
+      "Calgary"
+    ],
+    "answer": 0,
+    "explanation": "The strategy supports Amii in Edmonton, Mila in Montréal and the Vector Institute in Toronto.",
+    "sourceUrl": "https://cifar.ca/ai/",
+    "sourceLabel": "CIFAR — Pan-Canadian AI Strategy",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-08",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 2,
+    "company": "Wattpad",
+    "question": "Wattpad is part of which global digital-storytelling group?",
+    "options": [
+      "WEBTOON Entertainment",
+      "Rakuten Group",
+      "Spotify",
+      "Tencent Music"
+    ],
+    "answer": 0,
+    "explanation": "Toronto-founded Wattpad is part of WEBTOON Entertainment's global storytelling ecosystem.",
+    "sourceUrl": "https://company.wattpad.com/",
+    "sourceLabel": "Wattpad — Company",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-09",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 2,
+    "company": "DMZ",
+    "question": "The DMZ technology incubator is based at which Toronto university?",
+    "options": [
+      "Toronto Metropolitan University",
+      "York University",
+      "OCAD University",
+      "University of Guelph"
+    ],
+    "answer": 0,
+    "explanation": "DMZ is a technology incubator at Toronto Metropolitan University.",
+    "sourceUrl": "https://dmz.torontomu.ca/about/",
+    "sourceLabel": "DMZ — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-10",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 2,
+    "company": "NRC IRAP",
+    "question": "Which federal organization runs Canada's Industrial Research Assistance Program?",
+    "options": [
+      "National Research Council of Canada",
+      "Bank of Canada",
+      "Statistics Canada",
+      "Canada Council for the Arts"
+    ],
+    "answer": 0,
+    "explanation": "The National Research Council of Canada delivers IRAP support to innovative Canadian small and medium-sized businesses.",
+    "sourceUrl": "https://nrc.canada.ca/en/support-technology-innovation",
+    "sourceLabel": "National Research Council Canada — Innovation support",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-11",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 1,
+    "company": "Shopify",
+    "question": "Which Canadian city is home to Shopify's headquarters?",
+    "options": [
+      "Ottawa",
+      "Toronto",
+      "Vancouver",
+      "Montréal"
+    ],
+    "answer": 0,
+    "explanation": "Shopify is headquartered in Ottawa, where the company grew from its early online-store origins.",
+    "sourceUrl": "https://www.shopify.com/ca/about",
+    "sourceLabel": "Shopify — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "build-12",
+    "category": "Builders & Breakthroughs",
+    "difficulty": 2,
+    "company": "Amii",
+    "question": "The Alberta Machine Intelligence Institute is based in which city?",
+    "options": [
+      "Edmonton",
+      "Calgary",
+      "Red Deer",
+      "Lethbridge"
+    ],
+    "answer": 0,
+    "explanation": "Amii is an Edmonton-based institute for machine intelligence research and commercialization.",
+    "sourceUrl": "https://www.amii.ca/about",
+    "sourceLabel": "Amii — About",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-001",
+    "company": "Maneva",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "A manufacturer deploys Maneva's Video-to-Action AI. Which shop-floor challenge is explicitly among the problems it targets?",
+    "options": [
+      "Catching product defects as they appear",
+      "Writing television commercials",
+      "Forecasting foreign-exchange rates",
+      "Designing employee pension plans"
+    ],
+    "answer": 0,
+    "explanation": "Maneva lists quality assurance, including catching defects as they appear, as a core industrial use case for its computer-vision platform.",
+    "sourceUrl": "https://www.maneva.ai/",
+    "sourceLabel": "Maneva official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-002",
+    "company": "Voiceflow",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "Which end-to-end lifecycle does Voiceflow say its platform supports for chat and voice agents?",
+    "options": [
+      "Record, transcribe, subtitle, and publish podcasts",
+      "Collect, clean, label, and sell training datasets",
+      "Build, test, deploy, and monitor agents",
+      "Recruit, onboard, schedule, and pay human agents"
+    ],
+    "answer": 2,
+    "explanation": "Voiceflow's documentation describes a platform for building, testing, deploying, and monitoring reliable chat and voice agents.",
+    "sourceUrl": "https://www.voiceflow.com/docs/documentation/introduction",
+    "sourceLabel": "Voiceflow documentation — Introduction",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-003",
+    "company": "ODAIA",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "On ODAIA's pharma-commercial platform, what is the key output of the Value Engine, nicknamed “The Who”?",
+    "options": [
+      "A molecule toxicity score",
+      "An HCP PowerScore",
+      "A hospital bed forecast",
+      "A clinical-trial randomization code"
+    ],
+    "answer": 1,
+    "explanation": "ODAIA identifies HCP PowerScore as the Value Engine's key output for understanding which healthcare professionals are valuable to a brand and territory.",
+    "sourceUrl": "https://www.odaia.ai/platform-overview",
+    "sourceLabel": "ODAIA official platform overview",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-004",
+    "company": "Botpress",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "Which example best reflects the “real action” Botpress says its customer-support agents can take?",
+    "options": [
+      "Generate architectural blueprints",
+      "Process a refund and update an account",
+      "Calibrate a factory robot arm",
+      "Diagnose a medical scan"
+    ],
+    "answer": 1,
+    "explanation": "Botpress says its agents can process refunds, update accounts, and run multi-step support workflows rather than merely answer questions.",
+    "sourceUrl": "https://botpress.com/",
+    "sourceLabel": "Botpress official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-005",
+    "company": "Viggle AI",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "Viggle says its characters, motion, and scenes are generated together in shared 4D space by which proprietary model?",
+    "options": [
+      "Latent Motion Graph (LMG)",
+      "Dynamic Pose Transformer (DPT)",
+      "Neural Scene Weaver (NSW)",
+      "Joint Space-Time (JST)"
+    ],
+    "answer": 3,
+    "explanation": "Viggle names Joint Space-Time (JST) as its proprietary model for generating characters, motion, and scenes together in a shared 4D space.",
+    "sourceUrl": "https://viggle.ai/",
+    "sourceLabel": "Viggle official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-006",
+    "company": "ThinkLabs AI",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "ThinkLabs AI develops physics-informed digital twins and agents primarily to help operate what kind of critical system?",
+    "options": [
+      "Urban subway tunnels",
+      "Ocean freight fleets",
+      "Electric power grids",
+      "Commercial airline cabins"
+    ],
+    "answer": 2,
+    "explanation": "ThinkLabs AI focuses on trustworthy, physics-informed AI for electric-grid planning and operations by utilities and grid operators.",
+    "sourceUrl": "https://thinklabs.ai/",
+    "sourceLabel": "ThinkLabs AI official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-007",
+    "company": "Looki",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "After Looki L1 captures first-person moments hands-free, how can its software turn them into something a wearer revisits?",
+    "options": [
+      "Daily recaps, comics, vlogs, and searchable memories",
+      "Only raw security-camera footage",
+      "A monthly bank statement",
+      "A 3D-printable home blueprint"
+    ],
+    "answer": 0,
+    "explanation": "Looki presents L1 as a wearable AI life camera that converts captured moments into personal recaps, comics, vlogs, and searchable memories.",
+    "sourceUrl": "https://www.looki.ai/",
+    "sourceLabel": "Looki official product website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-008",
+    "company": "Gandeeva Therapeutics",
+    "category": "AI & Data",
+    "difficulty": 3,
+    "question": "Pick the trio that correctly names Gandeeva Therapeutics' three proprietary drug-discovery platform modules.",
+    "options": [
+      "SCAN, BIND, and SYNTH",
+      "ORBIT, VECTOR, and HELIX",
+      "SPOTLIGHT, HYPERFOCUS, and CRYO-CADD",
+      "ALPHA, BETA, and GAMMA"
+    ],
+    "answer": 2,
+    "explanation": "Gandeeva's platform page names SPOTLIGHT, HYPERFOCUS, and CRYO-CADD as the three modules combining AI, target work, and cryo-EM structural insight.",
+    "sourceUrl": "https://gandeeva.com/our-platform/",
+    "sourceLabel": "Gandeeva Therapeutics official platform page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-009",
+    "company": "Shakudo",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "A company using Shakudo wants one control point to route and govern model usage. Which named component fits that job?",
+    "options": [
+      "Agent Memory",
+      "LLM Gateway",
+      "Data Integration Platform",
+      "Loop Engineering"
+    ],
+    "answer": 1,
+    "explanation": "Shakudo describes its LLM Gateway as the unified control plane for routing and governing model usage.",
+    "sourceUrl": "https://www.shakudo.io/product",
+    "sourceLabel": "Shakudo official products page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-010",
+    "company": "Zuva",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "How did the sale of Kira Systems lead directly to the creation of Zuva?",
+    "options": [
+      "Kira's buyer renamed the entire acquired company Zuva",
+      "Zuva licensed an unrelated chatbot from a university",
+      "Kira's customers jointly formed a nonprofit called Zuva",
+      "The founders retained a copy of Kira's underlying AI and a team carried it into Zuva"
+    ],
+    "answer": 3,
+    "explanation": "Zuva's history says the founders retained a copy of Kira's underlying AI and about 30 team members after Kira's sale; that became Zuva.",
+    "sourceUrl": "https://zuva.ai/about/",
+    "sourceLabel": "Zuva official About page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-011",
+    "company": "Borderless AI",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "Within Borderless AI's HR-agent lineup, what is HRGPT designed to provide?",
+    "options": [
+      "Instant answers to HR questions",
+      "Automated CAD drawings",
+      "Medical-image annotations",
+      "Cryptocurrency trading signals"
+    ],
+    "answer": 0,
+    "explanation": "Borderless AI lists HRGPT as the agent for getting instant, accurate answers to HR questions.",
+    "sourceUrl": "https://www.hireborderless.com/",
+    "sourceLabel": "Borderless AI official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-012",
+    "company": "Reliant AI",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "Before and during its integration into Cohere, Reliant AI's flagship biopharma research workbench automated which combination of work?",
+    "options": [
+      "Payroll, expense approval, and benefits enrollment",
+      "Protein manufacturing, vial filling, and cold-chain shipping",
+      "Literature reviews, competitive landscaping, and extraction of scientific and regulatory data",
+      "Hospital food service, laundry routing, and parking enforcement"
+    ],
+    "answer": 2,
+    "explanation": "Cohere's acquisition announcement describes Reliant AI's flagship as an intelligent research workbench for literature review, competitive landscaping, and unstructured scientific and regulatory data extraction.",
+    "sourceUrl": "https://cohere.com/blog/cohere-acquires-reliant-ai-expand-sovereign-enterprise-ai",
+    "sourceLabel": "Cohere official Reliant AI acquisition announcement",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-013",
+    "company": "Augmenta",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "When extending its Spatial AI toward full MEP building design, which system did Augmenta say it tackled first?",
+    "options": [
+      "Plumbing drainage",
+      "Electrical raceways",
+      "Mechanical ventilation",
+      "Fire-sprinkler hydraulics"
+    ],
+    "answer": 1,
+    "explanation": "Augmenta says it tackled electrical first because routing and coordinating electrical raceway systems is especially demanding.",
+    "sourceUrl": "https://www.augmenta.ai/our-approach",
+    "sourceLabel": "Augmenta official approach page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-014",
+    "company": "Intrepid Labs",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "Complete the output side of Intrepid Labs' “Molecule in. Formulation out.” workflow: what should its AI-guided development produce?",
+    "options": [
+      "A patent-litigation prediction",
+      "A hospital staffing roster",
+      "A consumer advertising slogan",
+      "An optimized, manufacturable drug formulation"
+    ],
+    "answer": 3,
+    "explanation": "Intrepid Labs says its AI-guided workflows identify a development path that yields an optimized, manufacturable formulation ready for the next stage.",
+    "sourceUrl": "https://www.intrepidlabs.tech/",
+    "sourceLabel": "Intrepid Labs official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-015",
+    "company": "Private AI (now Limina)",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "Private AI's new name, Limina, comes from the Latin word “limen.” What does that word mean?",
+    "options": [
+      "Shield",
+      "Secret",
+      "Threshold",
+      "Archive"
+    ],
+    "answer": 2,
+    "explanation": "The company's rebrand announcement says Limina derives from the Latin “limen,” meaning “threshold,” evoking the boundary between sensitive data and safe use.",
+    "sourceUrl": "https://www.getlimina.ai/en/blog/private-ai-rebrands-limina-sensitive-data-privacy",
+    "sourceLabel": "Limina official rebrand announcement",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-016",
+    "company": "Ranovus",
+    "category": "AI & Data",
+    "difficulty": 3,
+    "question": "In Ranovus' optical-interconnect terminology, which scaling mode expands AI capability horizontally by connecting more compute nodes into a cluster fabric?",
+    "options": [
+      "Scale-Out",
+      "Scale-Up",
+      "Scale-Across",
+      "Scale-Down"
+    ],
+    "answer": 0,
+    "explanation": "Ranovus defines Scale-Out as interconnecting more AI compute nodes into high-bandwidth, power-efficient cluster fabrics.",
+    "sourceUrl": "https://ranovus.com/solutions-overview/",
+    "sourceLabel": "Ranovus official solutions overview",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-017",
+    "company": "Basetwo AI",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What quality-control role do Basetwo AI's real-time soft sensors play in manufacturing?",
+    "options": [
+      "Translate operator manuals into other languages",
+      "Predict deviations and support corrective action before quality issues occur",
+      "Replace every laboratory database with paper records",
+      "Generate packaging artwork from text prompts"
+    ],
+    "answer": 1,
+    "explanation": "Basetwo says its real-time soft sensors predict deviations so corrective actions can be implemented before they become product-quality problems.",
+    "sourceUrl": "https://www.basetwo.ai/",
+    "sourceLabel": "Basetwo AI official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-018",
+    "company": "Spellbook",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "Spellbook lets transactional lawyers spot risks and add redlines without leaving which familiar application?",
+    "options": [
+      "Adobe Photoshop",
+      "Salesforce",
+      "Microsoft Word",
+      "AutoCAD"
+    ],
+    "answer": 2,
+    "explanation": "Spellbook's official site says its AI contract-review workflow spots risks and adds redlines directly in Microsoft Word.",
+    "sourceUrl": "https://spellbook.com/",
+    "sourceLabel": "Spellbook official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-019",
+    "company": "Arteria AI",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "Arteria AI describes itself as an agentic backbone built exclusively for institutions in which sector?",
+    "options": [
+      "Financial services",
+      "Agricultural equipment",
+      "Film production",
+      "Residential construction"
+    ],
+    "answer": 0,
+    "explanation": "Arteria says it is built specifically for financial services and exclusively serves global financial institutions.",
+    "sourceUrl": "https://www.arteria.ai/",
+    "sourceLabel": "Arteria AI official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-020",
+    "company": "Boosted.ai",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "What Greek-letter name does Boosted.ai use for its investment-research product family for individuals, professionals, and institutions?",
+    "options": [
+      "Omega",
+      "Delta",
+      "Kappa",
+      "Alfa"
+    ],
+    "answer": 3,
+    "explanation": "Boosted.ai's official product lineup uses the Alfa name across Alfa, Alfa Pro, Alfa Prime, and related offerings.",
+    "sourceUrl": "https://www.boosted.ai/",
+    "sourceLabel": "Boosted.ai official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-021",
+    "company": "Xaba",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What specific programming system does Xaba use to enhance the capabilities of industrial robots?",
+    "options": [
+      "Custom reinforcement learning programming system",
+      "Rule-based deterministic control logic",
+      "Supervised learning for visual inspection only",
+      "Blockchain-verified smart contracts for fabrication"
+    ],
+    "answer": 0,
+    "explanation": "According to BetaKit, Xaba secured funding to boost the capabilities of industrial robots with its custom reinforcement learning programming system.",
+    "sourceUrl": "https://betakit.com/xaba-aims-to-make-industrial-robots-smarter-with-8-million-cad-seed-extension/",
+    "sourceLabel": "BetaKit",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-022",
+    "company": "Miovision",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "Which core technologies does Miovision utilize to modernize urban traffic management and optimize traffic flow?",
+    "options": [
+      "Computer vision, artificial intelligence, and advanced modeling",
+      "Satellite imagery analysis and drone surveillance",
+      "Manual data entry and legacy signal timing software",
+      "Blockchain-based toll collection systems"
+    ],
+    "answer": 0,
+    "explanation": "Canadian Innovators states that Miovision uses computer vision, artificial intelligence, and advanced modeling to modernize urban traffic management.",
+    "sourceUrl": "https://www.canadianinnovators.org/members/miovision",
+    "sourceLabel": "Canadian Innovators",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-023",
+    "company": "Nanoprecise Sci Corp",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "What is the primary function of Nanoprecise's platform regarding industrial equipment?",
+    "options": [
+      "Machine-health monitoring and predictive maintenance",
+      "Real-time financial auditing for manufacturing plants",
+      "Automated supply chain logistics optimization",
+      "Employee safety training via virtual reality"
+    ],
+    "answer": 0,
+    "explanation": "The official Nanoprecise website describes its platform as being for machine-health monitoring and predictive maintenance.",
+    "sourceUrl": "https://nanoprecise.io/",
+    "sourceLabel": "Nanoprecise Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-024",
+    "company": "Spare",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "How does Spare AI integrate its operational tools for transit agencies?",
+    "options": [
+      "It unifies rider support, driver comms, dispatch, maintenance, planning, and reporting into one place.",
+      "It connects separate legacy systems via a custom API gateway without changing the UI.",
+      "It replaces all hardware with new autonomous vehicles managed by a central cloud.",
+      "It focuses solely on passenger payment processing and fare collection."
+    ],
+    "answer": 0,
+    "explanation": "Spare's official AI page states that their platform brings rider support, driver comms, dispatch, maintenance, planning, and reporting into one place.",
+    "sourceUrl": "https://spare.com/ai",
+    "sourceLabel": "Spare AI Official Page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-025",
+    "company": "Unblocked",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What is the primary purpose of Unblocked's context infrastructure?",
+    "options": [
+      "Feeding AI coding agents organizational knowledge behind codebases",
+      "Scanning GitHub repositories for security vulnerabilities only",
+      "Automating Jira ticket creation based on Slack messages",
+      "Generating synthetic data for training large language models"
+    ],
+    "answer": 0,
+    "explanation": "The official Unblocked website describes its product as providing context infrastructure for agentic software development by feeding AI agents organizational knowledge.",
+    "sourceUrl": "https://getunblocked.com/",
+    "sourceLabel": "Unblocked Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-026",
+    "company": "Acerta Analytics",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What is the primary function of Acerta's LinePulse platform in a manufacturing context?",
+    "options": [
+      "Automating supply chain logistics for automotive parts",
+      "Detecting defects early to reduce scrap and rework",
+      "Managing employee scheduling on production lines",
+      "Designing new automotive chassis components"
+    ],
+    "answer": 1,
+    "explanation": "Acerta's LinePulse is an AI-driven manufacturing quality and process analytics platform designed to detect defects early, cut scrap and rework, and boost throughput.",
+    "sourceUrl": "https://acerta.ai/",
+    "sourceLabel": "Acerta LinePulse | AI Manufacturing Quality Platform",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-027",
+    "company": "Durable",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "What core capability does the Durable platform provide to service businesses?",
+    "options": [
+      "Generating websites and business tools in minutes",
+      "Conducting automated financial audits for SMBs",
+      "Providing AI-driven customer support chatbots only",
+      "Managing inventory for retail supply chains"
+    ],
+    "answer": 0,
+    "explanation": "Durable is an AI Business Builder that allows users to launch websites and business tools in minutes.",
+    "sourceUrl": "https://durable.com/",
+    "sourceLabel": "Durable – AI Business Builder | Launch in minutes",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-028",
+    "company": "Scispot",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "How does Scispot position itself for life-science laboratories?",
+    "options": [
+      "As a legacy LIMS replacement and AI-native operating layer",
+      "As a hardware manufacturer for robotic lab arms",
+      "As a cloud storage provider for raw genomic data only",
+      "As a regulatory body for clinical trial approvals"
+    ],
+    "answer": 0,
+    "explanation": "Scispot is described as the operating system for the lab of the future, automatically tracking actions and maintaining compliance to replace legacy LIMS and ELN systems.",
+    "sourceUrl": "https://www.scispot.com/",
+    "sourceLabel": "Scispot - The Operating System for the Lab of the Future",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-029",
+    "company": "Astrus",
+    "category": "AI & Data",
+    "difficulty": 3,
+    "question": "What specific bottleneck in microchip design does Astrus's AI address?",
+    "options": [
+      "Automating the manual process of analog layout",
+      "Optimizing digital logic gate placement for speed",
+      "Reducing the cost of silicon wafer fabrication",
+      "Managing thermal dissipation in high-power chips"
+    ],
+    "answer": 0,
+    "explanation": "Astrus's AI learns the physics behind chip design to automate analog layout, which is identified as a major bottleneck in the design process for advanced microchips.",
+    "sourceUrl": "https://mystartupworld.com/astrus-raises-8-million-funding-led-by-khosla-ventures/",
+    "sourceLabel": "Astrus raises $8 million funding led by Khosla Ventures",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-030",
+    "company": "Artificial Agency",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What specific capability does Artificial Agency's Behavior Engine provide to game studios regarding character development?",
+    "options": [
+      "It automates the generation of 3D textures for character skins.",
+      "It enables runtime decision-making and memory for game characters.",
+      "It converts legacy C++ game code into modern Unity scripts automatically.",
+      "It generates full multiplayer network protocols for new game titles."
+    ],
+    "answer": 1,
+    "explanation": "Artificial Agency's Behavior Engine is designed to make game development more practical and creative by providing character memory, runtime decision-making, and first-class Unity support, allowing studios to build dynamic game systems without overhauling workflows.",
+    "sourceUrl": "https://www.artificial.agency/",
+    "sourceLabel": "Artificial Agency Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-031",
+    "company": "Altis Labs",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "How does Altis Labs utilize its proprietary AI models to assist biopharma companies in clinical trials?",
+    "options": [
+      "By generating synthetic patient data to replace real-world recruitment.",
+      "By predicting clinically meaningful outcomes from existing medical imaging data.",
+      "By automating the physical manufacturing of drug compounds for trials.",
+      "By analyzing social media sentiment to predict trial dropout rates."
+    ],
+    "answer": 1,
+    "explanation": "Altis Labs trains proprietary AI models on over 200 million longitudinal images linked to clinical data. Their software platform provides deep learning models that predict clinically meaningful outcomes from existing medical imaging, accelerating clinical trials with AI endpoints.",
+    "sourceUrl": "https://www.sourcefromontario.com/en/page/delegate/138532/altis-labs",
+    "sourceLabel": "Source From Ontario - Altis Labs Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-032",
+    "company": "Cadstrom",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "What primary problem does Cadstrom's AI tool address in the electronic design automation workflow?",
+    "options": [
+      "It synthesizes new PCB layouts from natural language descriptions.",
+      "It verifies designs to catch errors before boards are fabricated.",
+      "It optimizes power consumption for high-frequency 5G components.",
+      "It manages supply chain logistics for raw copper and resin materials."
+    ],
+    "answer": 1,
+    "explanation": "Cadstrom addresses the problem of hardware errors by helping engineers catch issues before boards are built. Its AI-driven verification tools identify errors, oversights, and omissions in complex electronic hardware designs.",
+    "sourceUrl": "https://www.cadstrom.io/",
+    "sourceLabel": "Cadstrom Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-033",
+    "company": "Bench IQ",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What unique insight does Bench IQ provide to litigators that distinguishes it from standard legal research tools?",
+    "options": [
+      "It predicts the financial settlement amounts for all civil cases.",
+      "It uncovers the reasoning behind judicial rulings beyond just written opinions.",
+      "It automatically drafts court filings based on case precedents.",
+      "It tracks the personal schedules of judges to predict availability."
+    ],
+    "answer": 1,
+    "explanation": "Bench IQ is an AI-powered service that allows attorneys to uncover the reasons behind all of their judges' rulings, not just the small percentage that result in written opinions. This provides insights into how presiding judges think and rule.",
+    "sourceUrl": "https://benchiq.com/",
+    "sourceLabel": "Bench IQ Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-034",
+    "company": "Tempo Labs",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "How does Tempo Labs utilize AI agents in its development workflow?",
+    "options": [
+      "Agents autonomously generate and edit production React code based on natural language inputs from product teams.",
+      "Agents perform time-series reasoning over industrial telemetry data to optimize asset performance.",
+      "Agents create autonomous ad campaigns for ecommerce brands without human intervention.",
+      "Agents convert customer feedback into reviewed pull requests while the team approves key decisions."
+    ],
+    "answer": 3,
+    "explanation": "According to the official Tempo website, the platform uses AI agents to turn customer feedback, issues, and product requirements into reviewed pull requests, allowing the team to approve key decisions while the agents handle the work.",
+    "sourceUrl": "https://www.tempo.new/",
+    "sourceLabel": "Tempo - The IDE for the whole team",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-035",
+    "company": "Variational AI",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What is the primary function of Variational AI's Enki platform?",
+    "options": [
+      "It uses generative AI to design novel, synthesizable small molecules optimized for potency and ADMET properties.",
+      "It provides a cloud infrastructure solution for automating digital transformation consulting services.",
+      "It acts as an agentic growth engine that autonomously plans and launches on-brand ads for ecommerce.",
+      "It serves as a time-series reasoning engine grounded in asset schemas for industrial operations."
+    ],
+    "answer": 0,
+    "explanation": "Variational AI's official description states that the Enki platform uses generative AI to design novel, synthesizable small molecules optimized across potency, selectivity, ADMET, and synthetic feasibility.",
+    "sourceUrl": "https://variational.ai/",
+    "sourceLabel": "Variational AI - We discover novel drug-like small molecules",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-036",
+    "company": "Forma.ai",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "What is the core business focus of Forma.ai?",
+    "options": [
+      "Providing enterprise sales compensation software for automating incentive plan design and administration.",
+      "Developing autonomous vehicle simulation technology to model realistic human road behavior.",
+      "Creating construction market intelligence platforms that detect projects before they go public.",
+      "Building visual editors for product teams to generate production React code in natural language."
+    ],
+    "answer": 0,
+    "explanation": "The official Forma.ai website identifies the company as a provider of enterprise sales compensation software designed to automate incentive plan design and administration.",
+    "sourceUrl": "https://www.forma.ai/",
+    "sourceLabel": "Enterprise sales compensation software | Forma.ai",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-037",
+    "company": "Inverted AI",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What specific capability does Inverted AI provide for autonomous vehicle development?",
+    "options": [
+      "It generates reactive, realistic, and behaviorally diverse non-playable characters (NPCs) to simulate human road behavior.",
+      "It creates end-to-end market intelligence platforms by connecting data from land development lifecycle stages.",
+      "It offers a visual editor that allows product teams to generate production React code using natural language.",
+      "It designs novel small molecules optimized for therapeutic needs using generative AI techniques."
+    ],
+    "answer": 0,
+    "explanation": "Inverted AI's official description highlights its 'Driving Intelligence' which uses non-playable characters (NPCs) that are reactive, realistic, and behaviorally diverse to simulate human road behavior for AV/ADAS development.",
+    "sourceUrl": "https://www.inverted.ai/home",
+    "sourceLabel": "Driving intelligence - Inverted AI",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-038",
+    "company": "Mercator AI",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "How does Mercator AI generate its construction market intelligence?",
+    "options": [
+      "It collects data throughout the land development lifecycle and uses AI to determine project stages and stakeholders.",
+      "It utilizes time-series reasoning over telemetry to provide insights for industrial operations.",
+      "It employs generative AI to create autonomous ad campaigns for ecommerce brands.",
+      "It builds deep generative models to simulate human behavior for autonomous vehicle testing."
+    ],
+    "answer": 0,
+    "explanation": "Mercator AI's documentation explains that it collects data generated throughout the lifecycle of land development, uses AI to connect this data, determine the project's current stage, and identify involved stakeholders.",
+    "sourceUrl": "https://www.mercator.ai/articles/how-mercator-ai-created-constructions-first-end-to-end-market-intelligence-platform",
+    "sourceLabel": "How Mercator.ai Created Construction’s First End-to-end ...",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-039",
+    "company": "Moonvalley",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What is the primary focus of Moonvalley's technology as described on its official website?",
+    "options": [
+      "A fully licensed AI video foundation model for Hollywood and enterprise production",
+      "A text-to-image synthesis platform with advanced typography capabilities",
+      "Custom silicon solutions that hardwire machine learning models onto physical chips",
+      "An AI-driven genetic medicines platform for rare diseases"
+    ],
+    "answer": 0,
+    "explanation": "Moonvalley describes itself as 'the imagination research company' and focuses on building a fully licensed AI video foundation model aimed at Hollywood and enterprise production.",
+    "sourceUrl": "https://www.moonvalley.com/",
+    "sourceLabel": "moonvalley - the imagination research company",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-040",
+    "company": "Ideogram",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "Which capability distinguishes Ideogram's generative media platform according to its official description?",
+    "options": [
+      "Structural immunology for innate immune pathways",
+      "Hardwiring Llama architectures directly onto silicon chips",
+      "Advanced and reliable typography capabilities in text-to-image synthesis",
+      "Multilingual teams for dry and wet lab iteration"
+    ],
+    "answer": 2,
+    "explanation": "Ideogram is described as a generative media platform specializing in text-to-image synthesis with advanced and reliable typography capabilities.",
+    "sourceUrl": "https://ideogram.ai/",
+    "sourceLabel": "Ideogram | AI apps and models in one platform",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-041",
+    "company": "Ventus Therapeutics",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What scientific approach does Ventus Therapeutics apply to discover and develop therapeutics?",
+    "options": [
+      "Hardcore model silicon technology for rapid inference",
+      "Deep learning to model RNA biology for genetic medicines",
+      "Structural immunology to target innate immune pathways",
+      "Text-to-video synthesis with diffusion models"
+    ],
+    "answer": 2,
+    "explanation": "Ventus Therapeutics applies structural immunology to discover and develop therapeutics targeting innate immune pathways to address human disease.",
+    "sourceUrl": "https://www.ventustx.com/",
+    "sourceLabel": "The Power of Resolution - Ventus Therapeutics",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-042",
+    "company": "Taalas",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What is the core value proposition of Taalas' 'Hardcore Models' technology?",
+    "options": [
+      "They are 1000x more efficient than their software counterparts",
+      "They utilize structural immunology for drug discovery",
+      "They focus on multilingual teams for genetic therapy scaling",
+      "They provide best-in-class text rendering for images"
+    ],
+    "answer": 0,
+    "explanation": "Taalas creates a platform to turn AI models into custom silicon, resulting in 'Hardcore Models' that are described as being 1000x more efficient than their software counterparts.",
+    "sourceUrl": "https://taalas.com/",
+    "sourceLabel": "Taalas | The model is The Computer",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-043",
+    "company": "Deep Genomics",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "How does Deep Genomics utilize artificial intelligence in its drug discovery process?",
+    "options": [
+      "By hardwiring models onto physical chips for inference",
+      "By applying structural immunology to target innate immune pathways",
+      "By using deep learning to model RNA biology for genetic medicines",
+      "By synthesizing text-to-image with advanced typography"
+    ],
+    "answer": 2,
+    "explanation": "Deep Genomics is an AI-driven drug discovery company that uses artificial intelligence to build a new universe of life-saving genetic therapies by modeling RNA biology.",
+    "sourceUrl": "https://www.deepgenomics.com/",
+    "sourceLabel": "Deep Genomics | AI-Driven Discovery of Genetic Medicines",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-044",
+    "company": "Super Whisper",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "What core capability does Superwhisper provide to users across macOS, Windows, and iOS platforms?",
+    "options": [
+      "Cloud-based video rendering for mobile games",
+      "System-wide voice-to-text dictation with offline processing",
+      "Real-time stock market sentiment analysis",
+      "Automated code generation for Python scripts"
+    ],
+    "answer": 1,
+    "explanation": "Superwhisper is a system-wide voice-to-text dictation application that allows users to dictate text in any app on macOS, Windows, and iOS, utilizing Whisper-based automatic speech recognition with options for local on-device processing.",
+    "sourceUrl": "https://en.everybodywiki.com/Superwhisper",
+    "sourceLabel": "EverybodyWiki Bios & Wiki",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-045",
+    "company": "Veeda AI",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What specific type of technology is Veeda AI developing to support physical AI and robotics?",
+    "options": [
+      "World models for robot training",
+      "Generative text-to-speech engines",
+      "Blockchain-based identity verification",
+      "Neural network compression for mobile devices"
+    ],
+    "answer": 0,
+    "explanation": "Veeda AI was launched to develop world models specifically designed for physical AI and robot training, aiming to create a simulation environment for robotics.",
+    "sourceUrl": "https://letsdatascience.com/news/sanja-fidler-launches-veeda-ai-for-world-models-19b8c0fe",
+    "sourceLabel": "Let's Data Science",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-046",
+    "company": "Invision AI",
+    "category": "AI & Data",
+    "difficulty": 2,
+    "question": "What fundamental constraint of traditional computer vision technology did Invision AI aim to overcome with its scalable vision systems?",
+    "options": [
+      "Inability to process video at 4K resolution",
+      "Limitation to single-camera 2-D analytics",
+      "High latency in cloud-based processing",
+      "Lack of support for infrared imaging"
+    ],
+    "answer": 1,
+    "explanation": "The company was founded to address the severe constraint of limiting Computer Vision technology to single-camera 2-D analytics, aiming to create scalable next-generation vision systems.",
+    "sourceUrl": "https://invision.ai/company/",
+    "sourceLabel": "Invision AI Company Page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-047",
+    "company": "Turbopuffer",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "On what underlying infrastructure is the Turbopuffer search engine built to achieve high scalability and cost-effectiveness?",
+    "options": [
+      "Distributed Kubernetes clusters",
+      "Object storage",
+      "In-memory Redis databases",
+      "Proprietary solid-state drives"
+    ],
+    "answer": 1,
+    "explanation": "Turbopuffer is built from first principles on object storage, which allows it to provide fast, cost-effective, and extremely scalable vector search and full-text search capabilities.",
+    "sourceUrl": "https://turbopuffer.com/",
+    "sourceLabel": "Turbopuffer Official Site",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-001",
+    "company": "Saris",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What primary function do Saris' AI workflow agents perform for financial institutions?",
+    "options": [
+      "Automating consumer, mortgage, and commercial lending back-office work",
+      "Executing high-frequency cryptocurrency arbitrage trades",
+      "Generating personalized investment portfolios based on risk profiles",
+      "Verifying blockchain transaction integrity in real-time"
+    ],
+    "answer": 0,
+    "explanation": "Saris provides AI workflow agents designed to automate back-office work for banks and credit unions, specifically targeting consumer, mortgage, and commercial lending processes.",
+    "sourceUrl": "https://saris.ai/",
+    "sourceLabel": "Saris Official Site",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-002",
+    "company": "Brim Financial",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What specific type of financial infrastructure does Brim Financial provide to banks and fintechs to enable the issuance of consumer, business, and commercial cards?",
+    "options": [
+      "A full-stack modern technology platform enabling cards and payments through a single regulated partner",
+      "A proprietary blockchain ledger for cross-border settlement of card transactions",
+      "A decentralized lending protocol for issuing credit lines to small businesses",
+      "An AI-driven fraud detection API integrated with existing legacy banking systems"
+    ],
+    "answer": 0,
+    "explanation": "According to the company's description on Payments Canada, Brim Financial is a full-stack modern technology company enabling cards and payments through a single regulated partner, allowing banks and fintechs to roll out Consumer, Business, and Commercial Cards.",
+    "sourceUrl": "https://brimfinancial.com/PaymentsCanada",
+    "sourceLabel": "Brim Financial - Payments Canada",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-003",
+    "company": "OneVest",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "How does OneVest characterize its core platform architecture in the context of modernizing wealth management for financial institutions?",
+    "options": [
+      "An AI-native, agentic operating system that unifies workflows and client data",
+      "A modular API layer that connects disparate legacy banking databases",
+      "A decentralized autonomous organization (DAO) for automated investment strategies",
+      "A white-label mobile application framework for retail wealth advisors"
+    ],
+    "answer": 0,
+    "explanation": "OneVest describes itself as a financial technology company redefining wealth management with an AI-native, agentic operating system that brings together workflows, client data, and account management to advance fragmented legacy systems.",
+    "sourceUrl": "https://www.onevest.com/about-onevest",
+    "sourceLabel": "OneVest - About OneVest",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-004",
+    "company": "Helcim",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "Which pricing model is Helcim known for offering to small and medium businesses as a key differentiator in the Canadian payments market?",
+    "options": [
+      "Transparent interchange-plus pricing with no monthly fees",
+      "Flat-rate transaction fees with tiered hardware leasing",
+      "Subscription-based pricing with included fraud protection",
+      "Revenue-share agreements based on total merchant volume"
+    ],
+    "answer": 0,
+    "explanation": "Helcim is described as a payment processor known for its transparent interchange-plus pricing model and no monthly fees, providing an affordable solution for businesses to accept credit card payments.",
+    "sourceUrl": "https://www.16idc.com/en-us/coporation-detail/helcim",
+    "sourceLabel": "16IDC - Helcim Company Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-005",
+    "company": "FISPAN",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What is the primary value proposition of FISPAN's solution for banks regarding their relationship with mid-market businesses?",
+    "options": [
+      "Enabling banks to embed automated treasury and AP solutions directly into clients' ERP software",
+      "Providing a standalone mobile app for business owners to manage cash flow outside of banking portals",
+      "Offering high-yield savings accounts integrated with accounting software for small enterprises",
+      "Facilitating peer-to-peer lending between corporate clients through a blockchain network"
+    ],
+    "answer": 0,
+    "explanation": "FISPAN partners with banks to bridge the gap between their banking services and ERP/accounting software, providing embedded, automated solutions for accounts payable and cash management to help banks compete against fintechs.",
+    "sourceUrl": "https://fispan.com/",
+    "sourceLabel": "FISPAN - Bring your bank into your ERP",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-006",
+    "company": "Venn",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What core financial capabilities does Venn provide to Canadian small and medium-sized businesses?",
+    "options": [
+      "Multi-currency chequing accounts, domestic/international transfers, and corporate Mastercard spend management",
+      "Automated payroll processing and employee benefits administration for remote teams",
+      "Real-time inventory financing and supply chain credit lines for retail merchants",
+      "Digital wallet integration for accepting cryptocurrency payments from global customers"
+    ],
+    "answer": 0,
+    "explanation": "Venn offers the cheapest and easiest way to manage business banking needs in Canada, including chequing accounts in multiple currencies, domestic and international bank transfers, and a corporate Mastercard.",
+    "sourceUrl": "https://www.venn.ca/",
+    "sourceLabel": "Venn - Canadian Business Banking",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-007",
+    "company": "Float Financial",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "Which specific financial product expansion did Float Financial announce in January 2026 that includes corporate card limits reaching up to $3 million?",
+    "options": [
+      "Debt facilities for high-interest business accounts",
+      "Real-time payroll integration services",
+      "Cryptocurrency trading capabilities",
+      "International wire transfer automation"
+    ],
+    "answer": 0,
+    "explanation": "In January 2026, Float Financial announced the expansion of its banking products, including corporate cards with limits up to $3 million, supported by new debt facilities to maintain high-interest business accounts.",
+    "sourceUrl": "https://financialpost.com/fp-finance/fintech/float-financial-expands-banking-products-businesses-debt-funding",
+    "sourceLabel": "Financial Post",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-008",
+    "company": "Relay Financial",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What is the primary value proposition of Relay Financial regarding the relationship between small businesses and their financial advisors?",
+    "options": [
+      "Automated tax filing for sole proprietors",
+      "Simplified collaboration and visibility into financials",
+      "Instant cryptocurrency conversion for payroll",
+      "Real-time stock market trading integration"
+    ],
+    "answer": 1,
+    "explanation": "Relay Financial is described as a business banking platform that gives small businesses better visibility into their financials and simplifies collaboration between SMBs and their advisors, such as accountants and bookkeepers.",
+    "sourceUrl": "https://relayfi.com/blog/author/yoseph-west/",
+    "sourceLabel": "Relay Financial Blog",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-009",
+    "company": "Zum Rails",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "How does Zūm Rails differentiate its payment gateway technology compared to traditional stacked solutions?",
+    "options": [
+      "By offering only domestic US transactions",
+      "By merging open banking data with instant payments into a single gateway",
+      "By exclusively using blockchain for all KYC processes",
+      "By eliminating the need for any third-party compliance tools"
+    ],
+    "answer": 1,
+    "explanation": "Zūm Rails is an all-in-one payments gateway that merges open banking with instant payments, removing the need to stack multiple technologies on top of one another.",
+    "sourceUrl": "https://finovate.com/zum-rails-raises-7-8-million-to-merge-open-banking-and-instant-payments/",
+    "sourceLabel": "Finovate",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-010",
+    "company": "ZayZoon",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What is the flagship product of ZayZoon that allows employees to access part of their payday in advance?",
+    "options": [
+      "Wages On-Demand",
+      "Payroll Advance Pro",
+      "Instant Wage Transfer",
+      "Future Pay Access"
+    ],
+    "answer": 0,
+    "explanation": "ZayZoon is a pioneer in earned wage access (EWA) with its flagship product named 'Wages On-Demand', which allows employees to access part of their payday in advance.",
+    "sourceUrl": "https://www.zayzoon.com/our-story",
+    "sourceLabel": "ZayZoon About Us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-011",
+    "company": "nesto",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "How did nesto's business model evolve between its founding in 2018 and the year 2022?",
+    "options": [
+      "From a digital mortgage broker to a direct lender",
+      "From a direct lender to a mortgage brokerage",
+      "From a real estate developer to a fintech platform",
+      "From a commercial lender to a residential broker"
+    ],
+    "answer": 0,
+    "explanation": "Founded in 2018 as a digital mortgage broker, nesto transitioned to operate as a direct lender by 2022.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Nesto_(company)",
+    "sourceLabel": "Wikipedia",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-012",
+    "company": "Bull Bitcoin",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What is the primary focus of Bull Bitcoin's platform for Canadian users?",
+    "options": [
+      "A multi-asset exchange offering altcoins and derivatives",
+      "A Bitcoin-only exchange and self-custody platform",
+      "A decentralized finance (DeFi) lending protocol",
+      "A cryptocurrency mining hardware manufacturer"
+    ],
+    "answer": 1,
+    "explanation": "Bull Bitcoin operates as a Bitcoin-only exchange and self-custody platform serving Canadians since 2013.",
+    "sourceUrl": "https://www.bullbitcoin.com/",
+    "sourceLabel": "Bull Bitcoin Official Site",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-013",
+    "company": "Stablecorp",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "Which stablecoin does Stablecorp issue as the first compliant Canadian dollar digital currency?",
+    "options": [
+      "USDC",
+      "QCAD",
+      "DAI",
+      "CADT"
+    ],
+    "answer": 1,
+    "explanation": "Stablecorp is the issuer of QCAD, which is described as the first compliant Canadian dollar stablecoin.",
+    "sourceUrl": "https://stablecorp.ca/",
+    "sourceLabel": "Stablecorp: QCAD, The First Compliant Canadian Dollar Stablecoin",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-014",
+    "company": "Informal Systems",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What core blockchain infrastructure components does Informal Systems specialize in developing?",
+    "options": [
+      "Ethereum smart contract auditing and NFT marketplaces",
+      "Cosmos Network software including Tendermint and IBC",
+      "Bitcoin Layer-2 scaling solutions and Lightning Network nodes",
+      "Solana validator operations and DeFi yield aggregators"
+    ],
+    "answer": 1,
+    "explanation": "Informal Systems is a core developer of the Cosmos Network software and protocols, including the Tendermint consensus engine and the IBC interoperability standard.",
+    "sourceUrl": "https://startupintros.com/orgs/informal-systems",
+    "sourceLabel": "Startup Intros: Informal Systems Overview",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-015",
+    "company": "Quandri",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What specific market segment does Quandri's Renewal Intelligence Platform target for automation?",
+    "options": [
+      "Commercial real estate insurance underwriting",
+      "Personal lines insurance agencies and brokerages",
+      "Cybersecurity insurance risk modeling",
+      "Marine cargo insurance claims processing"
+    ],
+    "answer": 1,
+    "explanation": "Quandri transforms the policy renewal process for personal lines insurance agencies and brokerages by automating time-consuming tasks.",
+    "sourceUrl": "https://knowledge.quandri.io/who-is-quandri",
+    "sourceLabel": "About Quandri - Quandri Knowledge Base",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-016",
+    "company": "Fiscal.ai",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What significant funding milestone did Fiscal.ai achieve in June 2025?",
+    "options": [
+      "A $1.5M investment from the Government of Canada via FedDev Ontario",
+      "A $10M Series A round led by Portage",
+      "A strategic partnership with a major US bank for data integration",
+      "An IPO on the Toronto Stock Exchange"
+    ],
+    "answer": 1,
+    "explanation": "Fiscal.ai secured a US$10M Series A round led by Portage in June 2025.",
+    "sourceUrl": "https://fiscal.ai/blog/fiscal-ai-receives-government-of-canada-investment-to-advance-ai-powered-financial-data/",
+    "sourceLabel": "Fiscal.ai Blog: Government Investment Announcement",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-048",
+    "company": "Fellow",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "Fellow positions its AI meeting assistant primarily for which type of workplace use?",
+    "options": [
+      "Enterprise and regulated teams that need secure meeting support",
+      "Consumers editing vacation photographs",
+      "Factories programming robotic welding arms",
+      "Retailers managing warehouse inventory"
+    ],
+    "answer": 0,
+    "explanation": "Fellow describes its product as a secure AI meeting assistant for enterprise and regulated teams.",
+    "sourceUrl": "https://fellow.ai/",
+    "sourceLabel": "Fellow — official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "ai-exp-049",
+    "company": "Ribbon",
+    "category": "AI & Data",
+    "difficulty": 1,
+    "question": "Which recruiting activities does Ribbon’s AI recruiter explicitly support?",
+    "options": [
+      "Interviews, email, and SMS",
+      "Payroll, tax filing, and pensions",
+      "Chip layout, verification, and fabrication",
+      "Freight booking, customs, and warehousing"
+    ],
+    "answer": 0,
+    "explanation": "Ribbon describes its product as an AI recruiter for interviews, email, and SMS.",
+    "sourceUrl": "https://www.ribbon.ai/",
+    "sourceLabel": "Ribbon — official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-017",
+    "company": "Zapper",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "Which operational milestone did the DeFi portfolio tracking platform Zapper announce in July 2026 regarding its future status?",
+    "options": [
+      "It secured a Series B funding round to expand into new blockchain networks.",
+      "It announced a strategic partnership with a major centralized exchange for custody services.",
+      "It confirmed it would cease operations and shut down all platforms in August 2026.",
+      "It launched a native token to incentivize user-generated portfolio data."
+    ],
+    "answer": 2,
+    "explanation": "Multiple sources confirm that Zapper announced in July 2026 that it would cease operations after nearly seven years, with the shutdown scheduled for August 3, 2026. This decision affects its primary website, mobile application, and API services.",
+    "sourceUrl": "https://cryptovka.com/news/defi-portfolio-tracker-zapper-to-shut-down-operations-on-august-3",
+    "sourceLabel": "CryptoVKA News",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-018",
+    "company": "Buckzy Payments",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What regulatory designation and operational scope define Buckzy Payments Inc. according to its official corporate profile?",
+    "options": [
+      "A registered money services business with FINTRAC operating a cross-border payments network.",
+      "A venture capital firm specializing in early-stage blockchain infrastructure investments.",
+      "A decentralized autonomous organization (DAO) managing a global stablecoin reserve.",
+      "A licensed bank in Canada offering retail savings accounts to individuals."
+    ],
+    "answer": 0,
+    "explanation": "Buckzy Payments Inc. identifies itself as a cross-border payments network and embedded finance platform that is a registered money services business with FINTRAC (Financial Transactions and Reports Analysis Centre of Canada).",
+    "sourceUrl": "https://buckzy.net/",
+    "sourceLabel": "Buckzy Payments Inc. Official Site",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-019",
+    "company": "Inference Labs",
+    "category": "Fintech & Crypto",
+    "difficulty": 3,
+    "question": "Which specific cryptographic technology does Inference Labs integrate into its product Sertn to verify AI model outputs?",
+    "options": [
+      "Zero-knowledge proofs for on-chain verification of inference results.",
+      "Homomorphic encryption for secure data processing in the cloud.",
+      "Multi-party computation (MPC) for decentralized key management.",
+      "Schnorr signatures for aggregated transaction signing."
+    ],
+    "answer": 0,
+    "explanation": "The company's product Sertn is described as deploying production-grade computer vision with cryptographic Proof-of-Inference™ built in, which aligns with the use of zero-knowledge proofs to verify AI model outputs on-chain.",
+    "sourceUrl": "https://sertn.ai/about/",
+    "sourceLabel": "Sertn About Page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-020",
+    "company": "Vessel",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What core operational functions does the AI-powered platform Vessel automate for venture capital and private equity firms?",
+    "options": [
+      "Capital calls, distributions, waterfall modeling, and audit support.",
+      "Algorithmic trading execution and high-frequency market making.",
+      "Real-time cryptocurrency arbitrage and liquidity provision.",
+      "Smart contract auditing and blockchain security monitoring."
+    ],
+    "answer": 0,
+    "explanation": "Vessel is described as a platform that handles fund operations including capital calls, distributions, waterfall modeling, and audit support, allowing teams to focus on deploying capital rather than administrative tasks.",
+    "sourceUrl": "https://vessel.co/",
+    "sourceLabel": "Vessel Official Site",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-021",
+    "company": "PayTic",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "How does PayTic primarily differentiate its service offering for financial institutions regarding payment operations?",
+    "options": [
+      "By using AI to automate manual reconciliation and resolve exceptions in back-office workflows.",
+      "By providing a decentralized exchange for peer-to-peer international transfers.",
+      "By issuing digital wallets directly to consumers for cross-border remittances.",
+      "By offering blockchain-based settlement layers for interbank clearing."
+    ],
+    "answer": 0,
+    "explanation": "PayTic is described as a startup that simplifies payment processing by using artificial intelligence to automate manual tasks, specifically targeting the resolution of 'exceptions' and outdated back-office operations like reconciliation.",
+    "sourceUrl": "https://www.atlanticfintech.ca/spotlight/paytic",
+    "sourceLabel": "Atlantic Fintech Spotlight",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-022",
+    "company": "PayShepherd",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What primary function does PayShepherd perform to assist finance teams in managing contractor invoices?",
+    "options": [
+      "Providing real-time visibility into contractor cost, compliance, and performance on capital projects",
+      "Offering a first-pass review of every contractor invoice to catch errors before they reach Accounts Payable",
+      "Automating the issuance of payments directly to contractors without human intervention",
+      "Serving as a marketplace for connecting heavy-industry sites with independent contractors"
+    ],
+    "answer": 1,
+    "explanation": "According to the source describing PayShepherd's role in finance and AP, the platform strengthens financial control by providing a first-pass review of every contractor invoice, ensuring errors and anomalies are caught before they reach Accounts Payable.",
+    "sourceUrl": "https://www.payshepherd.com/by-role/finance",
+    "sourceLabel": "PayShepherd - Contractor Spend Control for Finance & AP",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-023",
+    "company": "Beacon",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "Which of the following best describes the 'My Beacon' super app mentioned in public sources?",
+    "options": [
+      "A digital platform for distributing roofing materials and building products to construction professionals",
+      "A purpose-built financial app simplifying international bill payments and transfers for immigrants in Canada",
+      "A legacy system for tracking inventory management and order status for QXO Canada branches",
+      "A mobile application exclusively for Fortune 500 employees to manage internal company benefits"
+    ],
+    "answer": 1,
+    "explanation": "The source titled 'Home - My Beacon' describes the app as a purpose-built super app designed to simplify financial needs, international bill payments, and transfers for users in Canada and their home countries.",
+    "sourceUrl": "https://www.mybeacon.ca/",
+    "sourceLabel": "My Beacon - Home",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-024",
+    "company": "Finofo",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What key operational characteristic distinguishes Finofo's infrastructure for Canadian finance teams?",
+    "options": [
+      "It is a US-based platform that aggregates global FX rates for mid-market companies",
+      "It is built in Canada and hosted in Canada to meet specific data residency requirements",
+      "It relies on manual intervention by Calgary-based staff to process all cross-border payments",
+      "It operates exclusively as a mobile app without any web-based dashboard for finance teams"
+    ],
+    "answer": 1,
+    "explanation": "The source 'AP Automation Built for Canadian Finance Teams' explicitly states that Finofo is built in Canada and hosted in Canada, which is critical for contracts requiring Canadian-resident processing.",
+    "sourceUrl": "https://www.finofo.com/platform/canadian-finance-teams",
+    "sourceLabel": "Finofo - AP Automation Built for Canadian Finance Teams",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-025",
+    "company": "Nmbr",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "How does Nmbr's embedded payroll infrastructure address the innovation lag in traditional payroll systems?",
+    "options": [
+      "By replacing all existing payroll software with a single proprietary desktop application",
+      "By allowing new entrants and existing software to automate tax calculations, compliance, and funding flows via API",
+      "By focusing solely on manual data entry tools for small business owners without API capabilities",
+      "By limiting its services to only the largest enterprises in Canada to ensure maximum security"
+    ],
+    "answer": 1,
+    "explanation": "In an interview with Fintech.ca, Nmbr's CEO explains that their API allows new entrants and existing payroll software to automate tasks like tax calculations, regulatory compliance, and funding flows.",
+    "sourceUrl": "https://www.fintech.ca/2024/10/11/nmbr-ceo-simon-bourgeois-on-payroll-innovation/",
+    "sourceLabel": "Fintech.ca - Nmbr CEO Interview",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-026",
+    "company": "LayerZero Labs",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What is the primary function of LayerZero as described on its official website?",
+    "options": [
+      "A centralized exchange for trading various cryptocurrencies and tokens",
+      "An omnichain messaging and interoperability protocol enabling dApps to run across distinct blockchains",
+      "A wallet provider focused exclusively on securing assets for institutional investors",
+      "A mining pool designed to increase the hash rate of the Ethereum network"
+    ],
+    "answer": 1,
+    "explanation": "The official LayerZero website describes the platform as developing an omnichain messaging and interoperability protocol that enables decentralized applications to run across distinct blockchains.",
+    "sourceUrl": "https://layerzero.network/",
+    "sourceLabel": "LayerZero - Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-027",
+    "company": "Blockstream",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "Which Bitcoin-native infrastructure component developed by Blockstream is specifically designed to enable faster transactions and lower fees through a layer-2 network?",
+    "options": [
+      "Liquid Sidechain",
+      "Core Lightning Network",
+      "Jade Hardware Wallet",
+      "Bitcoin Taproot Upgrade"
+    ],
+    "answer": 1,
+    "explanation": "Blockstream is known for developing infrastructure for the Bitcoin network, including sidechains and tools like Core Lightning, which facilitates faster transactions and lower fees as a layer-2 solution. This is supported by the description stating the company develops 'sidechains, privacy enhancements, and tools' and contributes to 'Bitcoin protocol development'.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Blockstream",
+    "sourceLabel": "Blockstream - Wikipedia",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-028",
+    "company": "Plooto",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What is the primary function of Plooto for small and medium-sized businesses?",
+    "options": [
+      "Providing venture capital funding",
+      "Automating accounts payable and receivable",
+      "Issuing stablecoins on the Bitcoin network",
+      "Offering cryptocurrency mining hardware"
+    ],
+    "answer": 1,
+    "explanation": "Plooto is described as an 'all-in-one accounts payable and accounts receivable platform' trusted by thousands of businesses. It focuses on streamlining business payments rather than funding or crypto infrastructure.",
+    "sourceUrl": "https://www.plooto.com/",
+    "sourceLabel": "Plooto: Your Business Payments Streamlined & Simplified",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-029",
+    "company": "Tetra Digital Group",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What significant financial product did Tetra Digital Group launch in May 2026?",
+    "options": [
+      "The CADD Canadian-dollar stablecoin",
+      "A regulated Bitcoin ETF",
+      "A cross-border payment rail for the Cosmos ecosystem",
+      "A decentralized exchange for NFTs"
+    ],
+    "answer": 0,
+    "explanation": "Tetra Digital Group is identified as a regulated Canadian digital-asset custodian that launched the CADD Canadian-dollar stablecoin in May 2026. The company's description highlights its role in Canadian digital asset infrastructure.",
+    "sourceUrl": "https://tetradg.com/",
+    "sourceLabel": "Tetra Digital Group | Canadian Digital Asset Infrastructure",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-030",
+    "company": "Keep",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What is the core product offering of Keep for Canadian small businesses?",
+    "options": [
+      "A corporate credit card and banking solution",
+      "An automated invoicing software suite",
+      "A cryptocurrency exchange platform",
+      "A blockchain-based supply chain tracker"
+    ],
+    "answer": 0,
+    "explanation": "Keep is described as 'Canada's #1 All-In-One Corporate Credit Card' and a challenger built for Canadian SMBs, offering corporate card services and banking features.",
+    "sourceUrl": "https://www.trykeep.com/",
+    "sourceLabel": "Keep | Canada's #1 All-In-One Corporate Credit Card",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-031",
+    "company": "Trolley",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "Which investor led Trolley's Series B funding round announced in November 2024 to accelerate its global payouts ecosystem?",
+    "options": [
+      "Pace Capital",
+      "Wavecrest Growth Partners",
+      "Greylock Partners",
+      "Fintech Ventures"
+    ],
+    "answer": 1,
+    "explanation": "According to the company blog post from November 13, 2024, Trolley secured $23M in Series B funding led by Wavecrest Growth Partners, with support from Pace Capital.",
+    "sourceUrl": "https://trolley.com/blog/global-payouts-solution-series-b-funding/",
+    "sourceLabel": "Trolley Blog",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-032",
+    "company": "Conquest Planning",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What is the core purpose of Conquest Planning's platform as described on its official website?",
+    "options": [
+      "To provide commission-free crypto trading for retail investors",
+      "To modernize financial advice delivery across all customer segments",
+      "To offer digital mortgage underwriting for first-time homebuyers",
+      "To facilitate cross-border payments for gig economy workers"
+    ],
+    "answer": 1,
+    "explanation": "The company's official site states its purpose is 'Financial advice delivery – reimagined,' focusing on modernizing how financial institutions deliver advice across all customer segments.",
+    "sourceUrl": "https://www.conquestplanning.com/en-ca",
+    "sourceLabel": "Conquest Planning Official Site",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-033",
+    "company": "Newton",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What is a key operational characteristic of Newton's crypto trading platform in Canada?",
+    "options": [
+      "It requires users to fund accounts via wire transfer only",
+      "It offers commission-light trading with free e-transfer funding options",
+      "It exclusively trades assets on the Ethereum blockchain",
+      "It operates as a custodial wallet for all user funds"
+    ],
+    "answer": 1,
+    "explanation": "Newton's homepage describes its platform allowing users to 'Fund with free e-transfer' and highlights 'commission-light trading' of supported assets.",
+    "sourceUrl": "https://www.newton.co/",
+    "sourceLabel": "Newton Official Site",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-034",
+    "company": "Figment",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What primary infrastructure service does Figment provide to institutional clients?",
+    "options": [
+      "Non-custodial staking-as-a-service for Proof-of-Stake networks",
+      "Decentralized exchange matching engine for retail traders",
+      "Blockchain-based identity verification for KYC compliance",
+      "AI-driven portfolio rebalancing for crypto assets"
+    ],
+    "answer": 0,
+    "explanation": "Figment's 'About' page and industry coverage describe the company as building infrastructure for the Proof-of-Stake economy, specifically offering staking-as-a-service to institutional clients.",
+    "sourceUrl": "https://www.figment.io/company/about/",
+    "sourceLabel": "Figment About Page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-035",
+    "company": "Axelar",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What is the primary function of the Axelar Network as described on its official website?",
+    "options": [
+      "A decentralized exchange for swapping tokens across different blockchains",
+      "A gateway to onchain finance enabling cross-chain and interoperability",
+      "A mining pool optimized for Bitcoin and Ethereum proof-of-work chains",
+      "A centralized custodial wallet service for institutional investors"
+    ],
+    "answer": 1,
+    "explanation": "The official Axelar website describes the platform as 'The Gateway To Onchain Finance' and provides resources on cross-chain and interoperability, indicating its role in connecting blockchain ecosystems.",
+    "sourceUrl": "https://www.axelar.network/",
+    "sourceLabel": "Axelar Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-036",
+    "company": "Ledn",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "Which specific product offerings did Ledn decide to wind down in Canada following regulatory discussions?",
+    "options": [
+      "Savings Accounts and B2X Loans",
+      "Bitcoin-backed lending and trading services",
+      "Institutional custody and staking products",
+      "Cross-border payment rails for fiat currencies"
+    ],
+    "answer": 0,
+    "explanation": "Ledn's help documentation states that due to regulatory discussions in Canada, the company decided to wind down its Savings Accounts (now Growth Accounts) and B2X Loans.",
+    "sourceUrl": "https://help.ledn.io/hc/en-us/articles/28274292472983-What-do-the-changes-in-Ledn-s-product-offerings-in-Canada-mean-for-me",
+    "sourceLabel": "Ledn Help Center",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-037",
+    "company": "ChainSafe",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "How does ChainSafe Systems describe its core specialization in the blockchain industry?",
+    "options": [
+      "As a venture capital firm focused on early-stage crypto startups",
+      "As a leading R&D firm specializing in protocol engineering and web3 gaming",
+      "As a regulatory compliance consultancy for digital asset exchanges",
+      "As a hardware manufacturer for cryptocurrency mining operations"
+    ],
+    "answer": 1,
+    "explanation": "ChainSafe's official website identifies the company as a leading blockchain R&D firm that specializes in protocol engineering, cross-chain interoperability, and web3 gaming.",
+    "sourceUrl": "https://chainsafe.io/",
+    "sourceLabel": "ChainSafe Systems Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-038",
+    "company": "Horizon (Sequence)",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What is the stated mission or positioning of Sequence according to its official domain?",
+    "options": [
+      "Building blocks for the onchain Internet era",
+      "A decentralized exchange for high-frequency trading",
+      "A regulatory compliance tool for Web3 developers",
+      "An infrastructure layer for Layer 2 scaling solutions"
+    ],
+    "answer": 0,
+    "explanation": "The official Sequence website (sequence.xyz) explicitly states its positioning as 'Building blocks for the onchain Internet era'.",
+    "sourceUrl": "https://sequence.xyz/",
+    "sourceLabel": "Sequence Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-001",
+    "company": "Field Effect",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the primary scope of protection offered by Field Effect's MDR solution?",
+    "options": [
+      "Protection limited to physical security for government supply chains",
+      "Comprehensive coverage protecting endpoints, networks, and cloud from one platform",
+      "Exclusive focus on detecting threats in legacy mainframe systems",
+      "Services restricted solely to large enterprise clients with 10,000+ employees"
+    ],
+    "answer": 1,
+    "explanation": "Field Effect's product page describes its MDR solution as powerfully protecting endpoints, networks, and cloud from a single platform.",
+    "sourceUrl": "https://fieldeffect.com/products/mdr",
+    "sourceLabel": "Field Effect MDR Product Page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-002",
+    "company": "Novarc Technologies",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Which core technology enables Novarc's Spool Welding Robot to dynamically adapt weld parameters in response to joint variations and material inconsistencies?",
+    "options": [
+      "Real-time computer vision and machine learning",
+      "Laser-based thermal scanning only",
+      "Manual operator override systems",
+      "Static pre-programmed welding paths"
+    ],
+    "answer": 0,
+    "explanation": "According to the RoboticsIntl profile, Novarc's flagship Spool Welding Robot uses real-time computer vision and machine learning to adapt weld parameters dynamically, compensating for joint variation and material inconsistencies.",
+    "sourceUrl": "https://www.roboticsintl.com/companies/novarc-technologies",
+    "sourceLabel": "RoboticsIntl Company Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-003",
+    "company": "Ideon Technologies",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What physical phenomenon does Ideon's REVEAL platform utilize to image subsurface structures without drilling?",
+    "options": [
+      "Cosmic-ray muons",
+      "Seismic acoustic waves",
+      "Ground-penetrating radar pulses",
+      "Magnetic resonance fields"
+    ],
+    "answer": 0,
+    "explanation": "The Ideon homepage describes their platform as utilizing cosmic-ray muons to unlock subsurface potential, allowing for imaging of structures beneath the surface without the need for drilling.",
+    "sourceUrl": "https://ideon.ai/",
+    "sourceLabel": "Ideon Technologies Official Site",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-004",
+    "company": "Prevu3D",
+    "category": "Frontier & Defence",
+    "difficulty": 1,
+    "question": "What is the primary function of Prevu3D's platform as described in their knowledge base and about pages?",
+    "options": [
+      "Advancing digital twin innovation for smarter decisions",
+      "Manufacturing physical laser scanning hardware",
+      "Providing cloud-based financial modeling services",
+      "Developing autonomous drone navigation systems"
+    ],
+    "answer": 0,
+    "explanation": "Prevu3D's 'About Us' page states the team is dedicated to advancing digital twin innovation to enable smarter decisions and improve collaboration worldwide.",
+    "sourceUrl": "https://www.prevu3d.com/about/",
+    "sourceLabel": "Prevu3D About Us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-005",
+    "company": "AON3D",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Which material class does AON3D's technology specifically target to make industrial 3D printing more accessible and cost-effective?",
+    "options": [
+      "Advanced thermoplastics",
+      "Liquid metal alloys",
+      "Ceramic composites",
+      "Carbon fiber reinforced polymers"
+    ],
+    "answer": 0,
+    "explanation": "The Canada Makes directory entry for AON3D highlights that their technology has made it significantly cheaper to 3D print with advanced thermoplastics.",
+    "sourceUrl": "https://canadamakes.ca/directory/aon3d",
+    "sourceLabel": "Canada Makes Directory",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-006",
+    "company": "ZeroKey",
+    "category": "Frontier & Defence",
+    "difficulty": 1,
+    "question": "What level of accuracy characterizes ZeroKey's real-time location system for digitizing industrial operations?",
+    "options": [
+      "Millimetre-accurate",
+      "Centimetre-accurate",
+      "Decimetre-accurate",
+      "Kilometre-accurate"
+    ],
+    "answer": 0,
+    "explanation": "ZeroKey's official homepage describes their system as a millimetre-accurate 3D real-time location system designed to digitize industrial operations.",
+    "sourceUrl": "https://zerokey.com/",
+    "sourceLabel": "ZeroKey Official Site",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-007",
+    "company": "Cellula Robotics",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Which specific long-endurance Autonomous Underwater Vehicle (AUV) model was selected by the Defense Innovation Unit for the Combat Autonomous Maritime Platform initiative?",
+    "options": [
+      "Solus",
+      "Guardian",
+      "Tundra",
+      "Taiga"
+    ],
+    "answer": 1,
+    "explanation": "Cellula Robotics was selected to deliver a commercial off-the-shelf, fuel cell-powered Guardian AUV as part of the Combat Autonomous Maritime Platform (CAMP) initiative under a contract awarded by the Defense Innovation Unit.",
+    "sourceUrl": "https://www.oceansciencetechnology.com/news/cellula-robotics-to-deliver-fuel-cell-powered-auv-for-diu-camp-initiative/",
+    "sourceLabel": "Ocean Science & Technology",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-008",
+    "company": "NordSpace",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the name of the orbital launch vehicle currently being developed by NordSpace to achieve sovereign Canadian launch capability?",
+    "options": [
+      "Taiga",
+      "Tundra",
+      "Aurora-8",
+      "SitaWare"
+    ],
+    "answer": 1,
+    "explanation": "NordSpace is developing the Taiga suborbital launch vehicle and the Tundra orbital launch vehicle, alongside the Athena satellite bus.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/NordSpace",
+    "sourceLabel": "Wikipedia",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-009",
+    "company": "Wolf Advanced Technology",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Which NVIDIA platform does Wolf Advanced Technology utilize in its new family of rugged, SOSA-aligned computing solutions for AI at the tactical edge?",
+    "options": [
+      "NVIDIA IGX Thor",
+      "NVIDIA Jetson Orin",
+      "NVIDIA DRIVE AGX",
+      "NVIDIA A100"
+    ],
+    "answer": 0,
+    "explanation": "Wolf Advanced Technology developed a new family of rugged, SOSA-aligned computing solutions accelerated by the NVIDIA IGX Thor platform to deliver data-center-class AI performance at the tactical edge.",
+    "sourceUrl": "https://www.defenseadvancement.com/news/wolf-launches-rugged-sosa-aligned-modules-for-ai-at-the-tactical-edge/",
+    "sourceLabel": "Defense Advancement",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-010",
+    "company": "Ecopia AI",
+    "category": "Frontier & Defence",
+    "difficulty": 1,
+    "question": "What is the primary output generated by Ecopia AI's technology when processing satellite and aerial imagery?",
+    "options": [
+      "HD vector maps",
+      "Real-time video feeds",
+      "3D printed prototypes",
+      "Encrypted communication channels"
+    ],
+    "answer": 0,
+    "explanation": "Ecopia AI converts satellite and aerial imagery into HD vector maps covering billions of features globally.",
+    "sourceUrl": "https://www.ecopiatech.com/",
+    "sourceLabel": "Ecopia AI",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-011",
+    "company": "Roshel",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the specific designation of the combat-proven armored vehicle line manufactured by Roshel?",
+    "options": [
+      "Senator",
+      "Guardian",
+      "Tundra",
+      "SitaWare"
+    ],
+    "answer": 0,
+    "explanation": "Roshel manufactures the Senator armoured vehicles, which are described as combat-proven and utilized by military and law enforcement agencies.",
+    "sourceUrl": "https://roshel.com/products/",
+    "sourceLabel": "Roshel",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-039",
+    "company": "Noble",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What type of blockchain infrastructure does Noble provide?",
+    "options": [
+      "Stablecoin infrastructure",
+      "Consumer credit scoring",
+      "Equity-trading brokerage",
+      "Proof-of-work mining hardware"
+    ],
+    "answer": 0,
+    "explanation": "Noble describes itself as stablecoin infrastructure designed to support digital-asset issuance and distribution.",
+    "sourceUrl": "https://noble.xyz/",
+    "sourceLabel": "Noble — official website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-040",
+    "company": "Pine",
+    "category": "Fintech & Crypto",
+    "difficulty": 1,
+    "question": "What part of Canadian home ownership did Pine initially set out to make easier?",
+    "options": [
+      "Getting a mortgage",
+      "Hiring a property manager",
+      "Buying home insurance",
+      "Renovating a kitchen"
+    ],
+    "answer": 0,
+    "explanation": "Pine says its founders started the company because obtaining a mortgage in Canada felt harder than it needed to be.",
+    "sourceUrl": "https://www.pine.ca/about-us",
+    "sourceLabel": "Pine — About Pine",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-041",
+    "company": "Balance",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What primary service does Balance provide to Canadian trading platforms and institutions regarding digital assets?",
+    "options": [
+      "Providing insured institutional-grade custody and wallet management",
+      "Manufacturing certified Sartorius weighing scales for calibration",
+      "Selling original Power Balance wristbands directly to consumers",
+      "Distributing premium streetwear collections globally"
+    ],
+    "answer": 0,
+    "explanation": "Balance operates as an insured digital asset custodian, offering institutional-grade custody and wallet management services specifically for Canadian trading platforms and institutions.",
+    "sourceUrl": "https://www.balance.ca/",
+    "sourceLabel": "Balance - Insured Digital Asset Custodian",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-042",
+    "company": "Helika",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "What is the primary function of Helika's platform as described in its official 'About' documentation?",
+    "options": [
+      "A decentralized exchange for Web3 gaming assets",
+      "An AI character platform enabling organizations to create intelligent characters",
+      "A venture capital fund focused on blockchain startups",
+      "A regulatory compliance tool for crypto exchanges"
+    ],
+    "answer": 1,
+    "explanation": "According to Helika's official 'About' page, the company is an AI character platform that helps organizations create intelligent characters to engage audiences and unlock new digital experiences.",
+    "sourceUrl": "https://www.helika.io/about-us/",
+    "sourceLabel": "Helika Official About Page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-043",
+    "company": "FundThrough",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "In April 2025, which company did FundThrough acquire to strengthen its digital-first invoice funding solution for consumer brands?",
+    "options": [
+      "BlueVine",
+      "Ampla",
+      "Klister Credit",
+      "FunderIntel"
+    ],
+    "answer": 1,
+    "explanation": "FundThrough announced the acquisition of Ampla on April 22, 2025, to strengthen its digital-first invoice funding solution. The source explicitly states that FundThrough acquired Ampla, a provider of financial technology solutions for consumer brands.",
+    "sourceUrl": "https://www.fundthrough.com/blog/newsroom/fundthrough-acquires-ampla-strengthening-its-digital-first-invoicefunding-solution/",
+    "sourceLabel": "FundThrough Newsroom",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "fin-exp-044",
+    "company": "CapIntel",
+    "category": "Fintech & Crypto",
+    "difficulty": 2,
+    "question": "In the 2022 Deloitte Technology Fast 50 program, CapIntel was recognized as one of Canada's Companies-to-Watch. What specific revenue growth percentage did the company achieve between 2018 and 2021?",
+    "options": [
+      "1200%",
+      "2051%",
+      "3400%",
+      "850%"
+    ],
+    "answer": 1,
+    "explanation": "According to the company's profile in the Deloitte Technology Fast 50 program, CapIntel ranked 5th with a revenue growth of 2051% from 2018 to 2021.",
+    "sourceUrl": "https://www.capintel.com/about-us",
+    "sourceLabel": "CapIntel About Us - Deloitte Recognition",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-012",
+    "company": "Canada Rocket Company",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What specific propellant combination and launch capability is Canada Rocket Company developing to achieve sovereign medium-lift orbital launch capabilities by 2034?",
+    "options": [
+      "Liquid hydrogen and liquid oxygen for heavy-lift launch",
+      "Methalox (methane-oxygen) reusable rockets for medium-lift launch",
+      "Solid-fuel boosters for tactical short-range launches",
+      "Hybrid rocket engines for sub-orbital tourism"
+    ],
+    "answer": 1,
+    "explanation": "Canada Rocket Company is explicitly building sovereign launch capabilities using reusable methalox (methane-oxygen) rockets to deliver medium-lift orbital launch capabilities by 2034.",
+    "sourceUrl": "https://www.canadarocketcompany.com/news/canada-rocket-company-selected-as-a-key-partner-by-canada-to-deliver-sovereign-space-launch-capabilities",
+    "sourceLabel": "Canada Rocket Company News Release",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-013",
+    "company": "Juno Industries",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Which autonomous platform is Juno Industries developing to address sovereign defence needs in the Arctic region?",
+    "options": [
+      "The Polar Nexus Arctic autonomous platform",
+      "The Northern Sentinel drone swarm",
+      "The Borealis maritime patrol vessel",
+      "The Icebreaker AI navigation system"
+    ],
+    "answer": 0,
+    "explanation": "Juno Industries is developing the Polar Nexus Arctic autonomous platform as part of its mission to build Canada's modern defence prime capabilities.",
+    "sourceUrl": "https://www.junoindustries.ca/",
+    "sourceLabel": "Juno Industries Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-014",
+    "company": "Haply Robotics",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the name of Haply Robotics' precision force-feedback haptic controller designed for robotic teleoperation and physical AI training?",
+    "options": [
+      "The Inverse3",
+      "The HARP Controller",
+      "The MinVerse Mouse",
+      "The ForceLink 3D"
+    ],
+    "answer": 0,
+    "explanation": "Haply Robotics designs and manufactures the Inverse3, a precision force-feedback haptic controller used for robotic teleoperation and physical AI training.",
+    "sourceUrl": "https://robottoday.com/suppliers-discovery/haply-robotics",
+    "sourceLabel": "RobotToday Supplier Discovery",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-015",
+    "company": "Brilliant Matters",
+    "category": "Frontier & Defence",
+    "difficulty": 1,
+    "question": "For which specific market sector does Brilliant Matters supply organic semiconductors and conductors?",
+    "options": [
+      "Printed electronics and organic solar cells",
+      "High-performance silicon microchips",
+      "Flexible OLED display backplanes",
+      "Quantum computing cryogenic circuits"
+    ],
+    "answer": 0,
+    "explanation": "Brilliant Matters is a supplier of organic semiconductors and conductors specifically for organic solar cells and other printed electronics markets.",
+    "sourceUrl": "https://brilliantmatters.com/",
+    "sourceLabel": "Brilliant Matters Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-016",
+    "company": "Sanctuary AI",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the name of Sanctuary AI's flagship general-purpose humanoid robot designed for commercial deployment in industrial environments?",
+    "options": [
+      "Phoenix",
+      "Atlas",
+      "Optimus",
+      "Amelia"
+    ],
+    "answer": 0,
+    "explanation": "Sanctuary AI's flagship product is Phoenix, a general-purpose humanoid robot designed for commercial deployment in warehouse, logistics, and manufacturing environments.",
+    "sourceUrl": "https://www.roboticsintl.com/companies/sanctuary-ai",
+    "sourceLabel": "RoboticsIntl Company Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-017",
+    "company": "Avidbots",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Which autonomous cleaning robot model from Avidbots is specifically noted for running over 18 hours on a single charge and being deployed in major airports and warehouses?",
+    "options": [
+      "Kas",
+      "Neo 2",
+      "Avidbot X",
+      "Cleaner Pro"
+    ],
+    "answer": 1,
+    "explanation": "According to the brand profile on youshouldautomatethat.tech, the Neo 2 model runs for over 18 hours on one charge and is deployed in major airports, malls, and warehouses worldwide.",
+    "sourceUrl": "https://youshouldautomatethat.tech/en/brands/avidbots/",
+    "sourceLabel": "YouShouldAutomateThat - Avidbots Brand Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-018",
+    "company": "Kinova Robotics",
+    "category": "Frontier & Defence",
+    "difficulty": 1,
+    "question": "In which Canadian city is Kinova Robotics headquartered and where its robotic platforms are engineered, assembled, and tested?",
+    "options": [
+      "Toronto",
+      "Vancouver",
+      "Boisbriand",
+      "Montreal"
+    ],
+    "answer": 2,
+    "explanation": "Multiple sources confirm that Kinova Robotics is headquartered in Boisbriand, Quebec, and that every robotic platform is engineered, assembled, and tested there by multidisciplinary teams.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kinova",
+    "sourceLabel": "Wikipedia - Kinova",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-019",
+    "company": "Robotiq",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the primary organizational structure of Robotiq, and which core product categories does it offer to simplify collaborative robot applications?",
+    "options": [
+      "A public corporation; offers only sanding tools",
+      "An employee-shareholder cooperative; offers grippers, sensing, vision, and production monitoring",
+      "A government agency; offers only camera systems",
+      "A private venture-backed firm; offers only hybrid propulsion systems"
+    ],
+    "answer": 1,
+    "explanation": "Robotiq operates as an employee-shareholder cooperative. Its core product offerings include grippers, sensing, vision, sanding, and production monitoring to simplify collaborative robot applications.",
+    "sourceUrl": "https://www.electromate.ca/robotic-automation/robotic-systems-manufacturers/robotiq/",
+    "sourceLabel": "Electromate - Robotiq Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-020",
+    "company": "Kepler Communications",
+    "category": "Frontier & Defence",
+    "difficulty": 3,
+    "question": "What significant technological breakthrough did Kepler Communications achieve in May 2026 regarding space-to-air communication?",
+    "options": [
+      "The first optical communications test connecting a spacecraft and an aircraft via laser link",
+      "The first commercial launch of a heavy-lift orbital rocket",
+      "The first deployment of a fully autonomous satellite swarm for defense",
+      "The first successful refueling of a nanosatellite in low Earth orbit"
+    ],
+    "answer": 0,
+    "explanation": "In May 2026, Kepler Communications successfully executed the world's first optical communications test connecting a spacecraft and an aircraft via laser link, a breakthrough highlighted by CEO Mina Mitry.",
+    "sourceUrl": "https://spaceinsight.org/2026/05/15/kepler-communications-ceo-talks-sovereignty-security-and-space-data/",
+    "sourceLabel": "Space Insight - Kepler Communications Coverage",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-021",
+    "company": "Reaction Dynamics",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the primary propulsion technology pioneered by Reaction Dynamics, and what are its scheduled milestones for suborbital and orbital launches?",
+    "options": [
+      "Hybrid rocket propulsion; maiden suborbital launch in 2026 and first orbital launch in 2028",
+      "Liquid oxygen/methane propulsion; maiden suborbital launch in 2025 and first orbital launch in 2027",
+      "Solid fuel propulsion; maiden suborbital launch in 2024 and first orbital launch in 2026",
+      "Electric ion propulsion; maiden suborbital launch in 2027 and first orbital launch in 2029"
+    ],
+    "answer": 0,
+    "explanation": "Reaction Dynamics pioneers hybrid rocket technology. The company scheduled a maiden suborbital space launch for 2026 and a first orbital launch for 2028.",
+    "sourceUrl": "https://www.reactiondynamics.space/en/about",
+    "sourceLabel": "Reaction Dynamics - About Us Page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-022",
+    "company": "Tailscale",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Which core networking approach does Tailscale utilize to simplify secure connectivity for devices and clouds?",
+    "options": [
+      "Perimeter-based firewalling with static IP routing",
+      "Zero-trust mesh networking",
+      "Traditional site-to-site VPN tunnels",
+      "Software-defined wide area networking (SD-WAN) only"
+    ],
+    "answer": 1,
+    "explanation": "Tailscale is described as revolutionizing secure networking with a zero-trust, easy-to-use approach, specifically utilizing a zero-trust mesh networking model.",
+    "sourceUrl": "https://www.smashingsecurity.com/people/avery-pennarun/",
+    "sourceLabel": "Smashing Security - Avery Pennarun",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-023",
+    "company": "SkyWatch",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "How does SkyWatch primarily facilitate the distribution of satellite imagery to enterprise applications?",
+    "options": [
+      "By manufacturing its own hyperspectral satellites for exclusive use",
+      "Through a marketplace and API aggregating data from over 700 commercial sensors",
+      "By providing only radar-optical imagery via a proprietary ground station network",
+      "Through a direct sales model selling single images to government agencies"
+    ],
+    "answer": 1,
+    "explanation": "SkyWatch operates a marketplace and API that aggregates data from over 700 commercial satellite sensors, offering a streamlined procurement process for users across various industries.",
+    "sourceUrl": "https://newspacetracker.com/company/skywatch/",
+    "sourceLabel": "Newspace Tracker - SkyWatch Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-024",
+    "company": "Promise Robotics",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the primary operational model of Promise Robotics for homebuilding?",
+    "options": [
+      "On-site robotic assembly of modular units by human crews",
+      "AI-powered offsite construction platform enabling industrialized production",
+      "3D printing of entire single-family homes in a single continuous pour",
+      "Manual prefabrication of timber frames for rapid on-site assembly"
+    ],
+    "answer": 1,
+    "explanation": "Promise Robotics enables homebuilding without limits through an AI-powered offsite construction platform that uses industrialized robotic automation to exponentially scale production.",
+    "sourceUrl": "https://promiserobotics.com/",
+    "sourceLabel": "Promise Robotics - Home",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-025",
+    "company": "Dominion Dynamics",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What specific capability is Dominion Dynamics developing to enhance Canada's sovereign defence future?",
+    "options": [
+      "A sovereign autonomous wingman system",
+      "A hypersonic missile defense grid",
+      "A quantum-encrypted satellite communication network",
+      "An AI-driven cyber warfare command center"
+    ],
+    "answer": 0,
+    "explanation": "Dominion Dynamics announced an investment to kickstart the development of a sovereign autonomous wingman as part of its mission to build Canada's sovereign capability for the 21st century.",
+    "sourceUrl": "https://www.newswire.ca/news-releases/dominion-dynamics-makes-initial-50-million-investment-to-build-a-sovereign-autonomous-wingman-892420247.html",
+    "sourceLabel": "Newswire - Dominion Dynamics Investment",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-026",
+    "company": "Wyvern",
+    "category": "Frontier & Defence",
+    "difficulty": 3,
+    "question": "What distinguishes Wyvern's hyperspectral satellite technology from traditional imaging satellites?",
+    "options": [
+      "It provides real-time video feeds of moving targets",
+      "It reveals the material and chemical signature of targets rather than just their shape",
+      "It operates exclusively in the infrared spectrum for night vision",
+      "It utilizes synthetic aperture radar to penetrate cloud cover"
+    ],
+    "answer": 1,
+    "explanation": "Wyvern's hyperspectral satellites can reveal what a target is made of (material and chemical signature), allowing them to detect camouflage and identify hidden realities that traditional shape-based imaging cannot.",
+    "sourceUrl": "https://www.canadianexplorers.ca/p/wyvern-hyperspectral-satellites-dark-ships",
+    "sourceLabel": "Canadian Explorers - Wyvern Hyperspectral Satellites",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-027",
+    "company": "Arcane Aerospace",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What specific technological focus and operational domain does Arcane Aerospace target for its public project supported by the Government of Canada?",
+    "options": [
+      "Developing next-generation satellite technology for in-orbit operations",
+      "Manufacturing autonomous lunar mining robots for ISRU",
+      "Producing micro-nuclear reactors for Arctic defence deployment",
+      "Designing modular fixed-wing UAVs for payload-agnostic missions"
+    ],
+    "answer": 0,
+    "explanation": "Public records and project descriptions confirm that Arcane Aerospace is developing next-generation satellite technology specifically for in-orbit operations to support the modernization of Canada's defence capabilities.",
+    "sourceUrl": "https://opengovca.com/corporation/17322879",
+    "sourceLabel": "OpenGov Canada - Arcane Aerospace Inc. Project Description",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-028",
+    "company": "Canadian Strategic Missions Corporation (CSMC)",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Following its rebranding in December 2025, what are the two fully owned subsidiaries established by Canadian Strategic Missions Corporation (CSMC)?",
+    "options": [
+      "CSMC Nuclear and CSMC Labs",
+      "CSMC Defence and CSMC Space Resources",
+      "CSMC Quantum and CSMC Arctic Systems",
+      "CSMC Aqualunar and CSMC Lunar Power"
+    ],
+    "answer": 0,
+    "explanation": "Official company descriptions state that CSMC operates two fully owned subsidiaries: CSMC Nuclear, focused on micro-nuclear reactors, and CSMC Labs, dedicated to quantum sensing R&D.",
+    "sourceUrl": "https://strategicmissions.ca/",
+    "sourceLabel": "CSMC Official Website - About Us",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-029",
+    "company": "Sentinel R&D",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the name of Sentinel R&D's modular fixed-wing UAV platform that is designed to be payload-agnostic and configurable for ISR, loitering strike, or electronic warfare?",
+    "options": [
+      "ReKam",
+      "Wreck 'Em",
+      "Airlogix-Sentinel",
+      "First Spike"
+    ],
+    "answer": 0,
+    "explanation": "Product documentation identifies the ReKam as Sentinel R&D's unified, payload-agnostic UAV platform capable of seamless mission configuration changes including ISR and loitering strike.",
+    "sourceUrl": "https://www.sentinelrd.com/products",
+    "sourceLabel": "Sentinel R&D - Products Page",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-030",
+    "company": "Maritime Launch",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Which unique operational capability does Maritime Launch Services claim to provide from its Spaceport Nova Scotia facility?",
+    "options": [
+      "Satellite delivery services across the widest range of launch inclinations available in North America from a single site",
+      "Exclusive sovereign launch access for government military satellites only",
+      "Rapid reusability of orbital vehicles using liquid hydrogen propulsion",
+      "On-orbit satellite servicing and refueling operations"
+    ],
+    "answer": 0,
+    "explanation": "According to the AIAC member profile, Maritime Launch is developing Spaceport Nova Scotia to provide satellite delivery services over the widest range of launch inclinations available anywhere in North America from a single site.",
+    "sourceUrl": "https://aiac.ca/members/maritime-launch-services/",
+    "sourceLabel": "AIAC Member Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-031",
+    "company": "Clearpath Robotics",
+    "category": "Frontier & Defence",
+    "difficulty": 1,
+    "question": "What is the primary product focus of Clearpath Robotics as described in its founding mission and current operations?",
+    "options": [
+      "Mobile robotic platforms for research, development, and industrial integration",
+      "Autonomous drone swarms for agricultural monitoring",
+      "Exoskeleton suits for military personnel enhancement",
+      "Underwater autonomous vehicles for seabed mapping"
+    ],
+    "answer": 0,
+    "explanation": "Clearpath Robotics was founded to streamline field robotics research and now manufactures and sells mobile robotic platforms (such as the OTTO line) to accelerate robotics R&D for researchers and corporations.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Clearpath_Robotics",
+    "sourceLabel": "Wikipedia: Clearpath Robotics",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-032",
+    "company": "ProteinQure",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What distinguishes ProteinQure's therapeutic approach in the context of its clinical-stage status?",
+    "options": [
+      "Designing novel exotic peptides using quantum computing and AI for drug discovery",
+      "Developing mRNA vaccines targeting viral mutations via CRISPR editing",
+      "Manufacturing synthetic blood substitutes using bioreactor fermentation",
+      "Creating gene therapies based on viral vector delivery systems"
+    ],
+    "answer": 0,
+    "explanation": "ProteinQure is a clinical-stage biotech company focused on designing novel exotic peptides for therapeutic applications using computational methods including quantum computing and AI, having announced the first clinical trial of a fully AI-designed peptide-drug conjugate.",
+    "sourceUrl": "https://www.proteinqure.com/",
+    "sourceLabel": "ProteinQure Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-033",
+    "company": "Quantum Bridge Technologies",
+    "category": "Frontier & Defence",
+    "difficulty": 3,
+    "question": "What specific protocol does Quantum Bridge Technologies utilize to deliver quantum-safe key management?",
+    "options": [
+      "Distributed Symmetric Key Establishment (DSKE)",
+      "Quantum Key Distribution (QKD) via decoy-state protocols",
+      "Post-Quantum Cryptography lattice-based algorithms",
+      "Elliptic Curve Cryptography with quantum-resistant parameters"
+    ],
+    "answer": 0,
+    "explanation": "Quantum Bridge Technologies develops a proprietary Distributed Symmetric Key Establishment (DSKE) protocol using symmetric cryptography and secret sharing to provide quantum-safe key management for existing networks.",
+    "sourceUrl": "https://quantum-data.com/companies/quantum-bridge-technologies/",
+    "sourceLabel": "QData Intelligence",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-034",
+    "company": "Crypto4A Technologies",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What significant validation milestone has Crypto4A achieved regarding its quantum-safe hardware security modules?",
+    "options": [
+      "First FIPS 140-3 Level 3 post-quantum validation",
+      "ISO 27001 certification for cloud-based key management",
+      "NIST PQC standardization for lattice-based cryptography",
+      "Common Criteria EAL4+ evaluation for embedded systems"
+    ],
+    "answer": 0,
+    "explanation": "Crypto4A holds the distinction of having quantum-safe hardware security modules that achieved the first FIPS 140-3 Level 3 post-quantum validation, anchoring Canada's sovereign secrets-management service.",
+    "sourceUrl": "https://crypto4a.com/",
+    "sourceLabel": "Crypto4A Official Website",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-035",
+    "company": "Quantropi",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Which platform does Quantropi use to distribute quantum-secure keys over existing internet links without requiring new hardware?",
+    "options": [
+      "QiSpace",
+      "QuantumLink",
+      "SecureNet SaaS",
+      "CryptoBridge"
+    ],
+    "answer": 0,
+    "explanation": "Quantropi's QiSpace platform is described as a quantum-secure communications platform that distributes keys over existing internet links without new hardware. This capability is explicitly recorded in the official company product details on True North Map and BattlePolicy.",
+    "sourceUrl": "https://truenorthmap.ca/organizations/quantropi",
+    "sourceLabel": "True North Map - Quantropi Official Product Record",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-036",
+    "company": "1QBit",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the name of 1QBit's flagship cloud-based platform that provides access to advanced optimization tools and quantum-inspired algorithms?",
+    "options": [
+      "1Qloud",
+      "QuantumCloud",
+      "OptiCore",
+      "AlgoSphere"
+    ],
+    "answer": 0,
+    "explanation": "According to the company profile on Atomtronium, 1QBit's flagship product is named 1Qloud, which serves as a cloud-based platform for accessing advanced optimization tools and quantum-inspired algorithms.",
+    "sourceUrl": "https://atomtronium.com/company/1qbit",
+    "sourceLabel": "Atomtronium - 1QBit Company Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-037",
+    "company": "High Q Technologies",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the name of the quantum-enabled EPR spectrometer that High Q Technologies announced as commercially available in January 2025?",
+    "options": [
+      "FATHOM",
+      "QuantumSpectra",
+      "ProteinMotion",
+      "EPR-X1"
+    ],
+    "answer": 0,
+    "explanation": "High Q Technologies announced the commercial availability and first sale of the FATHOM EPR spectrometer in January 2025, as reported by PR Newswire.",
+    "sourceUrl": "https://www.prnewswire.com/news-releases/high-q-technologies-announces-commercial-availability-and-first-sale-of-the-fathom-epr-spectrometer-302343426.html",
+    "sourceLabel": "PR Newswire - High Q Technologies Announcement",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-038",
+    "company": "InfinityQ Technology",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the name of InfinityQ Technology's first-generation analog quantum computer that operates at room temperature?",
+    "options": [
+      "infinityQube",
+      "QuantumAnalog",
+      "RoomTempCore",
+      "InfinityChip"
+    ],
+    "answer": 0,
+    "explanation": "According to the C2MI partner profile, InfinityQ Technology's first-generation analog quantum computer is named infinityQube, which utilizes electronic analog technology functioning at room temperature.",
+    "sourceUrl": "https://www.c2mi.ca/partenaire/technologies-infinityq-inc/",
+    "sourceLabel": "C2MI - InfinityQ Technology Partner Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-039",
+    "company": "Photonic Inc.",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What type of qubits does Photonic Inc. use in its distributed, fault-tolerant quantum computer architecture?",
+    "options": [
+      "Silicon spin qubits",
+      "Superconducting transmons",
+      "Trapped ions",
+      "Topological qubits"
+    ],
+    "answer": 0,
+    "explanation": "Photonic Inc. is described as pioneering a distributed, fault-tolerant quantum computer architecture built on silicon spin qubits that are optically linked by photons.",
+    "sourceUrl": "https://postquantum.com/quantum-computing-companies/photonic-inc/",
+    "sourceLabel": "PostQuantum - Photonic Inc. Company Profile",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-040",
+    "company": "Nord Quantique",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What specific architectural approach does Nord Quantique utilize to achieve a 1:1 ratio of logical to physical qubits?",
+    "options": [
+      "Using vast numbers of physical qubits to compensate for errors",
+      "Employing bosonic error-correcting codes in a superconducting architecture",
+      "Implementing trapped-ion technology with optical lattices",
+      "Relying on topological qubits isolated from environmental noise"
+    ],
+    "answer": 1,
+    "explanation": "Nord Quantique's superconducting architecture uses bosonic error-correcting codes to reach a 1:1 logical to physical qubit ratio, correcting errors intrinsically at the hardware level rather than adding vast numbers of physical qubits.",
+    "sourceUrl": "https://www.nordquantique.com/",
+    "sourceLabel": "Nord Quantique Home",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-041",
+    "company": "Anyon Systems",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "How does Anyon Systems position its quantum computing infrastructure for high-performance computing (HPC) centers?",
+    "options": [
+      "As a cloud-only service with no on-premise options",
+      "Through hybrid HPC-Quantum computing with on-premise superconducting systems",
+      "By focusing exclusively on quantum simulation without classical integration",
+      "Via satellite-based quantum links for remote HPC access"
+    ],
+    "answer": 1,
+    "explanation": "Anyon Systems develops and deploys on-premise superconducting quantum computers specifically designed for HPC centers, positioning itself as a leader in hybrid HPC-Quantum computing.",
+    "sourceUrl": "https://anyonsys.com/",
+    "sourceLabel": "Anyon Systems | Quantum Computing",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-042",
+    "company": "Space",
+    "category": "Frontier & Defence",
+    "difficulty": 1,
+    "question": "What is the primary function of Space's file management system regarding local storage usage?",
+    "options": [
+      "It compresses files to reduce disk space by 50%",
+      "It provides instant, streaming-like access to cloud data while using zero local disk space",
+      "It automatically deletes temporary files to free up drive space",
+      "It encrypts all local files to prevent unauthorized access"
+    ],
+    "answer": 1,
+    "explanation": "Space's solution is a new file management system that provides instant, streaming-like access to cloud data directly from local computers, aiming for an 'infinite computer' experience while using zero disk space.",
+    "sourceUrl": "https://www.forbes.com/sites/davidprosser/2026/08/18/space-paves-the-way-for-the-infinite-computer/",
+    "sourceLabel": "Forbes: Space Paves The Way For The Infinite Computer",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-043",
+    "company": "evolutionQ",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What is the core focus of evolutionQ's software solutions in the context of cybersecurity?",
+    "options": [
+      "Developing quantum computers for breaking encryption",
+      "Providing cryptographic resilience for the post-quantum era",
+      "Creating hardware-based firewalls for classical networks",
+      "Offering AI-driven threat detection for social engineering"
+    ],
+    "answer": 1,
+    "explanation": "evolutionQ is a cybersecurity company focused on developing scalable software solutions that provide cryptographic resilience for the post-quantum era, protecting against next-generation threats.",
+    "sourceUrl": "https://www.evolutionq.com/company/about",
+    "sourceLabel": "About Us - Quantum-Safe Cyber Security - evolutionQ",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-044",
+    "company": "ISARA",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What capability does ISARA's product suite offer regarding existing cryptographic infrastructure?",
+    "options": [
+      "It replaces all hardware immediately to ensure security",
+      "It enables migration to Post-Quantum Cryptography (PQC) without replacing hardware",
+      "It focuses solely on quantum key distribution networks",
+      "It provides physical isolation for critical systems from the internet"
+    ],
+    "answer": 1,
+    "explanation": "ISARA develops quantum-safe security products enabling organizations to migrate existing cryptographic infrastructure to PQC without replacing hardware, offering crypto-agility toolkits and migration services.",
+    "sourceUrl": "https://www.alphaquantum.org/company/isara",
+    "sourceLabel": "ISARA Corporation | AlphaQuantum",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-045",
+    "company": "Starpath Robotics",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "Starpath Robotics is developing lunar infrastructure to produce which propellant component from water ice on the Moon?",
+    "options": [
+      "Liquid oxygen (LOX)",
+      "Liquid methane imported from Earth",
+      "Solid aluminum powder",
+      "Compressed nitrogen"
+    ],
+    "answer": 0,
+    "explanation": "Starpath plans to mine lunar water ice and refine it into liquid oxygen, or LOX, for use as rocket propellant in lunar operations.",
+    "sourceUrl": "https://payloadspace.com/starpath-raises-12m-for-lunar-ice-mining/",
+    "sourceLabel": "Payload Space — Starpath lunar ice mining",
+    "asOf": "2026-08-31"
+  },
+  {
+    "id": "frontier-exp-046",
+    "company": "Avidrone Aerospace",
+    "category": "Frontier & Defence",
+    "difficulty": 2,
+    "question": "What happens during Avidrone Aerospace’s Touch-and-Go cargo-delivery process?",
+    "options": [
+      "The aircraft briefly lands, releases cargo, and continues its mission",
+      "A human pilot transfers control to a ground crane",
+      "The aircraft drops every package by parachute without landing",
+      "A delivery vehicle must exchange its entire battery before unloading"
+    ],
+    "answer": 0,
+    "explanation": "Avidrone describes Touch-and-Go as an autonomous process in which the unmanned aircraft briefly touches down, releases its cargo, and continues or completes its mission.",
+    "sourceUrl": "https://avidrone.com/technology/",
+    "sourceLabel": "Avidrone Aerospace — Technology",
+    "asOf": "2026-08-31"
+  }
 ]

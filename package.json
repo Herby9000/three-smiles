@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "check": "node --check server.js && node --check news/article-service.js && node --check news/news.js && node --check sw.js && node --check sw-v2.js && node --check public-projects/canadian-tech-challenge/assets/core.js && node --check public-projects/canadian-tech-challenge/assets/app.js && npm test",
-    "test": "node tests/test-login-gate.js && node tests/test-login-return.js && node tests/test-three-smiles-splash.js && node tests/test-portfolio-open-source.js && node tests/test-word-cloud.js && node tests/test-app-icons.js && node tests/test-service-worker.js && python3 tests/canadian-tech-challenge/test_content.py && node tests/canadian-tech-challenge/test_runtime.js && node --test tests/test-server-auth.js tests/test-agent-readiness.js tests/test-news-article.js tests/test-news-server.js tests/test-news-ui.js tests/test-canadian-tech-challenge.js"
+    "test": "node tests/test-login-gate.js && node tests/test-login-return.js && node tests/test-three-smiles-splash.js && node tests/test-portfolio-open-source.js && node tests/test-word-cloud.js && node tests/test-app-icons.js && node tests/test-service-worker.js && python3 tests/canadian-tech-challenge/test_content.py && node tests/canadian-tech-challenge/test_runtime.js && node tests/canadian-tech-challenge/test_app_ui.js && node --test tests/test-server-auth.js tests/test-agent-readiness.js tests/test-news-article.js tests/test-news-server.js tests/test-news-ui.js tests/test-canadian-tech-challenge.js"
   },
   "engines": {
     "node": ">=18"

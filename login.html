@@ -52,7 +52,9 @@
       if (!next.startsWith('/') || next.startsWith('//')) return '/';
 
       const rawPath = next.split(/[?#]/, 1)[0];
-      if (rawPath !== '/news' && !rawPath.startsWith('/news/')) return '/';
+      const isNews = rawPath === '/news' || rawPath.startsWith('/news/');
+      const isChallenge = rawPath === '/projects/canadian-tech-challenge' || rawPath.startsWith('/projects/canadian-tech-challenge/');
+      if (!isNews && !isChallenge) return '/';
 
       try {
         const target = new URL(next, window.location.origin);

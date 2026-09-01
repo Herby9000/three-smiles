@@ -35,14 +35,14 @@ async function startTestServer() {
   return { port: server.address().port, close: () => new Promise(resolve => server.close(resolve)) };
 }
 
-function request(app, pathname, host = 'herbyprojects.com') {
+function request(app, pathname, host = 'herbyprojects.com', headers = {}) {
   return new Promise((resolve, reject) => {
     const req = http.request({
       hostname: '127.0.0.1',
       port: app.port,
       path: pathname,
       method: 'GET',
-      headers: { Host: host, 'X-Forwarded-Proto': 'https' }
+      headers: { Host: host, 'X-Forwarded-Proto': 'https', ...headers }
     }, res => {
       const chunks = [];
       res.on('data', chunk => chunks.push(chunk));
@@ -56,18 +56,31 @@ function request(app, pathname, host = 'herbyprojects.com') {
   });
 }
 
-test('portfolio host serves the challenge shell and redirects to its trailing-slash URL', async () => {
+async function login(app) {
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify({ person: 'Charlie', passcode: 'charlie-test-pass' });
+    const req = http.request({ hostname: '127.0.0.1', port: app.port, path: '/api/login', method: 'POST', headers: { Host: 'herbyprojects.com', 'X-Forwarded-Proto': 'https', 'content-type': 'application/json', 'content-length': Buffer.byteLength(body) } }, res => {
+      res.resume();
+      res.on('end', () => resolve(res.headers['set-cookie'][0].split(';')[0]));
+    });
+    req.on('error', reject);
+    req.end(body);
+  });
+}
+
+test('authenticated portfolio host serves the challenge shell and redirects to its trailing-slash URL', async () => {
   const app = await startTestServer();
   try {
-    const redirect = await request(app, APP_ROUTE.slice(0, -1));
+    const cookie = await login(app);
+    const redirect = await request(app, APP_ROUTE.slice(0, -1), 'herbyprojects.com', { cookie });
     assert.equal(redirect.status, 302);
     assert.equal(redirect.headers.location, APP_ROUTE);
 
-    const page = await request(app, APP_ROUTE);
+    const page = await request(app, APP_ROUTE, 'herbyprojects.com', { cookie });
     assert.equal(page.status, 200);
     assert.match(page.headers['content-type'], /^text\/html; charset=utf-8$/);
     assert.match(page.text, /<title>North Star Tech Challenge — Canadian Tech Trivia<\/title>/);
-    assert.match(page.text, /72 sourced questions/);
+    assert.match(page.text, /211 sourced questions/);
     assert.equal(page.headers['cache-control'], 'no-store');
   } finally {
     await app.close();
@@ -88,7 +101,8 @@ test('all explicitly allowed nested assets resolve publicly with correct MIME ty
     ['assets/icon-512.png', /^image\/png$/]
   ]);
   try {
-    const page = await request(app, APP_ROUTE);
+    const cookie = await login(app);
+    const page = await request(app, APP_ROUTE, 'herbyprojects.com', { cookie });
     const [appSource, manifestSource] = await Promise.all([
       fs.readFile(path.join(APP_DIR, 'assets', 'app.js'), 'utf8'),
       fs.readFile(path.join(APP_DIR, 'manifest.webmanifest'), 'utf8')
@@ -97,7 +111,7 @@ test('all explicitly allowed nested assets resolve publicly with correct MIME ty
     for (const [relativePath, contentType] of expected) {
       assert.match(localReferences, new RegExp(relativePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `${relativePath} should be a relative reference`);
       const resolved = new URL(relativePath, `https://herbyprojects.com${APP_ROUTE}`).pathname;
-      const response = await request(app, resolved);
+      const response = await request(app, resolved, 'herbyprojects.com', { cookie });
       assert.equal(response.status, 200, relativePath);
       assert.match(response.headers['content-type'], contentType, relativePath);
       if (!relativePath.endsWith('.webmanifest')) assert.equal(response.headers['cache-control'], 'public, max-age=3600', relativePath);
@@ -107,20 +121,21 @@ test('all explicitly allowed nested assets resolve publicly with correct MIME ty
   }
 });
 
-test('question data is exactly balanced and excludes previously dead sources', async () => {
+test('question data has the exact expanded category counts and excludes previously dead sources', async () => {
   const questions = JSON.parse(await fs.readFile(path.join(APP_DIR, 'data', 'questions.json'), 'utf8'));
-  assert.equal(questions.length, 72);
+  assert.equal(questions.length, 211);
   const counts = questions.reduce((result, question) => {
     result[question.category] = (result[question.category] || 0) + 1;
     return result;
   }, {});
   assert.deepEqual(counts, {
-    'AI & Data': 12,
-    'Fintech & Crypto': 12,
+    'AI & Data': 61,
+    'Fintech & Crypto': 56,
     'SaaS & Enterprise': 12,
     'Consumer & Commerce': 12,
     'Deep Tech & Climate': 12,
-    'Builders & Breakthroughs': 12
+    'Builders & Breakthroughs': 12,
+    'Frontier & Defence': 46
   });
   for (const question of questions) assert.equal(DEAD_SOURCE_URLS.has(question.sourceUrl), false, question.id);
 });
@@ -128,6 +143,7 @@ test('question data is exactly balanced and excludes previously dead sources', a
 test('challenge allowlist does not expose traversal, unknown, dot, or test paths', async () => {
   const app = await startTestServer();
   try {
+    const cookie = await login(app);
     for (const pathname of [
       `${APP_ROUTE}unknown.txt`,
       `${APP_ROUTE}tests/test_runtime.js`,
@@ -136,7 +152,7 @@ test('challenge allowlist does not expose traversal, unknown, dot, or test paths
       `${APP_ROUTE}%2e%2e%2f%2e%2e%2fserver.js`,
       `${APP_ROUTE}assets/%2e%2e/%2e%2e/server.js`
     ]) {
-      const response = await request(app, pathname);
+      const response = await request(app, pathname, 'herbyprojects.com', { cookie });
       assert.equal(response.status, 404, pathname);
       assert.doesNotMatch(response.text, /createServer|North Star runtime tests/);
     }
@@ -145,13 +161,15 @@ test('challenge allowlist does not expose traversal, unknown, dot, or test paths
   }
 });
 
-test('challenge remains unavailable without authentication on the private host', async () => {
+test('challenge remains unavailable without authentication on canonical and private hosts', async () => {
   const app = await startTestServer();
   try {
-    for (const pathname of [APP_ROUTE, `${APP_ROUTE}assets/styles.css`]) {
-      const response = await request(app, pathname, 'three-smiles.herbyprojects.com');
-      assert.equal(response.status, 302, pathname);
-      assert.equal(response.headers.location, '/login');
+    for (const host of ['herbyprojects.com', 'three-smiles.herbyprojects.com']) {
+      for (const pathname of [APP_ROUTE, `${APP_ROUTE}assets/styles.css`, `${APP_ROUTE}data/questions.json`]) {
+        const response = await request(app, pathname, host);
+        assert.equal(response.status, 302, `${host}${pathname}`);
+        assert.equal(response.headers.location, `/login?next=${encodeURIComponent(pathname)}`);
+      }
     }
   } finally {
     await app.close();

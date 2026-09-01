@@ -61,12 +61,29 @@ function testWinnerAndRestoration() {
 }
 
 function testStudyAndRuntimeContracts() {
-  for (const category of Core.CATEGORIES) assert.equal(questions.filter((q) => q.category === category).length, 12);
+  assert.equal(questions.length, 211);
+  assert.ok(Core.CATEGORIES.includes("Frontier & Defence"));
+  assert.equal(questions.filter((q) => q.category === "Frontier & Defence").length, 46);
   const appSource = fs.readFileSync(path.join(APP_ROOT, "assets/app.js"), "utf8");
   new vm.Script(appSource, { filename: "app.js" });
   assert.match(appSource, /studyFilter === "All" \|\| question\.category === studyFilter/);
   assert.match(appSource, /localStorage\.getItem\(STORAGE_GAME\)/);
   assert.match(appSource, /rel=\\"noopener noreferrer\\"/);
+}
+
+function testFrontierDeckAndPersistence() {
+  const first = Core.createState(questions, { mode: "team", teams: ["North", "Star"], timer: 0, seed: "frontier" });
+  const second = Core.createState(questions, { mode: "team", teams: ["North", "Star"], timer: 0, seed: "frontier" });
+  const seen = [];
+  for (let index = 0; index < 46; index += 1) {
+    seen.push(Core.nextQuestion(first, questions, "Frontier & Defence"));
+    assert.equal(Core.nextQuestion(second, questions, "Frontier & Defence"), seen[index]);
+  }
+  assert.equal(new Set(seen).size, 46);
+  assert.ok(seen.every((id) => questions.find((question) => question.id === id).category === "Frontier & Defence"));
+  const restored = Core.restore(JSON.stringify(first), questions);
+  assert.deepEqual(restored.positions, first.positions);
+  assert.equal(restored.timer, 0);
 }
 
 [
@@ -75,5 +92,6 @@ function testStudyAndRuntimeContracts() {
   testTimerDisabledAndExpiration,
   testWinnerAndRestoration,
   testStudyAndRuntimeContracts,
+  testFrontierDeckAndPersistence,
 ].forEach((test) => test());
-console.log("North Star runtime tests: 5 passed");
+console.log("North Star runtime tests: 6 passed");

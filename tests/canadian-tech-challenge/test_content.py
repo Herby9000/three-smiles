@@ -11,7 +11,17 @@ ROOT = Path(__file__).resolve().parents[2] / "public-projects" / "canadian-tech-
 QUESTIONS = ROOT / "data" / "questions.json"
 CATEGORIES = {
     "AI & Data", "Fintech & Crypto", "SaaS & Enterprise", "Consumer & Commerce",
-    "Deep Tech & Climate", "Builders & Breakthroughs",
+    "Deep Tech & Climate", "Builders & Breakthroughs", "Frontier & Defence",
+}
+EXPECTED_COUNTS = {
+    "AI & Data": 61, "Fintech & Crypto": 56, "SaaS & Enterprise": 12,
+    "Consumer & Commerce": 12, "Deep Tech & Climate": 12,
+    "Builders & Breakthroughs": 12, "Frontier & Defence": 46,
+}
+EXPANSION_COMPANIES = {
+    "Maneva", "Voiceflow", "ODAIA", "Botpress", "Viggle AI", "ThinkLabs AI", "Looki", "Gandeeva Therapeutics", "Shakudo", "Zuva", "Borderless AI", "Reliant AI", "Augmenta", "Intrepid Labs", "Private AI (now Limina)", "Ranovus", "Basetwo AI", "Spellbook", "Arteria AI", "Boosted.ai", "Xaba", "Miovision", "Nanoprecise Sci Corp", "Spare", "Unblocked", "Acerta Analytics", "Durable", "Scispot", "Astrus", "Artificial Agency", "Altis Labs", "Cadstrom", "Bench IQ", "Tempo Labs", "Variational AI", "Forma.ai", "Inverted AI", "Mercator AI", "Moonvalley", "Ideogram", "Ventus Therapeutics", "Taalas", "Deep Genomics", "Super Whisper", "Veeda AI", "Invision AI", "Turbopuffer", "Fellow", "Ribbon",
+    "Saris", "Brim Financial", "OneVest", "Helcim", "FISPAN", "Venn", "Float Financial", "Relay Financial", "Zum Rails", "ZayZoon", "nesto", "Bull Bitcoin", "Stablecorp", "Informal Systems", "Quandri", "Fiscal.ai", "Zapper", "Buckzy Payments", "Inference Labs", "Vessel", "PayTic", "PayShepherd", "Beacon", "Finofo", "Nmbr", "LayerZero Labs", "Blockstream", "Plooto", "Tetra Digital Group", "Keep", "Trolley", "Conquest Planning", "Newton", "Figment", "Axelar", "Ledn", "ChainSafe", "Horizon (Sequence)", "Noble", "Pine", "Balance", "Helika", "FundThrough", "CapIntel",
+    "Field Effect", "Novarc Technologies", "Ideon Technologies", "Prevu3D", "AON3D", "ZeroKey", "Cellula Robotics", "NordSpace", "Wolf Advanced Technology", "Ecopia AI", "Roshel", "Canada Rocket Company", "Juno Industries", "Haply Robotics", "Brilliant Matters", "Sanctuary AI", "Avidbots", "Kinova Robotics", "Robotiq", "Kepler Communications", "Reaction Dynamics", "Tailscale", "SkyWatch", "Promise Robotics", "Dominion Dynamics", "Wyvern", "Arcane Aerospace", "Canadian Strategic Missions Corporation (CSMC)", "Sentinel R&D", "Maritime Launch", "Clearpath Robotics", "ProteinQure", "Quantum Bridge Technologies", "Crypto4A Technologies", "Quantropi", "1QBit", "High Q Technologies", "InfinityQ Technology", "Photonic Inc.", "Nord Quantique", "Anyon Systems", "Space", "evolutionQ", "ISARA", "Starpath Robotics", "Avidrone Aerospace",
 }
 KNOWN_DEAD_SOURCE_URLS = {
     "https://generalfusion.com/technology/",
@@ -48,11 +58,19 @@ class QuestionDataTests(unittest.TestCase):
     def setUpClass(cls):
         cls.questions = json.loads(QUESTIONS.read_text())
 
-    def test_minimum_count_and_exact_balance(self):
-        self.assertGreaterEqual(len(self.questions), 72)
+    def test_exact_total_and_category_counts(self):
+        self.assertEqual(len(self.questions), 211)
         counts = Counter(q["category"] for q in self.questions)
         self.assertEqual(set(counts), CATEGORIES)
-        self.assertEqual(set(counts.values()), {12})
+        self.assertEqual(dict(counts), EXPECTED_COUNTS)
+
+    def test_every_expected_expansion_company_appears_once_and_helius_is_absent(self):
+        expansion = [q for q in self.questions if "-exp-" in q["id"]]
+        self.assertEqual(len(expansion), 139)
+        counts = Counter(q["company"] for q in expansion)
+        self.assertEqual(set(counts), EXPANSION_COMPANIES)
+        self.assertTrue(all(count == 1 for count in counts.values()))
+        self.assertNotIn("helius", " ".join(q["company"] for q in expansion).casefold())
 
     def test_schema_and_values(self):
         required = {"id", "category", "difficulty", "company", "question", "options", "answer", "explanation", "sourceUrl", "sourceLabel", "asOf"}
@@ -90,6 +108,12 @@ class QuestionDataTests(unittest.TestCase):
 
 
 class SiteIntegrityTests(unittest.TestCase):
+    def test_expanded_bank_is_excluded_from_github_pages(self):
+        repository_root = ROOT.parents[1]
+        pages_config = (repository_root / "_config.yml").read_text()
+        self.assertIn("- public-projects", pages_config)
+        self.assertFalse((repository_root / ".nojekyll").exists())
+
     def test_html_local_assets_and_anchors_exist(self):
         parser = LocalReferenceParser()
         parser.feed((ROOT / "index.html").read_text())

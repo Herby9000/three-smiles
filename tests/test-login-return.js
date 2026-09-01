@@ -18,6 +18,7 @@ function returnPath(rawQuery = '') {
 assert.equal(returnPath('?next=%2Fnews'), '/news');
 assert.equal(returnPath('?next=%2Fnews%2F'), '/news/');
 assert.equal(returnPath('?next=%2Fnews%2Farchive%2Ftoday%3Fedition%3Duk%26view%3Dcompact'), '/news/archive/today?edition=uk&view=compact');
+assert.equal(returnPath('?next=%2Fprojects%2Fcanadian-tech-challenge%2F'), '/projects/canadian-tech-challenge/');
 
 for (const malicious of [
   '?next=https%3A%2F%2Fevil.example%2Fnews%2F',
@@ -28,6 +29,7 @@ for (const malicious of [
   '?next=%2Fnews%5C%5Cevil.example%2F',
   '?next=%5C%5Cevil.example%5Cnews',
   '?next=%2Fnewsroom',
+  '?next=%2Fprojects%2Fcanadian-tech-challenges%2F',
   '?next=%2F',
   '?next=%E0%A4%A',
   '?next=%2Fnews%00%2Fevil',
