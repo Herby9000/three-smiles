@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import hashlib
 import json
 import struct
 import unittest
@@ -18,6 +19,11 @@ EXPECTED_COUNTS = {
     "Consumer & Commerce": 12, "Deep Tech & Climate": 12,
     "Builders & Breakthroughs": 12, "Frontier & Defence": 46,
 }
+EXPECTED_EXPANSION_CONTENT_SHA256 = "4e37efb961dc3b3a7e9b508e6cdfd834e49a6901db631f7a2f19ac49035f8e73"
+EXPANSION_INPUT_FIELDS = (
+    "category", "difficulty", "company", "question", "options", "answer",
+    "explanation", "sourceUrl", "sourceLabel", "asOf",
+)
 EXPANSION_COMPANIES = {
     "Maneva", "Voiceflow", "ODAIA", "Botpress", "Viggle AI", "ThinkLabs AI", "Looki", "Gandeeva Therapeutics", "Shakudo", "Zuva", "Borderless AI", "Reliant AI", "Augmenta", "Intrepid Labs", "Private AI (now Limina)", "Ranovus", "Basetwo AI", "Spellbook", "Arteria AI", "Boosted.ai", "Xaba", "Miovision", "Nanoprecise Sci Corp", "Spare", "Unblocked", "Acerta Analytics", "Durable", "Scispot", "Astrus", "Artificial Agency", "Altis Labs", "Cadstrom", "Bench IQ", "Tempo Labs", "Variational AI", "Forma.ai", "Inverted AI", "Mercator AI", "Moonvalley", "Ideogram", "Ventus Therapeutics", "Taalas", "Deep Genomics", "Super Whisper", "Veeda AI", "Invision AI", "Turbopuffer", "Fellow", "Ribbon",
     "Saris", "Brim Financial", "OneVest", "Helcim", "FISPAN", "Venn", "Float Financial", "Relay Financial", "Zum Rails", "ZayZoon", "nesto", "Bull Bitcoin", "Stablecorp", "Informal Systems", "Quandri", "Fiscal.ai", "Zapper", "Buckzy Payments", "Inference Labs", "Vessel", "PayTic", "PayShepherd", "Beacon", "Finofo", "Nmbr", "LayerZero Labs", "Blockstream", "Plooto", "Tetra Digital Group", "Keep", "Trolley", "Conquest Planning", "Newton", "Figment", "Axelar", "Ledn", "ChainSafe", "Horizon (Sequence)", "Noble", "Pine", "Balance", "Helika", "FundThrough", "CapIntel",
@@ -71,6 +77,18 @@ class QuestionDataTests(unittest.TestCase):
         self.assertEqual(set(counts), EXPANSION_COMPANIES)
         self.assertTrue(all(count == 1 for count in counts.values()))
         self.assertNotIn("helius", " ".join(q["company"] for q in expansion).casefold())
+
+    def test_expansion_exactly_matches_the_normalized_authoritative_input(self):
+        expansion = [q for q in self.questions if "-exp-" in q["id"]]
+        normalized = [
+            {field: question[field] for field in EXPANSION_INPUT_FIELDS}
+            for question in expansion
+        ]
+        normalized.sort(key=lambda question: (question["company"], question["question"]))
+        payload = json.dumps(
+            normalized, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+        ).encode()
+        self.assertEqual(hashlib.sha256(payload).hexdigest(), EXPECTED_EXPANSION_CONTENT_SHA256)
 
     def test_schema_and_values(self):
         required = {"id", "category", "difficulty", "company", "question", "options", "answer", "explanation", "sourceUrl", "sourceLabel", "asOf"}
