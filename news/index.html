@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="assets/icons/daily-seven-180.png?v=1" sizes="180x180">
   <link rel="manifest" href="manifest.webmanifest?v=2">
   <script>document.documentElement.classList.add('js')</script>
-  <link rel="stylesheet" href="assets/news.css?v=5">
+  <link rel="stylesheet" href="assets/news.css?v=6">
   <link rel="stylesheet" href="assets/editorial.css?v=1">
   <script src="assets/news.js?v=8" defer></script>
 </head>
@@ -78,7 +78,11 @@
   </main>
 
   <dialog id="reader" class="reader" aria-labelledby="reader-title">
-    <form method="dialog"><button class="close-reader" aria-label="Close reader" value="close">Close <span aria-hidden="true">×</span></button></form>
+    <form class="reader-toolbar" method="dialog">
+      <button class="close-reader" aria-label="Close reader" value="close">
+        <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </form>
     <article class="reader-paper">
       <p class="reader-kicker" id="reader-kicker"></p>
       <h2 id="reader-title"></h2>

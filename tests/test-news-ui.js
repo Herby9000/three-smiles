@@ -8,6 +8,7 @@ const { JSDOM } = require('jsdom');
 const edition = JSON.parse(fs.readFileSync('news/data/news.json', 'utf8'));
 const html = fs.readFileSync('news/index.html', 'utf8');
 const script = fs.readFileSync('news/assets/news.js', 'utf8');
+const styles = fs.readFileSync('news/assets/news.css', 'utf8');
 
 function publisherFamily(story) {
   return story.publisher || story.source;
@@ -89,6 +90,24 @@ test('active private UI loads the canonical edition and opens all Editorial long
   assert.ok(document.querySelector('#reader-copy').textContent.length > 900);
   assert.match(document.querySelector('#reader-disclosure').textContent, /never fabricates/i);
   assert.equal(document.querySelector('#reader-source').getAttribute('target'), '_blank');
+});
+
+test('reader close toolbar stays available above the scrolling article on safe-area iPhones', () => {
+  const dom = new JSDOM(html);
+  const document = dom.window.document;
+  const reader = document.querySelector('#reader');
+  const toolbar = reader.querySelector(':scope > .reader-toolbar');
+  const close = toolbar?.querySelector('.close-reader');
+
+  assert.ok(toolbar, 'the sticky toolbar is not constrained by a short form ancestor');
+  assert.equal(close?.getAttribute('aria-label'), 'Close reader');
+  assert.ok(close.querySelector('svg[aria-hidden="true"]'), 'close uses a custom icon');
+  assert.equal(close.textContent.trim(), '', 'close icon is not a letter or text glyph');
+  assert.match(styles, /\.reader-toolbar\{[^}]*position:sticky[^}]*top:0[^}]*z-index:/);
+  assert.match(styles, /\.reader-toolbar\{[^}]*safe-area-inset-top[^}]*safe-area-inset-right[^}]*safe-area-inset-left/);
+  assert.match(styles, /\.close-reader\{[^}]*min-width:48px[^}]*min-height:48px/);
+  assert.match(styles, /\.close-reader:focus-visible\{[^}]*outline:/);
+  assert.equal(toolbar.nextElementSibling?.classList.contains('reader-paper'), true, 'toolbar occupies its own row above article text');
 });
 
 test('active UI rejects an incomplete Top 7 without rendering unsafe partial cards', async () => {
