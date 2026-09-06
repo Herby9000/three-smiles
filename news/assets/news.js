@@ -94,10 +94,34 @@
   reader.addEventListener('close', () => document.body.classList.remove('reader-open'));
   reader.addEventListener('click', event => { if (event.target === reader) reader.close(); });
 
-  function storyButton(story, compact = false) {
-    const button = el('button', compact ? '' : 'read-button', compact ? story.title : 'Read in app');
-    button.type = 'button'; button.addEventListener('click', () => openReader(story));
-    return button;
+  function makeStoryCardInteractive(card, story, protectDrag = false) {
+    let pointerStart = null;
+    let dragged = false;
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `Read ${story.title} in app`);
+    if (protectDrag) {
+      card.addEventListener('pointerdown', event => {
+        pointerStart = { x: event.clientX, y: event.clientY };
+        dragged = false;
+      });
+      card.addEventListener('pointermove', event => {
+        if (!pointerStart) return;
+        if (Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 10) dragged = true;
+      });
+      card.addEventListener('pointerup', () => { pointerStart = null; });
+      card.addEventListener('pointercancel', () => { pointerStart = null; dragged = false; });
+    }
+    card.addEventListener('click', () => {
+      if (dragged) { dragged = false; return; }
+      openReader(story);
+    });
+    card.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      dragged = false;
+      openReader(story);
+    });
   }
   function renderTop(stories) {
     rail.replaceChildren();
@@ -114,7 +138,9 @@
       });
       frame.append(image, unavailable);
       card.append(frame, el('p', 'card-number', String(index + 1).padStart(2, '0')),
-        el('p', 'story-meta', meta(story)), el('h3', '', story.title), el('p', 'dek', story.summary), storyButton(story));
+        el('p', 'story-meta', meta(story)), el('h3', '', story.title), el('p', 'dek', story.summary),
+        el('span', 'read-cue', 'Read in app'));
+      makeStoryCardInteractive(card, story, true);
       rail.append(card);
     });
     rail.setAttribute('aria-busy', 'false');
@@ -154,9 +180,9 @@
       const list = el('div', 'story-list');
       categoryStories.forEach(story => {
         const item = el('article', category === 'Editorial' ? 'list-story editorial-story' : 'list-story');
-        const title = el('h3'); title.append(storyButton(story, true));
-        item.append(el('p', 'story-meta', meta(story)), title,
+        item.append(el('p', 'story-meta', meta(story)), el('h3', '', story.title),
           el('p', 'list-dek', story.summary), el('p', 'labels', (story.labels || []).join(' · ')));
+        makeStoryCardInteractive(item, story);
         list.append(item);
       });
       if (categoryStories.length) wrapper.append(list);

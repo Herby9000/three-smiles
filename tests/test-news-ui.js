@@ -84,7 +84,9 @@ test('active private UI loads the canonical edition and opens all Editorial long
   assert.equal(cards.length, 10);
   assert.ok(cards.every(card => /min read.*words available/i.test(card.querySelector('.story-meta').textContent)));
 
-  cards[0].querySelector('h3 button').click();
+  assert.ok(cards.every(card => card.getAttribute('role') === 'button' && card.tabIndex === 0));
+  assert.ok(cards.every(card => card.querySelectorAll('button, a, input, select, textarea').length === 0));
+  cards[0].click();
   assert.equal(document.querySelector('#reader').open, true);
   assert.ok(document.querySelectorAll('#reader-copy p').length > 1);
   assert.ok(document.querySelector('#reader-copy').textContent.length > 900);
@@ -92,7 +94,64 @@ test('active private UI loads the canonical edition and opens all Editorial long
   assert.equal(document.querySelector('#reader-source').getAttribute('target'), '_blank');
 });
 
-test('reader close toolbar stays available above the scrolling article on safe-area iPhones', () => {
+test('Top 7 cards are accessible controls that open without nested interactive elements', async () => {
+  const { dom } = setup();
+  await tick();
+  const document = dom.window.document;
+  const card = document.querySelector('#top-rail .story-card');
+  const title = card.querySelector('h3').textContent;
+
+  assert.equal(card.getAttribute('role'), 'button');
+  assert.equal(card.tabIndex, 0);
+  assert.match(card.getAttribute('aria-label'), new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  assert.equal(card.querySelectorAll('button, a, input, select, textarea').length, 0);
+  assert.match(card.querySelector('.read-cue').textContent, /read in app/i);
+
+  card.click();
+  assert.equal(document.querySelector('#reader').open, true);
+  assert.equal(document.querySelector('#reader-title').textContent, title);
+});
+
+test('Top 7 cards activate with Enter and Space and retain a visible focus treatment', async () => {
+  const { dom } = setup();
+  await tick();
+  const document = dom.window.document;
+  const cards = document.querySelectorAll('#top-rail .story-card');
+
+  cards[0].dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  assert.equal(document.querySelector('#reader-title').textContent, cards[0].querySelector('h3').textContent);
+  document.querySelector('#reader').close();
+
+  const space = new dom.window.KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+  cards[1].dispatchEvent(space);
+  assert.equal(space.defaultPrevented, true);
+  assert.equal(document.querySelector('#reader-title').textContent, cards[1].querySelector('h3').textContent);
+  assert.match(styles, /\.story-card:focus-visible(?:,[^{]+)?\{[^}]*outline:/);
+});
+
+test('horizontal pointer drags scroll the Top 7 rail without opening a card', async () => {
+  const { dom } = setup();
+  await tick();
+  const document = dom.window.document;
+  const card = document.querySelector('#top-rail .story-card');
+  const pointerEvent = (type, clientX, clientY) => {
+    const event = new dom.window.Event(type, { bubbles: true });
+    Object.defineProperties(event, {
+      clientX: { value: clientX },
+      clientY: { value: clientY }
+    });
+    return event;
+  };
+
+  card.dispatchEvent(pointerEvent('pointerdown', 180, 20));
+  card.dispatchEvent(pointerEvent('pointermove', 90, 22));
+  card.dispatchEvent(pointerEvent('pointerup', 90, 22));
+  card.click();
+
+  assert.equal(document.querySelector('#reader').open, false);
+});
+
+test('reader close control is sleek, touch-safe and sticky on safe-area iPhones', () => {
   const dom = new JSDOM(html);
   const document = dom.window.document;
   const reader = document.querySelector('#reader');
@@ -105,7 +164,9 @@ test('reader close toolbar stays available above the scrolling article on safe-a
   assert.equal(close.textContent.trim(), '', 'close icon is not a letter or text glyph');
   assert.match(styles, /\.reader-toolbar\{[^}]*position:sticky[^}]*top:0[^}]*z-index:/);
   assert.match(styles, /\.reader-toolbar\{[^}]*safe-area-inset-top[^}]*safe-area-inset-right[^}]*safe-area-inset-left/);
-  assert.match(styles, /\.close-reader\{[^}]*min-width:48px[^}]*min-height:48px/);
+  assert.match(styles, /\.reader-toolbar\{[^}]*border:0[^}]*background:transparent/);
+  assert.match(styles, /\.close-reader\{[^}]*min-width:44px[^}]*min-height:44px/);
+  assert.match(styles, /\.close-reader\{[^}]*border:[^;}]*rgba\([^}]*background:rgba\([^}]*box-shadow:/);
   assert.match(styles, /\.close-reader:focus-visible\{[^}]*outline:/);
   assert.equal(toolbar.nextElementSibling?.classList.contains('reader-paper'), true, 'toolbar occupies its own row above article text');
 });
