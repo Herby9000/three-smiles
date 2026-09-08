@@ -173,7 +173,6 @@ async function writeAuthorizedUserToken(tokenPath, config, refreshToken) {
   try {
     await fs.writeFile(temporaryPath, contents, { mode: 0o600, flag: 'wx' });
     await fs.rename(temporaryPath, tokenPath);
-    await fs.chmod(tokenPath, 0o600);
   } catch (error) {
     await fs.rm(temporaryPath, { force: true }).catch(() => {});
     throw error;
@@ -308,14 +307,33 @@ function corsHeaders(req, allowedOrigin) {
   return {};
 }
 
-function isPortfolioHost(hostHeader = '') {
-  const hostname = String(hostHeader).split(':')[0].toLowerCase();
-  return hostname === 'herbyprojects.com' || hostname === 'www.herbyprojects.com';
+function parseHostAuthority(hostHeader = '') {
+  const authority = String(hostHeader);
+  if (!/^[A-Za-z0-9.-]+(?::[0-9]{1,5})?$/.test(authority)) return null;
+  try {
+    const parsed = new URL(`http://${authority}`);
+    if (parsed.username || parsed.password || parsed.pathname !== '/' || parsed.search || parsed.hash) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
 }
 
-function isPublicHost(hostHeader = '') {
-  const hostname = String(hostHeader).split(':')[0].toLowerCase();
-  return isPortfolioHost(hostHeader) || hostname === 'three-smiles.herbyprojects.com';
+function publicHost(hostHeader = '') {
+  const parsed = parseHostAuthority(hostHeader);
+  if (!parsed) return null;
+  const origins = new Map([
+    ['herbyprojects.com', 'https://herbyprojects.com'],
+    ['www.herbyprojects.com', 'https://www.herbyprojects.com'],
+    ['three-smiles.herbyprojects.com', 'https://three-smiles.herbyprojects.com']
+  ]);
+  const httpsOrigin = origins.get(parsed.hostname.toLowerCase());
+  return httpsOrigin ? { hostname: parsed.hostname.toLowerCase(), httpsOrigin } : null;
+}
+
+function isPortfolioHost(hostHeader = '') {
+  const host = publicHost(hostHeader);
+  return host?.hostname === 'herbyprojects.com' || host?.hostname === 'www.herbyprojects.com';
 }
 
 function createServer(options = {}) {
@@ -386,8 +404,9 @@ function createServer(options = {}) {
   function oauthRequestHasExpectedOrigin(req, config) {
     if (!oauthProduction) return true;
     const callback = new URL(config.callbackUrl);
+    const requestHost = parseHostAuthority(req.headers.host);
     const forwardedProto = String(req.headers['x-forwarded-proto'] || '').trim().toLowerCase();
-    return String(req.headers.host || '').toLowerCase() === callback.host.toLowerCase() && forwardedProto === 'https';
+    return requestHost?.host.toLowerCase() === callback.host.toLowerCase() && forwardedProto === 'https';
   }
 
   async function requireCharlie(req, res) {
@@ -491,6 +510,7 @@ function createServer(options = {}) {
     garbageCollectOAuthStates();
     try {
       const config = await getOAuthConfig();
+      if (!oauthRequestHasExpectedOrigin(req, config)) return oauthPage(res, 400, false);
       let connected = true;
       try {
         await fs.access(config.tokenPath);
@@ -702,19 +722,24 @@ function createServer(options = {}) {
 
   return http.createServer(async (req, res) => {
     try {
-      const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+      const url = new URL(req.url, 'http://localhost');
+      const host = publicHost(req.headers.host);
       const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
-      if (isPublicHost(req.headers.host) && forwardedProto === 'http') {
+      const oauthRequest = url.pathname.startsWith('/oauth/google/');
+      if (!host && forwardedProto === 'http' && oauthRequest) {
+        return oauthSend(res, 400, { error: 'bad request' });
+      }
+      if (host && forwardedProto === 'http') {
         res.writeHead(301, {
-          location: `https://${req.headers.host}${req.url}`,
-          'cache-control': 'no-store'
+          ...(oauthRequest ? OAUTH_SECURITY_HEADERS : { 'cache-control': 'no-store' }),
+          location: `${host.httpsOrigin}${url.pathname}${url.search}`
         });
         return res.end('Moved Permanently');
       }
-      if (isPublicHost(req.headers.host) && forwardedProto === 'https') {
+      if (host && forwardedProto === 'https') {
         res.setHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
       }
-      if (url.pathname.startsWith('/oauth/google/')) return await handleOAuth(req, res, url);
+      if (oauthRequest) return await handleOAuth(req, res, url);
       if (url.pathname.startsWith('/api/')) return await handleApi(req, res, url);
       return await serveStatic(req, res, url);
     } catch (error) {

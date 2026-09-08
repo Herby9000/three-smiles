@@ -293,6 +293,14 @@ test('production OAuth endpoints require the configured HTTPS public origin', as
     assert.equal(rejected.response.status, 400);
     assertSecurityHeaders(rejected.response);
 
+    const rejectedStatus = await rawGet(app.base, '/oauth/google/status', {
+      cookie,
+      host: 'herbyprojects.com',
+      'x-forwarded-proto': 'https'
+    });
+    assert.equal(rejectedStatus.status, 400);
+    assertSecurityHeaders(rejectedStatus);
+
     const accepted = await rawGet(app.base, '/oauth/google/start', {
       cookie,
       host: 'three-smiles.herbyprojects.com',
@@ -309,11 +317,20 @@ test('production OAuth routes upgrade forwarded HTTP before OAuth dispatch', asy
   const app = await startServer({ serverOptions: { oauthProduction: true } });
   try {
     const response = await rawGet(app.base, '/oauth/google/start?from=phone', {
-      host: 'three-smiles.herbyprojects.com',
+      host: 'three-smiles.herbyprojects.com:80',
       'x-forwarded-proto': 'http'
     });
     assert.equal(response.status, 301);
     assert.equal(response.headers.get('location'), 'https://three-smiles.herbyprojects.com/oauth/google/start?from=phone');
+    assertSecurityHeaders(response);
+
+    const malicious = await rawGet(app.base, '/oauth/google/callback?code=callback-secret&state=state-secret', {
+      host: 'three-smiles.herbyprojects.com:443@attacker.example',
+      'x-forwarded-proto': 'http'
+    });
+    assert.equal(malicious.status, 400);
+    assert.equal(malicious.headers.get('location'), null);
+    assertSecurityHeaders(malicious);
   } finally {
     await app.close();
   }
