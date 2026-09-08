@@ -236,6 +236,28 @@ test('callback rejects malformed responses, insufficient scope, and wrong Gmail 
   }
 });
 
+test('callback rejects a token granting Gmail readonly plus a broader scope without writing credentials', async () => {
+  const app = await startServer({
+    fetchImpl: async url => String(url).includes('/token')
+      ? new Response(JSON.stringify({
+        access_token: 'access-secret',
+        refresh_token: 'refresh-secret',
+        scope: `${GMAIL_READONLY} https://www.googleapis.com/auth/gmail.send`
+      }), { status: 200 })
+      : new Response(JSON.stringify({ emailAddress: 'charlie@cmcc.vc' }), { status: 200 })
+  });
+  try {
+    const started = await begin(app, await app.login('Charlie'));
+    const state = started.authorization.searchParams.get('state');
+    const response = await fetch(`${app.base}/oauth/google/callback?code=secret-code&state=${state}`);
+    assert.equal(response.status, 400);
+    assertSecurityHeaders(response);
+    await assert.rejects(fs.access(app.tokenPath));
+  } finally {
+    await app.close();
+  }
+});
+
 test('successful callback atomically replaces an authorized-user token file with mode 0600', async () => {
   const app = await startServer();
   try {
@@ -278,6 +300,20 @@ test('production OAuth endpoints require the configured HTTPS public origin', as
     });
     assert.equal(accepted.status, 302);
     assertSecurityHeaders(accepted);
+  } finally {
+    await app.close();
+  }
+});
+
+test('production OAuth routes upgrade forwarded HTTP before OAuth dispatch', async () => {
+  const app = await startServer({ serverOptions: { oauthProduction: true } });
+  try {
+    const response = await rawGet(app.base, '/oauth/google/start?from=phone', {
+      host: 'three-smiles.herbyprojects.com',
+      'x-forwarded-proto': 'http'
+    });
+    assert.equal(response.status, 301);
+    assert.equal(response.headers.get('location'), 'https://three-smiles.herbyprojects.com/oauth/google/start?from=phone');
   } finally {
     await app.close();
   }

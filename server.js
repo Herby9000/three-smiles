@@ -466,7 +466,8 @@ function createServer(options = {}) {
       if (!tokenResponse.ok) return oauthPage(res, 400, false);
       const token = await tokenResponse.json();
       const grantedScopes = String(token.scope || '').split(/\s+/).filter(Boolean);
-      if (!token.access_token || !token.refresh_token || !grantedScopes.includes(GMAIL_READONLY_SCOPE)) {
+      if (!token.access_token || !token.refresh_token ||
+          grantedScopes.length !== 1 || grantedScopes[0] !== GMAIL_READONLY_SCOPE) {
         return oauthPage(res, 400, false);
       }
 
@@ -702,7 +703,6 @@ function createServer(options = {}) {
   return http.createServer(async (req, res) => {
     try {
       const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-      if (url.pathname.startsWith('/oauth/google/')) return await handleOAuth(req, res, url);
       const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
       if (isPublicHost(req.headers.host) && forwardedProto === 'http') {
         res.writeHead(301, {
@@ -714,6 +714,7 @@ function createServer(options = {}) {
       if (isPublicHost(req.headers.host) && forwardedProto === 'https') {
         res.setHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
       }
+      if (url.pathname.startsWith('/oauth/google/')) return await handleOAuth(req, res, url);
       if (url.pathname.startsWith('/api/')) return await handleApi(req, res, url);
       return await serveStatic(req, res, url);
     } catch (error) {
