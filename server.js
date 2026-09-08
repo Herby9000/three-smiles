@@ -28,6 +28,16 @@ const CANADIAN_TECH_CHALLENGE_FILES = new Map([
 const MAX_BODY = 64 * 1024;
 const SESSION_COOKIE = 'three_smiles_session';
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+const OAUTH_STATE_TTL_MS = 10 * 60 * 1000;
+const MAX_PENDING_OAUTH_STATES = 32;
+const GMAIL_READONLY_SCOPE = 'https://www.googleapis.com/auth/gmail.readonly';
+const OAUTH_SECURITY_HEADERS = {
+  'cache-control': 'no-store',
+  'referrer-policy': 'no-referrer',
+  'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'DENY'
+};
 
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -104,6 +114,68 @@ async function loadAuth(authFile) {
     if (error.code === 'ENOENT') {
       throw new Error(`Missing auth config at ${authFile}. Create it with sessionSecret plus SHA-256 passcode hashes for Charlie and Daisy.`);
     }
+    throw error;
+  }
+}
+
+async function loadOAuthConfig(configFile, dataDir) {
+  let webClient;
+  if (process.env.GOOGLE_OAUTH_CLIENT_ID && process.env.GOOGLE_OAUTH_CLIENT_SECRET) {
+    webClient = {
+      client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+      client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+      redirect_uris: process.env.GOOGLE_OAUTH_CALLBACK_URL ? [process.env.GOOGLE_OAUTH_CALLBACK_URL] : []
+    };
+  } else {
+    const parsed = JSON.parse(await fs.readFile(configFile, 'utf8'));
+    webClient = parsed.web || parsed;
+  }
+  return normalizeOAuthConfig({
+    clientId: webClient.client_id,
+    clientSecret: webClient.client_secret,
+    callbackUrl: process.env.GOOGLE_OAUTH_CALLBACK_URL || webClient.redirect_uris?.[0],
+    expectedEmail: process.env.GOOGLE_OAUTH_EXPECTED_EMAIL || 'charlie@cmcc.vc',
+    tokenPath: process.env.GOOGLE_OAUTH_TOKEN_PATH || path.join(dataDir, 'google-authorized-user.json')
+  });
+}
+
+function normalizeOAuthConfig(config) {
+  const normalized = {
+    clientId: String(config?.clientId || '').trim(),
+    clientSecret: String(config?.clientSecret || ''),
+    callbackUrl: String(config?.callbackUrl || '').trim(),
+    expectedEmail: String(config?.expectedEmail || 'charlie@cmcc.vc').trim().toLowerCase(),
+    tokenPath: String(config?.tokenPath || '').trim()
+  };
+  let callback;
+  try {
+    callback = new URL(normalized.callbackUrl);
+  } catch {
+    throw new Error('invalid OAuth configuration');
+  }
+  if (!normalized.clientId || !normalized.clientSecret || !normalized.tokenPath || !normalized.expectedEmail ||
+      callback.protocol !== 'https:' || callback.pathname !== '/oauth/google/callback' || callback.search || callback.hash) {
+    throw new Error('invalid OAuth configuration');
+  }
+  return normalized;
+}
+
+async function writeAuthorizedUserToken(tokenPath, config, refreshToken) {
+  const directory = path.dirname(tokenPath);
+  await fs.mkdir(directory, { recursive: true });
+  const temporaryPath = path.join(directory, `.${path.basename(tokenPath)}.${process.pid}.${crypto.randomBytes(12).toString('hex')}.tmp`);
+  const contents = JSON.stringify({
+    type: 'authorized_user',
+    client_id: config.clientId,
+    client_secret: config.clientSecret,
+    refresh_token: refreshToken
+  }, null, 2);
+  try {
+    await fs.writeFile(temporaryPath, contents, { mode: 0o600, flag: 'wx' });
+    await fs.rename(temporaryPath, tokenPath);
+    await fs.chmod(tokenPath, 0o600);
+  } catch (error) {
+    await fs.rm(temporaryPath, { force: true }).catch(() => {});
     throw error;
   }
 }
@@ -252,9 +324,18 @@ function createServer(options = {}) {
   const authFile = options.authFile || DEFAULT_AUTH_FILE;
   const allowedOrigin = options.allowedOrigin ?? process.env.ALLOWED_ORIGIN;
   const newsArticleService = options.newsArticleService || createArticleService({ cacheRoot: path.join(dataDir, 'news-cache') });
+  const oauthConfigFile = options.oauthConfigFile || process.env.GOOGLE_OAUTH_CLIENT_FILE || path.join(dataDir, 'google-oauth-client.json');
+  const oauthFetch = options.oauthFetch || globalThis.fetch;
+  const oauthNow = options.oauthNow || Date.now;
+  const oauthProduction = options.oauthProduction ?? process.env.NODE_ENV === 'production';
+  const pendingOAuthStates = new Map();
   let authPromise;
+  let oauthConfigPromise;
   let storeWriteQueue = Promise.resolve();
   const getAuth = () => authPromise ||= loadAuth(authFile);
+  const getOAuthConfig = () => oauthConfigPromise ||= options.oauth
+    ? Promise.resolve().then(() => normalizeOAuthConfig(options.oauth))
+    : loadOAuthConfig(oauthConfigFile, dataDir);
 
   function saveEntry(entry) {
     const operation = storeWriteQueue.then(async () => {
@@ -277,6 +358,156 @@ function createServer(options = {}) {
     }
     const token = makeSession(person, auth.sessionSecret);
     return send(res, 200, { ok: true, person }, { ...corsHeaders(req, allowedOrigin), 'set-cookie': sessionCookie(token, req) });
+  }
+
+  function oauthSend(res, status, payload, headers = {}) {
+    return send(res, status, payload, { ...OAUTH_SECURITY_HEADERS, ...headers });
+  }
+
+  function oauthPage(res, status, success) {
+    const title = success ? 'CMCC inbox connected' : 'Connection unsuccessful';
+    const message = success
+      ? 'The CMCC inbox is connected. This tab may be closed.'
+      : 'The connection could not be completed. Please close this tab and try again.';
+    const body = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><style>html{color-scheme:light}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f4ef;color:#18332d;font:17px/1.5 system-ui,-apple-system,sans-serif}main{box-sizing:border-box;width:min(92vw,32rem);padding:2.25rem;border:1px solid #d9ded8;border-radius:1.25rem;background:#fff;box-shadow:0 1rem 3rem #18332d18}h1{margin:0 0 .75rem;font-size:clamp(1.65rem,7vw,2.25rem);line-height:1.12}p{margin:0;color:#4b5f5a}</style></head><body><main><h1>${title}</h1><p>${message}</p></main></body></html>`;
+    return oauthSend(res, status, body, { 'content-type': 'text/html; charset=utf-8' });
+  }
+
+  function garbageCollectOAuthStates() {
+    const now = oauthNow();
+    for (const [state, pending] of pendingOAuthStates) {
+      if (pending.expiresAt <= now) pendingOAuthStates.delete(state);
+    }
+    while (pendingOAuthStates.size > MAX_PENDING_OAUTH_STATES) {
+      pendingOAuthStates.delete(pendingOAuthStates.keys().next().value);
+    }
+  }
+
+  function oauthRequestHasExpectedOrigin(req, config) {
+    if (!oauthProduction) return true;
+    const callback = new URL(config.callbackUrl);
+    const forwardedProto = String(req.headers['x-forwarded-proto'] || '').trim().toLowerCase();
+    return String(req.headers.host || '').toLowerCase() === callback.host.toLowerCase() && forwardedProto === 'https';
+  }
+
+  async function requireCharlie(req, res) {
+    const session = readSession(req, await getAuth());
+    if (!session) {
+      oauthSend(res, 401, { error: 'authentication required' });
+      return false;
+    }
+    if (session.person !== 'Charlie') {
+      oauthSend(res, 403, { error: 'forbidden' });
+      return false;
+    }
+    return true;
+  }
+
+  async function handleOAuthStart(req, res) {
+    if (!await requireCharlie(req, res)) return;
+    let config;
+    try {
+      config = await getOAuthConfig();
+    } catch {
+      return oauthSend(res, 503, { error: 'OAuth is not configured' });
+    }
+    if (!oauthRequestHasExpectedOrigin(req, config)) return oauthPage(res, 400, false);
+
+    garbageCollectOAuthStates();
+    while (pendingOAuthStates.size >= MAX_PENDING_OAUTH_STATES) {
+      pendingOAuthStates.delete(pendingOAuthStates.keys().next().value);
+    }
+    const state = crypto.randomBytes(32).toString('base64url');
+    const verifier = crypto.randomBytes(64).toString('base64url');
+    const challenge = crypto.createHash('sha256').update(verifier).digest('base64url');
+    pendingOAuthStates.set(state, { verifier, expiresAt: oauthNow() + OAUTH_STATE_TTL_MS });
+    const authorization = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+    authorization.search = new URLSearchParams({
+      client_id: config.clientId,
+      redirect_uri: config.callbackUrl,
+      response_type: 'code',
+      scope: GMAIL_READONLY_SCOPE,
+      access_type: 'offline',
+      prompt: 'consent',
+      state,
+      code_challenge: challenge,
+      code_challenge_method: 'S256'
+    }).toString();
+    return redirect(res, authorization.toString(), OAUTH_SECURITY_HEADERS);
+  }
+
+  async function handleOAuthCallback(req, res, url) {
+    try {
+      const config = await getOAuthConfig();
+      if (!oauthRequestHasExpectedOrigin(req, config)) return oauthPage(res, 400, false);
+      garbageCollectOAuthStates();
+      const codes = url.searchParams.getAll('code');
+      const states = url.searchParams.getAll('state');
+      if (states.length !== 1 || !states[0]) {
+        return oauthPage(res, 400, false);
+      }
+      const pending = pendingOAuthStates.get(states[0]);
+      if (!pending || pending.expiresAt <= oauthNow()) return oauthPage(res, 400, false);
+      pendingOAuthStates.delete(states[0]);
+      if (url.searchParams.has('error') || codes.length !== 1 || !codes[0]) return oauthPage(res, 400, false);
+
+      const tokenResponse = await oauthFetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          code: codes[0],
+          client_id: config.clientId,
+          client_secret: config.clientSecret,
+          redirect_uri: config.callbackUrl,
+          grant_type: 'authorization_code',
+          code_verifier: pending.verifier
+        }).toString()
+      });
+      if (!tokenResponse.ok) return oauthPage(res, 400, false);
+      const token = await tokenResponse.json();
+      const grantedScopes = String(token.scope || '').split(/\s+/).filter(Boolean);
+      if (!token.access_token || !token.refresh_token || !grantedScopes.includes(GMAIL_READONLY_SCOPE)) {
+        return oauthPage(res, 400, false);
+      }
+
+      const profileResponse = await oauthFetch('https://gmail.googleapis.com/gmail/v1/users/me/profile', {
+        headers: { authorization: `Bearer ${token.access_token}` }
+      });
+      if (!profileResponse.ok) return oauthPage(res, 400, false);
+      const profile = await profileResponse.json();
+      if (String(profile.emailAddress || '').trim().toLowerCase() !== config.expectedEmail) {
+        return oauthPage(res, 400, false);
+      }
+      await writeAuthorizedUserToken(config.tokenPath, config, token.refresh_token);
+      return oauthPage(res, 200, true);
+    } catch {
+      return oauthPage(res, 400, false);
+    }
+  }
+
+  async function handleOAuthStatus(req, res) {
+    if (!await requireCharlie(req, res)) return;
+    garbageCollectOAuthStates();
+    try {
+      const config = await getOAuthConfig();
+      let connected = true;
+      try {
+        await fs.access(config.tokenPath);
+      } catch {
+        connected = false;
+      }
+      return oauthSend(res, 200, { configured: true, pending: pendingOAuthStates.size > 0, connected });
+    } catch {
+      return oauthSend(res, 200, { configured: false, pending: false, connected: false });
+    }
+  }
+
+  async function handleOAuth(req, res, url) {
+    if (req.method !== 'GET') return oauthSend(res, 405, { error: 'method not allowed' });
+    if (url.pathname === '/oauth/google/start') return handleOAuthStart(req, res);
+    if (url.pathname === '/oauth/google/callback') return handleOAuthCallback(req, res, url);
+    if (url.pathname === '/oauth/google/status') return handleOAuthStatus(req, res);
+    return oauthSend(res, 404, { error: 'not found' });
   }
 
   async function requireSession(req, res, url) {
@@ -470,6 +701,8 @@ function createServer(options = {}) {
 
   return http.createServer(async (req, res) => {
     try {
+      const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+      if (url.pathname.startsWith('/oauth/google/')) return await handleOAuth(req, res, url);
       const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
       if (isPublicHost(req.headers.host) && forwardedProto === 'http') {
         res.writeHead(301, {
@@ -481,7 +714,6 @@ function createServer(options = {}) {
       if (isPublicHost(req.headers.host) && forwardedProto === 'https') {
         res.setHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
       }
-      const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
       if (url.pathname.startsWith('/api/')) return await handleApi(req, res, url);
       return await serveStatic(req, res, url);
     } catch (error) {
