@@ -12,12 +12,15 @@ const repositories = [
   'uno-watch-display',
   'toronto-entertainment',
   'sticklab',
-  'ros-morris-portfolio'
+  'ros-morris-portfolio',
+  'herbyprojects/tree/main/goal-rush'
 ];
 
 const projectShelf = html.slice(html.indexOf('<div class="grid">'), html.indexOf('</section>', html.indexOf('<div class="grid">')));
 const dailySevenStart = projectShelf.indexOf('<h3>The Daily Seven</h3>');
 const dailySevenCard = projectShelf.slice(projectShelf.lastIndexOf('<article', dailySevenStart), projectShelf.indexOf('</article>', dailySevenStart) + '</article>'.length);
+const goalRushStart = projectShelf.indexOf('<h3>Goal Rush</h3>');
+const goalRushCard = projectShelf.slice(projectShelf.lastIndexOf('<article', goalRushStart), projectShelf.indexOf('</article>', goalRushStart) + '</article>'.length);
 
 assert.match(html, /The apps are personal\. The code is public\./, 'hero makes the open-source promise unmistakable');
 assert.match(html, /id="open-source"/, 'portfolio has a dedicated open-source section');
@@ -27,6 +30,9 @@ assert.match(html, /href="https:\/\/github\.com\/Herby9000\/herbyprojects"[^>]*t
 assert.match(dailySevenCard, /<h3>The Daily Seven<\/h3>/, 'The Daily Seven project card remains available');
 assert.match(dailySevenCard, /private full reader/i, 'The Daily Seven card labels the authenticated full reader');
 assert.match(dailySevenCard, /href="https:\/\/three-smiles\.herbyprojects\.com\/news\/"[^>]*target="_blank"[^>]*rel="noopener"/, 'The Daily Seven card opens the private full reader safely');
+assert.match(goalRushCard, /football-themed mental-maths game/i, 'Goal Rush card concisely describes the game');
+assert.match(goalRushCard, /href="https:\/\/herby9000\.github\.io\/herbyprojects\/goal-rush\/"[^>]*target="_blank"[^>]*rel="noopener"/, 'Goal Rush card opens the live app safely');
+assert.equal((goalRushCard.match(/class="tag"/g) || []).length, 3, 'Goal Rush card has three tags');
 for (const repo of repositories) {
   const escaped = repo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   assert.match(html, new RegExp(`href="https://github\\.com/Herby9000/${escaped}"[^>]*target="_blank"[^>]*rel="noopener"`), `${repo} card links to its public source repository`);
