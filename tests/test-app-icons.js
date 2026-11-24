@@ -30,7 +30,7 @@ assert.match(newsHtml, /<meta name="apple-mobile-web-app-title" content="Daily S
 assert.match(newsHtml, /<link rel="icon" href="assets\/icons\/daily-seven\.svg\?v=1" type="image\/svg\+xml"/);
 assert.match(newsHtml, /<link rel="icon" href="assets\/icons\/daily-seven-192\.png\?v=1" type="image\/png" sizes="192x192"/);
 assert.match(newsHtml, /<link rel="apple-touch-icon" href="assets\/icons\/daily-seven-180\.png\?v=1" sizes="180x180"/);
-assert.match(newsHtml, /<link rel="manifest" href="manifest\.webmanifest\?v=2"/);
+assert.match(newsHtml, /<link rel="manifest" href="manifest\.webmanifest\?v=3"/);
 assert.doesNotMatch(newsHtml, /\.\.\/assets\/icon\.svg/, 'Daily Seven does not reuse the generic Three Smiles icon');
 
 const newsManifestUrl = new URL('https://example.test/news/manifest.webmanifest');
@@ -38,12 +38,11 @@ const newsManifest = JSON.parse(fs.readFileSync('news/manifest.webmanifest', 'ut
 assert.equal(newsManifest.name, 'The Daily Seven');
 assert.equal(newsManifest.short_name, 'Daily Seven');
 assert.equal(newsManifest.id, './');
+assert.equal(newsManifest.background_color, '#ffffff');
+assert.equal(newsManifest.theme_color, '#ffffff');
 assert.equal(new URL(newsManifest.id, newsManifestUrl).pathname, '/news/');
 assert.equal(new URL(newsManifest.start_url, newsManifestUrl).pathname, '/news/');
 assert.equal(new URL(newsManifest.scope, newsManifestUrl).pathname, '/news/');
-assert.equal(newsManifest.theme_color, '#f4efe6');
-assert.equal(newsManifest.background_color, '#f4efe6');
-
 const expectedNewsIcons = [
   ['assets/icons/daily-seven-192.png', '192x192', 192],
   ['assets/icons/daily-seven-512.png', '512x512', 512]

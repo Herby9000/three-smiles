@@ -399,16 +399,35 @@ test('Today promotes the first ordered Top 7 story as a photo-led lead and secti
   }));
 });
 
-test('literary magazine system keeps warm paper, oxblood accents, original wordmark and responsive layouts', () => {
+test('literary system keeps white surfaces, restrained oxblood accents, original wordmark and responsive layouts', () => {
   const dom = new JSDOM(html);
   const document = dom.window.document;
   assert.equal(document.querySelector('.wordmark')?.textContent.trim(), 'The Daily Seven');
-  assert.match(styles, /--paper:\s*#[a-f\d]{6}/i);
+  assert.match(styles, /:root\{--paper:#fff;--sheet:#fff\}/);
   assert.match(styles, /--oxblood:\s*#[a-f\d]{6}/i);
   assert.match(styles, /\.wordmark\{/);
   assert.match(styles, /\.story-card-lead\{/);
   assert.match(styles, /@media\(max-width:750px\)/);
   assert.match(styles + editorialStyles, /\.bbc-headline-media\{/);
+  assert.match(styles, /html,body\{[^}]*background:#fff[^}]*\}/);
+  assert.match(styles, /\.masthead,\.topics,main\{background:#fff\}/);
+  assert.match(styles, /\.reader,\.reader-paper\{background:#fff\}/);
+});
+
+test('Top 7 is one ordered, swipeable photo-card rail without page-level horizontal overflow', async () => {
+  const { dom } = setup();
+  await tick();
+  const cards = [...dom.window.document.querySelectorAll('#top-rail .story-card')];
+  const orderedTitles = edition.topStoryIds.map(id => edition.stories.find(story => story.id === id).title);
+
+  assert.equal(cards.length, 7);
+  assert.deepEqual(cards.map(card => card.querySelector('h3').textContent), orderedTitles);
+  assert.ok(cards.every(card => card.tabIndex === 0 && card.getAttribute('role') === 'button'));
+  assert.ok(cards.every(card => card.querySelector('.story-image-frame img')));
+  assert.match(styles, /\.top-rail\{[^}]*grid-auto-flow:column[^}]*overflow-x:auto[^}]*overflow-y:hidden[^}]*scroll-snap-type:x mandatory/);
+  assert.match(styles, /\.story-card,.story-card-lead,.story-card-secondary\{[^}]*scroll-snap-align:start/);
+  assert.match(styles, /body\{overflow-x:hidden\}/);
+  assert.match(styles, /@media\(max-width:750px\)\{\.top-rail\{[^}]*grid-auto-columns:min\(82vw,360px\)/);
 });
 
 test('Top 7 cards activate with Enter and Space and retain a visible focus treatment', async () => {

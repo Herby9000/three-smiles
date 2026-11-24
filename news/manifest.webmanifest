@@ -5,8 +5,8 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4efe6",
-  "theme_color": "#f4efe6",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "description": "A subscription-free personal news briefing.",
   "icons": [
     {
