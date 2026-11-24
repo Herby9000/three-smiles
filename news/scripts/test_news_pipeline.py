@@ -110,7 +110,8 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual({icon['sizes'] for icon in manifest['icons']}, {'192x192', '512x512'})
         for icon in manifest['icons']:
             resolved = urljoin(deployed_manifest_url, icon['src'])
-            self.assertEqual(urlparse(resolved).path, f'/herbyprojects/news/assets/icons/daily-seven-{icon["sizes"].split("x")[0]}.png')
+            self.assertEqual(urlparse(resolved).path, f'/herbyprojects/news/daily-seven-icon-{icon["sizes"].split("x")[0]}.png')
+            self.assertEqual(urlparse(resolved).query, 'v=2')
             self.assertEqual(icon['type'], 'image/png')
 
     def test_daily_seven_png_icons_have_signatures_and_exact_dimensions(self):
@@ -123,24 +124,25 @@ class PipelineTests(unittest.TestCase):
 
     def test_daily_seven_html_has_complete_app_icon_metadata(self):
         html = (Path(__file__).parents[1] / 'index.html').read_text(encoding='utf-8')
-        self.assertIn('<meta name="theme-color" content="#f4efe6">', html)
+        self.assertIn('<meta name="theme-color" content="#ffffff">', html)
         self.assertIn('<meta name="application-name" content="Daily Seven">', html)
         self.assertIn('<meta name="apple-mobile-web-app-title" content="Daily Seven">', html)
-        self.assertIn('<link rel="manifest" href="manifest.webmanifest?v=2">', html)
-        self.assertIn('<link rel="icon" href="assets/icons/daily-seven.svg?v=1" type="image/svg+xml">', html)
-        self.assertIn('<link rel="icon" href="assets/icons/daily-seven-192.png?v=1" type="image/png" sizes="192x192">', html)
-        self.assertIn('<link rel="apple-touch-icon" href="assets/icons/daily-seven-180.png?v=1" sizes="180x180">', html)
+        self.assertIn('<link rel="manifest" href="manifest.webmanifest?v=4">', html)
+        self.assertIn('<link rel="icon" href="assets/icons/daily-seven.svg?v=2" type="image/svg+xml">', html)
+        self.assertIn('<link rel="icon" href="assets/icons/daily-seven-192.png?v=2" type="image/png" sizes="192x192">', html)
+        self.assertIn('<link rel="apple-touch-icon" href="assets/icons/daily-seven-180.png?v=2" sizes="180x180">', html)
         self.assertNotIn('../assets/favicon', html)
 
-    def test_daily_seven_icon_is_original_editorial_art_not_a_generic_letter(self):
+    def test_daily_seven_icon_is_path_based_editorial_numeral(self):
         icon_path = Path(__file__).parents[1] / 'assets' / 'icons' / 'daily-seven.svg'
         source = icon_path.read_text(encoding='utf-8')
         root = ElementTree.fromstring(source)
         self.assertEqual(root.attrib.get('viewBox'), '0 0 512 512')
         self.assertIn('Daily Seven morning briefing icon', source)
-        self.assertEqual(len(root.findall(".//*[@class='editorial-rule']")), 7)
-        self.assertEqual(len(root.findall(".//*[@class='rising-sun']")), 1)
-        self.assertNotIn('>H<', source)
+        self.assertEqual(len(root.findall(".//*[@class='numeral-seven']")), 1)
+        self.assertEqual(len(root.findall(".//*[@class='oxblood-rule']")), 1)
+        self.assertNotIn('<text', source)
+        self.assertNotIn('font-family', source)
 
     def test_browser_javascript_initializes_and_starts_loading(self):
         script = Path(__file__).with_name('test_news_runtime.js')
