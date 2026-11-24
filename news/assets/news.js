@@ -73,16 +73,16 @@
     const size = verifiedImageSize(story || {});
     return url && size ? { url, width: size[0], height: size[1], alt: typeof story.imageAlt === 'string' ? story.imageAlt.trim() : '' } : null;
   }
-  function extractedImage(candidate, requireDimensions = false) {
+  function extractedImage(candidate) {
     const url = safeImageUrl(candidate?.url);
     const width = Number(candidate?.width); const height = Number(candidate?.height);
     const hasSize = Number.isInteger(width) && width >= 960 && Number.isInteger(height) && height >= 540;
-    if (!url || (requireDimensions && !hasSize) ||
-        (candidate?.width !== undefined && !hasSize) || (candidate?.height !== undefined && !hasSize)) return null;
+    if (!url || (candidate?.width !== undefined && !hasSize) || (candidate?.height !== undefined && !hasSize)) return null;
     return {
       url,
       width: hasSize ? width : 1200,
       height: hasSize ? height : 675,
+      verifyNaturalSize: !hasSize,
       alt: typeof candidate.alt === 'string' ? candidate.alt.trim() : '',
       caption: typeof candidate.caption === 'string' ? candidate.caption.trim() : '',
     };
@@ -102,7 +102,7 @@
     frame.append(image, unavailable);
     return frame;
   }
-  function readerFigure(data, className) {
+  function readerFigure(data, className, fallback = null) {
     const figure = el('figure', `reader-image ${className}`);
     const image = el('img', 'reader-image-media');
     image.src = data.url; image.alt = data.alt; image.width = data.width; image.height = data.height;
@@ -111,8 +111,19 @@
     const unavailable = el('div', 'reader-image-status', 'Publisher image unavailable');
     unavailable.hidden = true;
     image.addEventListener('error', () => {
+      if (fallback && fallback.url !== data.url) {
+        figure.replaceWith(readerFigure(fallback, className));
+        return;
+      }
       image.hidden = true; unavailable.hidden = false; figure.classList.add('image-unavailable');
     });
+    if (data.verifyNaturalSize) {
+      image.addEventListener('load', () => {
+        if (image.naturalWidth >= 960 && image.naturalHeight >= 540) return;
+        if (fallback && fallback.url !== data.url) figure.replaceWith(readerFigure(fallback, className));
+        else figure.remove();
+      }, { once: true });
+    }
     figure.append(image, unavailable);
     if (data.caption) figure.append(el('figcaption', 'reader-image-caption', data.caption));
     return figure;
@@ -120,9 +131,10 @@
   function renderReaderCopy(story, body, article = null) {
     const copy = $('#reader-copy');
     const nodes = [];
-    const extractedLead = extractedImage(article?.leadImage, true);
-    const lead = extractedLead || snapshotImage(story);
-    if (lead) nodes.push(readerFigure(lead, 'reader-lead-image'));
+    const extractedLead = extractedImage(article?.leadImage);
+    const snapshotLead = snapshotImage(story);
+    const lead = extractedLead || snapshotLead;
+    if (lead) nodes.push(readerFigure(lead, 'reader-lead-image', extractedLead ? snapshotLead : null));
     const blocks = Array.isArray(article?.blocks) && article.blocks.some(block => block?.type === 'paragraph') ? article.blocks : null;
     if (blocks) {
       blocks.forEach(block => {

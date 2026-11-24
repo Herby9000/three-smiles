@@ -294,6 +294,70 @@ test('BBC extracted lead and inline photos render in publisher order through the
   assert.equal(document.querySelector('.reader-inline-image figcaption').textContent, 'A supplied BBC caption');
 });
 
+test('BBC photos without metadata use natural dimensions and retain the verified feed fallback', async () => {
+  const snapshot = structuredClone(edition);
+  snapshot.bbcTopStories = [{
+    title: 'BBC metadata-free image fixture',
+    description: 'Immediate feed summary.',
+    url: 'https://www.bbc.com/news/articles/metadata-free-image-fixture',
+    image: 'https://ichef.bbci.co.uk/news/1024/cpsprodpb/snapshot.jpg',
+    imageWidth: 1024,
+    imageHeight: 576,
+    imageAlt: 'Verified feed fallback'
+  }];
+  const extracted = {
+    status: 200,
+    body: {
+      ok: true,
+      article: {
+        title: 'BBC metadata-free image fixture',
+        siteName: 'BBC',
+        paragraphs: ['Opening extracted paragraph.', 'Closing extracted paragraph.'],
+        leadImage: { url: 'https://ichef.bbci.co.uk/news/1200/cpsprodpb/lead-no-size.jpg', alt: 'Lead without metadata' },
+        blocks: [
+          { type: 'paragraph', text: 'Opening extracted paragraph.' },
+          { type: 'image', url: 'https://ichef.bbci.co.uk/news/1200/cpsprodpb/inline-large.jpg', alt: 'Large inline without metadata' },
+          { type: 'image', url: 'https://ichef.bbci.co.uk/news/480/cpsprodpb/inline-small.jpg', alt: 'Small inline without metadata' },
+          { type: 'paragraph', text: 'Closing extracted paragraph.' }
+        ]
+      }
+    }
+  };
+  const setNaturalSizeAndLoad = (dom, image, width, height) => {
+    Object.defineProperties(image, {
+      naturalWidth: { configurable: true, value: width },
+      naturalHeight: { configurable: true, value: height }
+    });
+    image.dispatchEvent(new dom.window.Event('load'));
+  };
+
+  const lowResolution = setup(snapshot, extracted);
+  await tick();
+  lowResolution.dom.window.document.querySelector('#bbc-top-stories button').click();
+  await tick();
+  const lowDocument = lowResolution.dom.window.document;
+  const lead = lowDocument.querySelector('.reader-lead-image img');
+  assert.equal(lead.src, extracted.body.article.leadImage.url, 'the live API shape is accepted before intrinsic size validation');
+  const inline = [...lowDocument.querySelectorAll('.reader-inline-image img')];
+  assert.equal(inline.length, 2, 'metadata-free inline candidates are conditionally rendered');
+  setNaturalSizeAndLoad(lowResolution.dom, inline[0], 1200, 800);
+  setNaturalSizeAndLoad(lowResolution.dom, inline[1], 480, 320);
+  assert.deepEqual([...lowDocument.querySelectorAll('.reader-inline-image img')].map(image => image.src), [inline[0].src],
+    'only an intrinsically large inline photo remains');
+  setNaturalSizeAndLoad(lowResolution.dom, lead, 800, 450);
+  assert.equal(lowDocument.querySelector('.reader-lead-image img').src, snapshot.bbcTopStories[0].image,
+    'a low-resolution extracted lead restores the verified feed photo');
+
+  const failedLoad = setup(snapshot, extracted);
+  await tick();
+  failedLoad.dom.window.document.querySelector('#bbc-top-stories button').click();
+  await tick();
+  failedLoad.dom.window.document.querySelector('.reader-lead-image img')
+    .dispatchEvent(new failedLoad.dom.window.Event('error'));
+  assert.equal(failedLoad.dom.window.document.querySelector('.reader-lead-image img').src, snapshot.bbcTopStories[0].image,
+    'an extracted lead load error restores the verified feed photo');
+});
+
 test('Top 7 cards are accessible controls that open without nested interactive elements', async () => {
   const { dom } = setup();
   await tick();
