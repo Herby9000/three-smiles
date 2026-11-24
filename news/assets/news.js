@@ -8,6 +8,8 @@
   const leadSection = $('.lead-section');
   const latestSection = $('.latest-section');
   const sections = $('#story-sections');
+  const bbcSection = $('#bbc-top-stories');
+  const bbcHeadlines = $('#bbc-headlines');
   const reader = $('#reader');
   const formatter = new Intl.DateTimeFormat(undefined, {
     year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
@@ -50,6 +52,15 @@
     try {
       const url = new URL(value);
       return url.protocol === 'https:' && !url.username && !url.password && (!url.port || url.port === '443') ? url.href : '';
+    } catch (_) { return ''; }
+  }
+  function safeBbcUrl(value) {
+    try {
+      const url = new URL(value);
+      const bbcHosts = new Set(['bbc.com', 'www.bbc.com', 'bbc.co.uk', 'www.bbc.co.uk']);
+      return url.protocol === 'https:' && !url.username && !url.password && (!url.port || url.port === '443') && bbcHosts.has(url.hostname)
+        ? url.href
+        : '';
     } catch (_) { return ''; }
   }
   function verifiedImageSize(story) {
@@ -195,6 +206,27 @@
       sections.append(el('p', 'empty-state', 'No stories are available in this section. The next refresh will try again.'));
     }
   }
+  function renderBbcTopStories(stories) {
+    bbcHeadlines.replaceChildren();
+    if (Array.isArray(stories)) {
+      stories.forEach(story => {
+        const title = typeof story?.title === 'string' ? story.title.trim() : '';
+        const url = safeBbcUrl(story?.url);
+        if (!title || !url) return;
+        const item = el('li', 'bbc-headline');
+        const link = el('a', 'bbc-headline-link', title);
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.setAttribute('aria-label', `${title} — BBC (opens in a new tab)`);
+        item.append(link, el('span', 'bbc-attribution', 'BBC'));
+        bbcHeadlines.append(item);
+      });
+    }
+    const hidden = state.filter !== 'All' || !bbcHeadlines.children.length;
+    bbcSection.hidden = hidden;
+    bbcSection.setAttribute('aria-hidden', String(hidden));
+  }
   function applyFilter(filter) {
     state.filter = filter;
     $('#latest-heading').textContent = filter === 'Editorial' ? 'Substantial essays & investigations' : 'Latest by section';
@@ -206,6 +238,7 @@
       button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
     });
     renderSections(state.data.stories);
+    renderBbcTopStories(state.data.bbcTopStories);
   }
   document.querySelectorAll('.topic').forEach(button => button.addEventListener('click', () => applyFilter(button.dataset.filter)));
 
