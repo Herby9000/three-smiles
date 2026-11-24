@@ -9,9 +9,9 @@
 .bbc-top-stories{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:8px 0 48px}
 .bbc-headlines{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
 .bbc-headline{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--rule)}
-.bbc-headline-link{color:var(--ink);font-size:clamp(20px,4vw,28px);font-weight:700;line-height:1.15;text-decoration-thickness:1px;text-underline-offset:4px}
-.bbc-headline-link:hover{text-decoration-color:var(--red)}
-.bbc-headline-link:focus-visible{outline:3px solid var(--red);outline-offset:4px}
+.bbc-headline-button{margin:0;padding:0;border:0;background:transparent;color:var(--ink);font:700 clamp(20px,4vw,28px)/1.15 var(--serif);text-align:left;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;cursor:pointer}
+.bbc-headline-button:hover{text-decoration-color:var(--red)}
+.bbc-headline-button:focus-visible{outline:3px solid var(--red);outline-offset:4px}
 .bbc-attribution{color:var(--muted);font:800 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase}
 @media(max-width:480px){.editorial-story{padding:18px 16px}.editorial-story h3 button{overflow-wrap:anywhere}.story-meta{overflow-wrap:anywhere}}
 @media(prefers-reduced-motion:reduce){.editorial-story,.editorial-topic{transition:none!important}}

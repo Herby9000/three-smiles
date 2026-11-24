@@ -23,7 +23,18 @@ function assertPublisherCap(ids, cap, byId, label) {
   assert.ok([...counts.values()].every(count => count <= cap), `${label} respects publisher cap ${cap}`);
 }
 
-function setup(snapshot = edition) {
+function setup(snapshot = edition, articleResponse = {
+  status: 200,
+  body: {
+    ok: true,
+    article: {
+      title: 'Extracted BBC title',
+      byline: 'BBC Reporter',
+      siteName: 'BBC',
+      paragraphs: ['First extracted BBC paragraph.', 'Second extracted BBC paragraph.']
+    }
+  }
+}) {
   const dom = new JSDOM(html, {
     url: 'https://three-smiles.herbyprojects.com/news/',
     runScripts: 'outside-only'
@@ -36,6 +47,12 @@ function setup(snapshot = edition) {
   const requests = [];
   dom.window.fetch = async (url, options) => {
     requests.push({ url, options });
+    if (url === '/api/news/article') {
+      return new Response(JSON.stringify(articleResponse.body), {
+        status: articleResponse.status,
+        headers: { 'content-type': 'application/json' }
+      });
+    }
     return new Response(JSON.stringify(snapshot), { headers: { 'content-type': 'application/json' } });
   };
   dom.window.eval(script);
@@ -104,13 +121,14 @@ test('BBC Top Stories is the final Today-only content section and preserves ever
   await tick();
   const document = dom.window.document;
   const section = document.querySelector('#bbc-top-stories');
-  const links = [...section.querySelectorAll('a')];
+  const buttons = [...section.querySelectorAll('button')];
 
   assert.equal(document.querySelectorAll('#top-rail .story-card').length, 7, 'Top 7 remains unchanged');
   assert.equal(document.querySelector('main').lastElementChild, section, 'BBC is the final content section before the footer');
   assert.equal(section.hidden, false, 'BBC headlines are shown on Today');
-  assert.deepEqual(links.map(link => link.textContent), snapshot.bbcTopStories.map(story => story.title), 'snapshot order is preserved without a limit');
-  assert.ok(links.every(link => link.tagName === 'A' && link.textContent.startsWith('BBC headline')));
+  assert.deepEqual(buttons.map(button => button.textContent), snapshot.bbcTopStories.map(story => story.title), 'snapshot order is preserved without a limit');
+  assert.ok(buttons.every(button => button.tagName === 'BUTTON' && button.type === 'button' && button.textContent.startsWith('BBC headline')));
+  assert.ok(buttons.every(button => /read .* in app/i.test(button.getAttribute('aria-label'))));
   assert.ok([...section.querySelectorAll('.bbc-attribution')].every(label => label.textContent === 'BBC'));
 
   document.querySelector('[data-filter="Politics"]').click();
@@ -119,13 +137,13 @@ test('BBC Top Stories is the final Today-only content section and preserves ever
   assert.equal(section.hidden, false, 'BBC headlines return on Today');
 });
 
-test('BBC Top Stories tolerates an absent feed and only links to verified HTTPS BBC hosts', async () => {
+test('BBC Top Stories tolerates an absent feed and only renders verified HTTPS BBC hosts', async () => {
   const oldSnapshot = structuredClone(edition);
   delete oldSnapshot.bbcTopStories;
   const oldEdition = setup(oldSnapshot);
   await tick();
   assert.equal(oldEdition.dom.window.document.querySelector('#bbc-top-stories').hidden, true);
-  assert.equal(oldEdition.dom.window.document.querySelectorAll('#bbc-top-stories a').length, 0);
+  assert.equal(oldEdition.dom.window.document.querySelectorAll('#bbc-top-stories button').length, 0);
 
   const snapshot = structuredClone(edition);
   snapshot.bbcTopStories = [
@@ -138,13 +156,61 @@ test('BBC Top Stories tolerates an absent feed and only links to verified HTTPS 
   ];
   const { dom } = setup(snapshot);
   await tick();
-  const links = [...dom.window.document.querySelectorAll('#bbc-top-stories a')];
-  assert.deepEqual(links.map(link => link.textContent), ['Safe BBC.com', 'Safe BBC.co.uk']);
-  assert.ok(links.every(link => link.protocol === 'https:' && ['www.bbc.com', 'www.bbc.co.uk'].includes(link.hostname)));
-  assert.ok(links.every(link => link.getAttribute('target') === '_blank' && link.getAttribute('rel') === 'noopener noreferrer'));
+  const buttons = [...dom.window.document.querySelectorAll('#bbc-top-stories button')];
+  assert.deepEqual(buttons.map(button => button.textContent), ['Safe BBC.com', 'Safe BBC.co.uk']);
+  assert.ok(buttons.every(button => !button.hasAttribute('formaction')));
+});
 
-  links[0].click();
-  assert.equal(dom.window.document.querySelector('#reader').open, false, 'BBC links do not use the full-text reader');
+test('BBC headline opens in app with its snapshot description, then requests and renders the extracted body', async () => {
+  const snapshot = structuredClone(edition);
+  snapshot.bbcTopStories = [{
+    title: 'BBC reader fixture',
+    description: 'Canonical BBC snapshot description.',
+    url: 'https://www.bbc.com/news/articles/reader-fixture'
+  }];
+  const { dom, requests } = setup(snapshot);
+  await tick();
+  const document = dom.window.document;
+  const button = document.querySelector('#bbc-top-stories button');
+
+  button.click();
+  assert.equal(document.querySelector('#reader').open, true, 'headline tap stays in the app');
+  assert.equal(document.querySelector('#reader-title').textContent, snapshot.bbcTopStories[0].title);
+  assert.equal(document.querySelector('#reader-copy').textContent, snapshot.bbcTopStories[0].description, 'description is the immediate excerpt');
+  assert.equal(dom.window.location.href, 'https://three-smiles.herbyprojects.com/news/');
+  assert.equal(requests[1].url, '/api/news/article');
+  assert.equal(requests[1].options.method, 'POST');
+  assert.equal(requests[1].options.credentials, 'same-origin');
+  assert.deepEqual(JSON.parse(requests[1].options.body), { url: snapshot.bbcTopStories[0].url });
+
+  await tick();
+  assert.equal(document.querySelector('#reader-title').textContent, 'Extracted BBC title');
+  assert.deepEqual([...document.querySelectorAll('#reader-copy p')].map(paragraph => paragraph.textContent),
+    ['First extracted BBC paragraph.', 'Second extracted BBC paragraph.']);
+  assert.match(document.querySelector('#reader-disclosure').textContent, /extracted for private reading/i);
+  assert.equal(document.querySelector('#reader-source').href, snapshot.bbcTopStories[0].url, 'only the optional source control links out');
+});
+
+test('BBC reader retains the snapshot description when extraction is unavailable', async () => {
+  const snapshot = structuredClone(edition);
+  snapshot.bbcTopStories = [{
+    title: 'BBC fallback fixture',
+    description: 'Keep this BBC summary visible.',
+    url: 'https://www.bbc.co.uk/news/articles/fallback-fixture'
+  }];
+  const fallback = {
+    status: 422,
+    body: { ok: false, fallback: true, error: 'Full article unavailable; showing the feed summary.' }
+  };
+  const { dom } = setup(snapshot, fallback);
+  await tick();
+  const document = dom.window.document;
+
+  document.querySelector('#bbc-top-stories button').click();
+  await tick();
+  assert.equal(document.querySelector('#reader-copy').textContent, snapshot.bbcTopStories[0].description);
+  assert.match(document.querySelector('#reader-disclosure').textContent, /unavailable.*showing the feed summary/i);
+  assert.equal(document.querySelector('#reader-source').hidden, false);
 });
 
 test('Top 7 cards are accessible controls that open without nested interactive elements', async () => {

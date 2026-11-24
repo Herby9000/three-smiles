@@ -11,6 +11,7 @@
   const bbcSection = $('#bbc-top-stories');
   const bbcHeadlines = $('#bbc-headlines');
   const reader = $('#reader');
+  let readerRequestVersion = 0;
   const formatter = new Intl.DateTimeFormat(undefined, {
     year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
   });
@@ -67,33 +68,64 @@
     const width = Number(story.imageWidth); const height = Number(story.imageHeight);
     return Number.isInteger(width) && Number.isInteger(height) && width >= 960 && height >= 540 ? [width, height] : null;
   }
-  function openReader(story) {
+  function renderReaderCopy(story, body) {
+    const copy = $('#reader-copy');
+    const prose = String(body || '').split(/\n{2,}/).filter(Boolean).map(paragraph => el('p', '', paragraph));
+    const imageUrl = safeImageUrl(story.imageUrl);
+    if (!imageUrl) {
+      copy.replaceChildren(...prose);
+      return;
+    }
+    const figure = el('figure', 'reader-image');
+    const image = el('img', 'reader-image-media');
+    const size = verifiedImageSize(story) || [640, 360];
+    image.src = imageUrl; image.alt = ''; image.width = size[0]; image.height = size[1];
+    image.loading = 'lazy'; image.decoding = 'async'; image.referrerPolicy = 'no-referrer';
+    const unavailable = el('figcaption', 'reader-image-status', 'Publisher image unavailable');
+    unavailable.hidden = true;
+    image.addEventListener('error', () => {
+      image.hidden = true; unavailable.hidden = false; figure.classList.add('image-unavailable');
+    });
+    figure.append(image, unavailable);
+    copy.replaceChildren(figure, ...prose);
+  }
+  async function loadArticle(story, version) {
+    try {
+      const response = await fetch('/api/news/article', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ url: story.url }),
+      });
+      const result = await response.json();
+      if (version !== readerRequestVersion || !reader.open) return;
+      if (!response.ok || !result.ok || !Array.isArray(result.article?.paragraphs)) {
+        $('#reader-disclosure').textContent = result.error || 'Full article unavailable; showing the feed summary.';
+        return;
+      }
+      const article = result.article;
+      $('#reader-title').textContent = article.title || story.title;
+      $('#reader-byline').textContent = [article.siteName || story.source, article.byline].filter(Boolean).join(' · ');
+      renderReaderCopy({}, article.paragraphs.join('\n\n'));
+      $('#reader-disclosure').textContent = 'Full article extracted for private reading. This reader never embeds a publisher page.';
+    } catch (_) {
+      if (version === readerRequestVersion && reader.open) {
+        $('#reader-disclosure').textContent = 'Full article unavailable; showing the feed summary.';
+      }
+    }
+  }
+  function openReader(story, options = {}) {
+    const version = ++readerRequestVersion;
     $('#reader-kicker').textContent = `${story.category} · ${story.region}`;
     $('#reader-title').textContent = story.title;
     $('#reader-byline').textContent = meta(story);
-    const copy = $('#reader-copy');
     const body = story.body || story.summary;
-    const prose = String(body || '').split(/\n{2,}/).filter(Boolean).map(paragraph => el('p', '', paragraph));
-    const imageUrl = safeImageUrl(story.imageUrl);
-    if (imageUrl) {
-      const figure = el('figure', 'reader-image');
-      const image = el('img', 'reader-image-media');
-      const size = verifiedImageSize(story) || [640, 360];
-      image.src = imageUrl; image.alt = ''; image.width = size[0]; image.height = size[1];
-      image.loading = 'lazy'; image.decoding = 'async'; image.referrerPolicy = 'no-referrer';
-      const unavailable = el('figcaption', 'reader-image-status', 'Publisher image unavailable');
-      unavailable.hidden = true;
-      image.addEventListener('error', () => {
-        image.hidden = true; unavailable.hidden = false; figure.classList.add('image-unavailable');
-      });
-      figure.append(image, unavailable);
-      copy.replaceChildren(figure, ...prose);
-    } else {
-      copy.replaceChildren(...prose);
-    }
+    renderReaderCopy(story, body);
     const storyLabels = Array.isArray(story.labels) ? story.labels : [story.category, story.region];
     const labels = $('#reader-labels'); labels.replaceChildren(...storyLabels.map(label => el('span', '', label)));
-    $('#reader-disclosure').textContent = `${story.contentStatus}. This reader never fabricates missing article text or embeds a publisher page.`;
+    $('#reader-disclosure').textContent = options.loadArticle
+      ? 'Loading available article text. Showing the BBC feed summary while it loads.'
+      : `${story.contentStatus}. This reader never fabricates missing article text or embeds a publisher page.`;
     const source = $('#reader-source');
     const sourceUrl = safeSourceUrl(story.url);
     source.hidden = !sourceUrl;
@@ -101,8 +133,12 @@
     source.setAttribute('aria-label', `Optional: continue reading ${story.title} at ${story.source} (opens new tab)`);
     if (typeof reader.showModal === 'function') reader.showModal(); else reader.setAttribute('open', '');
     document.body.classList.add('reader-open');
+    if (options.loadArticle) void loadArticle(story, version);
   }
-  reader.addEventListener('close', () => document.body.classList.remove('reader-open'));
+  reader.addEventListener('close', () => {
+    readerRequestVersion += 1;
+    document.body.classList.remove('reader-open');
+  });
   reader.addEventListener('click', event => { if (event.target === reader) reader.close(); });
 
   function makeStoryCardInteractive(card, story, protectDrag = false) {
@@ -214,12 +250,23 @@
         const url = safeBbcUrl(story?.url);
         if (!title || !url) return;
         const item = el('li', 'bbc-headline');
-        const link = el('a', 'bbc-headline-link', title);
-        link.href = url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.setAttribute('aria-label', `${title} — BBC (opens in a new tab)`);
-        item.append(link, el('span', 'bbc-attribution', 'BBC'));
+        const button = el('button', 'bbc-headline-button', title);
+        button.type = 'button';
+        button.setAttribute('aria-label', `Read ${title} in app`);
+        button.addEventListener('click', () => openReader({
+          title,
+          url,
+          summary: typeof story.description === 'string' && story.description.trim()
+            ? story.description.trim()
+            : 'This BBC feed supplied a headline but no article summary.',
+          source: 'BBC',
+          publisher: 'BBC',
+          category: 'BBC Top Stories',
+          region: 'Today',
+          labels: ['BBC Top Stories'],
+          contentStatus: 'BBC feed summary',
+        }, { loadArticle: true }));
+        item.append(button, el('span', 'bbc-attribution', 'BBC'));
         bbcHeadlines.append(item);
       });
     }
