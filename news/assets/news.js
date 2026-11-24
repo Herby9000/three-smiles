@@ -68,26 +68,75 @@
     const width = Number(story.imageWidth); const height = Number(story.imageHeight);
     return Number.isInteger(width) && Number.isInteger(height) && width >= 960 && height >= 540 ? [width, height] : null;
   }
-  function renderReaderCopy(story, body) {
-    const copy = $('#reader-copy');
-    const prose = String(body || '').split(/\n{2,}/).filter(Boolean).map(paragraph => el('p', '', paragraph));
-    const imageUrl = safeImageUrl(story.imageUrl);
-    if (!imageUrl) {
-      copy.replaceChildren(...prose);
-      return;
-    }
-    const figure = el('figure', 'reader-image');
-    const image = el('img', 'reader-image-media');
-    const size = verifiedImageSize(story) || [640, 360];
-    image.src = imageUrl; image.alt = ''; image.width = size[0]; image.height = size[1];
+  function snapshotImage(story) {
+    const url = safeImageUrl(story?.imageUrl || story?.image);
+    const size = verifiedImageSize(story || {});
+    return url && size ? { url, width: size[0], height: size[1], alt: typeof story.imageAlt === 'string' ? story.imageAlt.trim() : '' } : null;
+  }
+  function extractedImage(candidate, requireDimensions = false) {
+    const url = safeImageUrl(candidate?.url);
+    const width = Number(candidate?.width); const height = Number(candidate?.height);
+    const hasSize = Number.isInteger(width) && width >= 960 && Number.isInteger(height) && height >= 540;
+    if (!url || (requireDimensions && !hasSize) ||
+        (candidate?.width !== undefined && !hasSize) || (candidate?.height !== undefined && !hasSize)) return null;
+    return {
+      url,
+      width: hasSize ? width : 1200,
+      height: hasSize ? height : 675,
+      alt: typeof candidate.alt === 'string' ? candidate.alt.trim() : '',
+      caption: typeof candidate.caption === 'string' ? candidate.caption.trim() : '',
+    };
+  }
+  function storyImageFrame(story, className = '') {
+    const data = snapshotImage(story);
+    if (!data) return null;
+    const frame = el('figure', `story-image-frame${className ? ` ${className}` : ''}`);
+    const image = el('img', 'story-image');
+    image.src = data.url; image.alt = data.alt; image.width = data.width; image.height = data.height;
     image.loading = 'lazy'; image.decoding = 'async'; image.referrerPolicy = 'no-referrer';
-    const unavailable = el('figcaption', 'reader-image-status', 'Publisher image unavailable');
+    const unavailable = el('div', 'image-status', 'Publisher image unavailable');
+    unavailable.hidden = true;
+    image.addEventListener('error', () => {
+      image.hidden = true; unavailable.hidden = false; frame.classList.add('image-unavailable');
+    });
+    frame.append(image, unavailable);
+    return frame;
+  }
+  function readerFigure(data, className) {
+    const figure = el('figure', `reader-image ${className}`);
+    const image = el('img', 'reader-image-media');
+    image.src = data.url; image.alt = data.alt; image.width = data.width; image.height = data.height;
+    image.loading = className === 'reader-lead-image' ? 'eager' : 'lazy';
+    image.decoding = 'async'; image.referrerPolicy = 'no-referrer';
+    const unavailable = el('div', 'reader-image-status', 'Publisher image unavailable');
     unavailable.hidden = true;
     image.addEventListener('error', () => {
       image.hidden = true; unavailable.hidden = false; figure.classList.add('image-unavailable');
     });
     figure.append(image, unavailable);
-    copy.replaceChildren(figure, ...prose);
+    if (data.caption) figure.append(el('figcaption', 'reader-image-caption', data.caption));
+    return figure;
+  }
+  function renderReaderCopy(story, body, article = null) {
+    const copy = $('#reader-copy');
+    const nodes = [];
+    const extractedLead = extractedImage(article?.leadImage, true);
+    const lead = extractedLead || snapshotImage(story);
+    if (lead) nodes.push(readerFigure(lead, 'reader-lead-image'));
+    const blocks = Array.isArray(article?.blocks) && article.blocks.some(block => block?.type === 'paragraph') ? article.blocks : null;
+    if (blocks) {
+      blocks.forEach(block => {
+        if (block?.type === 'paragraph' && typeof block.text === 'string' && block.text.trim()) {
+          nodes.push(el('p', '', block.text.trim()));
+        } else if (block?.type === 'image') {
+          const image = extractedImage(block);
+          if (image && image.url !== lead?.url) nodes.push(readerFigure(image, 'reader-inline-image'));
+        }
+      });
+    } else {
+      String(body || '').split(/\n{2,}/).filter(Boolean).forEach(paragraph => nodes.push(el('p', '', paragraph)));
+    }
+    copy.replaceChildren(...nodes);
   }
   async function loadArticle(story, version) {
     try {
@@ -106,7 +155,7 @@
       const article = result.article;
       $('#reader-title').textContent = article.title || story.title;
       $('#reader-byline').textContent = [article.siteName || story.source, article.byline].filter(Boolean).join(' · ');
-      renderReaderCopy({}, article.paragraphs.join('\n\n'));
+      renderReaderCopy(story, article.paragraphs.join('\n\n'), article);
       $('#reader-disclosure').textContent = 'Full article extracted for private reading. This reader never embeds a publisher page.';
     } catch (_) {
       if (version === readerRequestVersion && reader.open) {
@@ -173,17 +222,9 @@
   function renderTop(stories) {
     rail.replaceChildren();
     stories.forEach((story, index) => {
-      const card = el('article', 'story-card');
-      const frame = el('div', 'story-image-frame');
-      const image = el('img', 'story-image');
-      const size = verifiedImageSize(story);
-      image.src = safeImageUrl(story.imageUrl); image.alt = ''; image.width = size[0]; image.height = size[1];
-      image.loading = 'lazy'; image.decoding = 'async'; image.referrerPolicy = 'no-referrer';
-      const unavailable = el('p', 'image-status', 'Publisher image unavailable'); unavailable.hidden = true;
-      image.addEventListener('error', () => {
-        image.hidden = true; unavailable.hidden = false; card.classList.add('image-unavailable');
-      });
-      frame.append(image, unavailable);
+      const card = el('article', `story-card ${index === 0 ? 'story-card-lead' : 'story-card-secondary'}`);
+      const frame = storyImageFrame(story);
+      if (index === 0) frame.querySelector('img').loading = 'eager';
       card.append(frame, el('p', 'card-number', String(index + 1).padStart(2, '0')),
         el('p', 'story-meta', meta(story)), el('h3', '', story.title), el('p', 'dek', story.summary),
         el('span', 'read-cue', 'Read in app'));
@@ -227,6 +268,11 @@
       const list = el('div', 'story-list');
       categoryStories.forEach(story => {
         const item = el('article', category === 'Editorial' ? 'list-story editorial-story' : 'list-story');
+        const frame = storyImageFrame(story, 'list-story-image');
+        if (frame) {
+          item.classList.add('has-story-image');
+          item.append(frame);
+        }
         item.append(el('p', 'story-meta', meta(story)), el('h3', '', story.title),
           el('p', 'list-dek', story.summary), el('p', 'labels', (story.labels || []).join(' · ')));
         makeStoryCardInteractive(item, story);
@@ -253,7 +299,7 @@
         const button = el('button', 'bbc-headline-button', title);
         button.type = 'button';
         button.setAttribute('aria-label', `Read ${title} in app`);
-        button.addEventListener('click', () => openReader({
+        const readerStory = {
           title,
           url,
           summary: typeof story.description === 'string' && story.description.trim()
@@ -265,7 +311,14 @@
           region: 'Today',
           labels: ['BBC Top Stories'],
           contentStatus: 'BBC feed summary',
-        }, { loadArticle: true }));
+          imageUrl: story.imageUrl || story.image,
+          imageWidth: story.imageWidth,
+          imageHeight: story.imageHeight,
+          imageAlt: story.imageAlt,
+        };
+        button.addEventListener('click', () => openReader(readerStory, { loadArticle: true }));
+        const media = storyImageFrame(readerStory, 'bbc-headline-media');
+        if (media) item.append(media);
         item.append(button, el('span', 'bbc-attribution', 'BBC'));
         bbcHeadlines.append(item);
       });

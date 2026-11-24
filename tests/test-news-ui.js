@@ -9,6 +9,7 @@ const edition = JSON.parse(fs.readFileSync('news/data/news.json', 'utf8'));
 const html = fs.readFileSync('news/index.html', 'utf8');
 const script = fs.readFileSync('news/assets/news.js', 'utf8');
 const styles = fs.readFileSync('news/assets/news.css', 'utf8');
+const editorialStyles = fs.readFileSync('news/assets/editorial.css', 'utf8');
 
 function publisherFamily(story) {
   return story.publisher || story.source;
@@ -213,6 +214,86 @@ test('BBC reader retains the snapshot description when extraction is unavailable
   assert.equal(document.querySelector('#reader-source').hidden, false);
 });
 
+test('BBC feed images are validated, paired with headlines and retained as reader fallback', async () => {
+  const snapshot = structuredClone(edition);
+  snapshot.bbcTopStories = [
+    {
+      title: 'BBC photographed fixture',
+      description: 'A feed-supplied summary.',
+      url: 'https://www.bbc.com/news/articles/photographed-fixture',
+      image: 'https://ichef.bbci.co.uk/news/1024/cpsprodpb/fixture.jpg',
+      imageWidth: 1024,
+      imageHeight: 576,
+      imageAlt: 'Reporter at the scene'
+    },
+    {
+      title: 'BBC invalid image fixture',
+      url: 'https://www.bbc.com/news/articles/invalid-image-fixture',
+      image: 'http://ichef.bbci.co.uk/news/unsafe.jpg',
+      imageWidth: 1024,
+      imageHeight: 576
+    }
+  ];
+  const articleWithoutImages = {
+    status: 200,
+    body: { ok: true, article: { title: 'Extracted', siteName: 'BBC', paragraphs: ['First full paragraph.', 'Second full paragraph.'] } }
+  };
+  const { dom } = setup(snapshot, articleWithoutImages);
+  await tick();
+  const document = dom.window.document;
+  const items = document.querySelectorAll('.bbc-headline');
+
+  assert.equal(items.length, 2, 'every BBC item remains present and ordered');
+  assert.equal(items[0].querySelector('img').src, snapshot.bbcTopStories[0].image);
+  assert.equal(items[0].querySelector('img').alt, snapshot.bbcTopStories[0].imageAlt);
+  assert.equal(items[1].querySelector('img'), null, 'an unvalidated image never masquerades as a news photo');
+
+  items[0].querySelector('button').click();
+  await tick();
+  const fallback = document.querySelector('.reader-lead-image img');
+  assert.equal(fallback.src, snapshot.bbcTopStories[0].image, 'validated snapshot image survives extraction without imagery');
+  assert.equal(fallback.alt, snapshot.bbcTopStories[0].imageAlt);
+});
+
+test('BBC extracted lead and inline photos render in publisher order through the safe reader pipeline', async () => {
+  const snapshot = structuredClone(edition);
+  snapshot.bbcTopStories = [{
+    title: 'BBC image reader fixture',
+    description: 'Immediate feed summary.',
+    url: 'https://www.bbc.co.uk/news/articles/image-reader-fixture',
+    image: 'https://ichef.bbci.co.uk/news/1024/cpsprodpb/snapshot.jpg',
+    imageWidth: 1024,
+    imageHeight: 576
+  }];
+  const extracted = {
+    status: 200,
+    body: {
+      ok: true,
+      article: {
+        title: 'BBC image reader fixture',
+        siteName: 'BBC',
+        paragraphs: ['Opening extracted paragraph.', 'Closing extracted paragraph.'],
+        leadImage: { url: 'https://ichef.bbci.co.uk/news/1200/cpsprodpb/lead.jpg', width: 1200, height: 675, alt: 'Lead scene' },
+        blocks: [
+          { type: 'paragraph', text: 'Opening extracted paragraph.' },
+          { type: 'image', url: 'https://ichef.bbci.co.uk/news/1200/cpsprodpb/inline.jpg', width: 1200, height: 800, alt: 'Inline scene', caption: 'A supplied BBC caption' },
+          { type: 'paragraph', text: 'Closing extracted paragraph.' }
+        ]
+      }
+    }
+  };
+  const { dom } = setup(snapshot, extracted);
+  await tick();
+  const document = dom.window.document;
+
+  document.querySelector('#bbc-top-stories button').click();
+  await tick();
+  assert.equal(document.querySelector('.reader-lead-image img').src, extracted.body.article.leadImage.url, 'real extracted lead replaces snapshot fallback');
+  assert.deepEqual([...document.querySelectorAll('#reader-copy > *')].map(node => node.classList.contains('reader-image') ? 'image' : node.textContent),
+    ['image', 'Opening extracted paragraph.', 'image', 'Closing extracted paragraph.']);
+  assert.equal(document.querySelector('.reader-inline-image figcaption').textContent, 'A supplied BBC caption');
+});
+
 test('Top 7 cards are accessible controls that open without nested interactive elements', async () => {
   const { dom } = setup();
   await tick();
@@ -229,6 +310,41 @@ test('Top 7 cards are accessible controls that open without nested interactive e
   card.click();
   assert.equal(document.querySelector('#reader').open, true);
   assert.equal(document.querySelector('#reader-title').textContent, title);
+});
+
+test('Today promotes the first ordered Top 7 story as a photo-led lead and section lists use verified feed photos', async () => {
+  const { dom } = setup();
+  await tick();
+  const document = dom.window.document;
+  const cards = [...document.querySelectorAll('#top-rail .story-card')];
+  const firstId = edition.topStoryIds[0];
+  const firstStory = edition.stories.find(story => story.id === firstId);
+
+  assert.equal(cards.length, 7);
+  assert.ok(cards[0].classList.contains('story-card-lead'));
+  assert.equal(cards[0].querySelector('h3').textContent, firstStory.title, 'Top 7 order remains unchanged');
+  assert.equal(cards[0].querySelector('img').loading, 'eager');
+  assert.ok(cards.slice(1).every(card => card.classList.contains('story-card-secondary')));
+
+  document.querySelector('[data-filter="Politics"]').click();
+  const pictured = [...document.querySelectorAll('.list-story.has-story-image')];
+  assert.ok(pictured.length > 0, 'feed-supplied section imagery is visibly used');
+  assert.ok(pictured.every(card => {
+    const image = card.querySelector('img');
+    return image && image.src.startsWith('https:') && Number(image.width) >= 960 && Number(image.height) >= 540;
+  }));
+});
+
+test('literary magazine system keeps warm paper, oxblood accents, original wordmark and responsive layouts', () => {
+  const dom = new JSDOM(html);
+  const document = dom.window.document;
+  assert.equal(document.querySelector('.wordmark')?.textContent.trim(), 'The Daily Seven');
+  assert.match(styles, /--paper:\s*#[a-f\d]{6}/i);
+  assert.match(styles, /--oxblood:\s*#[a-f\d]{6}/i);
+  assert.match(styles, /\.wordmark\{/);
+  assert.match(styles, /\.story-card-lead\{/);
+  assert.match(styles, /@media\(max-width:750px\)/);
+  assert.match(styles + editorialStyles, /\.bbc-headline-media\{/);
 });
 
 test('Top 7 cards activate with Enter and Space and retain a visible focus treatment', async () => {
